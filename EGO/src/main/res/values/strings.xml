@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EGO</string>
+
+    <!-- Main Activity -->
+    <string name="action_data_management">Datenverwaltung</string>
+
+    <!-- Address View Fragment -->
+    <string name="address_view_address">Adresse</string>
+    <string name="address_view_city">Ort</string>
+    <string name="address_view_zipcode">PLZ</string>
+    <string name="address_view_street">Straße</string>
+    <string name="address_view_streetno">Hausnummer</string>
+    <string name="address_view_results">Ergebnisse</string>
+
+    <!-- Data Management Activity -->
+    <string name="title_data_management_activity">Datenverwaltung</string>
+    <string name="data_management_activity_import">Daten importieren</string>
+
+    <string-array name="data_management_import_titles">
+        <item>Adressen</item>
+        <item>Bereitschaftsdienste</item>
+    </string-array>
+    <string-array name="data_management_import_descriptions">
+        <item>aus /sdcard/ego/import/adressen.csv</item>
+        <item>aus /sdcard/ego/import/bereitschaft.csv</item>
+    </string-array>
+
+</resources>
