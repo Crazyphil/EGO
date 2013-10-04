@@ -1,0 +1,6 @@
+Winkler Jakob:
+	Aufnahme-KH/Diensthabender Arzt für heute direkt anzeigen statt mit Klick
+
+Besprechung 26.09.13
+	DoRIS-Koordinaten müssen in Geokoordinaten umgerechnet werden (kommen so vom BEV) - kann das so direkt vom Navi verwendet werden? (EPSG:31255, GK M31)
+	Vertauschen: Straße-Hausnr, PLZ-Ort (deaktiviert, solange keine Straß-Hausnr eingegeben)

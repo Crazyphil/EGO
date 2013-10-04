@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:dividerPadding="1dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:text="@string/address_view_address"
+        android:id="@+id/address_textViewAddress" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <tk.crazysoft.ego.components.NoDefaultSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_spinnerStreet"
+                android:prompt="@string/address_view_street"
+                android:layout_marginTop="@dimen/activity_element_margin"
+                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_imageButtonClearStreet"
+                android:layout_column="2"
+                android:src="@android:drawable/ic_input_delete" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <tk.crazysoft.ego.components.NoDefaultSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_spinnerStreetNo"
+                android:hint="@string/address_view_streetno"
+                android:layout_marginTop="@dimen/activity_element_margin"
+                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:prompt="@string/address_view_streetno" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_imageButtonClearStreetNo"
+                android:layout_column="2"
+                android:src="@android:drawable/ic_input_delete" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <tk.crazysoft.ego.components.NoDefaultSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_spinnerCity"
+                android:prompt="@string/address_view_city"
+                android:layout_marginTop="@dimen/activity_element_margin"
+                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_imageButtonClearCity"
+                android:layout_column="2"
+                android:src="@android:drawable/ic_input_delete" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <tk.crazysoft.ego.components.NoDefaultSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_spinnerZip"
+                android:prompt="@string/address_view_zipcode"
+                android:layout_marginTop="@dimen/activity_element_margin"
+                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address_imageButtonClearZip"
+                android:layout_column="2"
+                android:src="@android:drawable/ic_input_delete" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:text="@string/address_view_results"
+        android:id="@+id/address_textViewResults"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/address_listViewResults"
+        android:headerDividersEnabled="false" />
+</LinearLayout>
