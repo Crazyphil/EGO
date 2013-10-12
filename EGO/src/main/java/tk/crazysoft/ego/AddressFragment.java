@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import tk.crazysoft.ego.components.NoDefaultSpinner;
 
 public class AddressFragment extends Fragment/* implements LoaderManager.LoaderCallbacks<Cursor>*/ {
-
     private NoDefaultSpinner spinnerCity, spinnerZip, spinnerStreet, spinnerStreetNo;
     private ImageButton imageButtonClearCity, imageButtonClearZip, imageButtonClearStreet, imageButtonClearStreetNo;
 
@@ -40,6 +38,7 @@ public class AddressFragment extends Fragment/* implements LoaderManager.LoaderC
         setDataOnSpinner(spinnerCity, R.array.city_array, false);
         setDataOnSpinner(spinnerZip, R.array.zip_array, false);
         setDataOnSpinner(spinnerStreet, R.array.street_array, true);
+        setDataOnSpinner(spinnerStreetNo, R.array.streetno_array, true);
 
         imageButtonClearCity.setOnClickListener(new ClearButtonOnClickListener());
         imageButtonClearZip.setOnClickListener(new ClearButtonOnClickListener());
@@ -77,5 +76,4 @@ public class AddressFragment extends Fragment/* implements LoaderManager.LoaderC
             }
         }
     }
-
 }

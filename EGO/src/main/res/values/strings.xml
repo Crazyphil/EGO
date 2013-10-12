@@ -20,11 +20,19 @@
 
     <string-array name="data_management_import_titles">
         <item>Adressen</item>
+        <item>Krankenhausaufnahmen</item>
         <item>Bereitschaftsdienste</item>
     </string-array>
     <string-array name="data_management_import_descriptions">
-        <item>aus /sdcard/ego/import/adressen.csv</item>
-        <item>aus /sdcard/ego/import/bereitschaft.csv</item>
+        <item>aus %sego/import/adressen.csv</item>
+        <item>aus %sego/import/aufnahmen.csv</item>
+        <item>aus %sego/import/bereitschaft.csv</item>
     </string-array>
+
+    <!-- Data Import Service class -->
+    <string name="service_dataimport_error_nosd">Es befindet sich keine SD-Karte im Gerät.</string>
+    <string name="service_dataimport_error_notfound">Die gewünschte Import-Datei ist nicht vorhanden oder nicht lesbar.</string>
+    <string name="service_dataimport_error_readfail">Der Import ist fehlgeschlagen.</string>
+    <string name="service_dataimport_result">%1$d Einträge wurden importiert, %2$d waren fehlerhaft.</string>
 
 </resources>

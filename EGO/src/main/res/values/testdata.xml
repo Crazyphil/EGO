@@ -31,4 +31,20 @@
         <item>Schulstraße</item>
         <item>Vorstadt</item>
     </string-array>
+
+    <string-array name="streetno_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>6</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11a</item>
+        <item>11b</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>16</item>
+    </string-array>
 </resources>

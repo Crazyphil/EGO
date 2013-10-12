@@ -27,6 +27,9 @@
             android:label="@string/title_data_management_activity"
             android:parentActivityName="tk.crazysoft.ego.MainActivity" >
         </activity>
+        <service
+            android:name=".services.DataImportService"
+            android:exported="false" />
     </application>
 
 </manifest>
