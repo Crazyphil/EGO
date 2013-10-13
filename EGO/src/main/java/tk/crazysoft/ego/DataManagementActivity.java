@@ -1,6 +1,5 @@
 package tk.crazysoft.ego;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -23,6 +22,7 @@ import tk.crazysoft.ego.services.DataImportService;
 
 public class DataManagementActivity extends ActionBarActivity {
     private ListView listViewImport;
+    private DataImportReceiver importReceiver;
 
     private static final int ITEM_IMPORT_ADDRESSES = 0;
     private static final int ITEM_IMPORT_HOSPITAL_ADMITTANCES = 1;
@@ -42,7 +42,7 @@ public class DataManagementActivity extends ActionBarActivity {
         IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
         importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
         importFilter.addAction(DataImportService.BROADCAST_RESULT);
-        DataImportReceiver importReceiver = new DataImportReceiver(this);
+        importReceiver = new DataImportReceiver(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(importReceiver, importFilter);
     }
 
@@ -99,9 +99,7 @@ public class DataManagementActivity extends ActionBarActivity {
                 throw new IllegalArgumentException("Import action not defined");
             }
 
-            Intent importIntent = new Intent(DataManagementActivity.this, DataImportService.class);
-            importIntent.setAction(action);
-            DataManagementActivity.this.startService(importIntent);
+            importReceiver.startServiceIntent(action);
         }
     }
 }

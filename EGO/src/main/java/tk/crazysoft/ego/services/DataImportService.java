@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.regex.Pattern;
 
 import tk.crazysoft.ego.R;
@@ -41,6 +42,7 @@ public class DataImportService extends IntentService {
     private static final String CSV_COMMENT = "#";
 
     private SQLiteDatabase db = null;
+    private WeakReference<PJ> sourceProjection, targetProjection;
 
     public DataImportService() {
         super(DataImportService.class.getName());
@@ -53,6 +55,8 @@ public class DataImportService extends IntentService {
         if (action.equals(ACTION_IMPORT_ADDRESSES)) {
             importAddresses();
         }
+
+        DataImportReceiver.completeWakefulIntent(intent);
     }
 
     private void importAddresses() {
@@ -107,9 +111,13 @@ public class DataImportService extends IntentService {
                         String city = fields[3].trim();
                         String street = fields[5].trim();
                         String streetno = fields[6].trim();
+                        String mapsheet = "";
+                        if (fields.length > 7) {
+                            mapsheet = fields[7].trim();
+                        }
 
                         double[] geoCoords = convertEPSG31255toWSG84(eastCoord, northCoord);
-                        if (geoCoords == null || !insertAddress(geoCoords[1], geoCoords[0], zipCode, city, street, streetno, "")) {
+                        if (geoCoords == null || !insertAddress(geoCoords[1], geoCoords[0], zipCode, city, street, streetno, mapsheet)) {
                             failedEntries++;
                         }
                     } catch (NumberFormatException e) {
@@ -147,12 +155,17 @@ public class DataImportService extends IntentService {
     }
 
     private double[] convertEPSG31255toWSG84(double east, double north) {
-        PJ source = new PJ("+init=epsg:31255");
-        PJ target = new PJ("+proj=latlong +datum=WGS84");
         double[] coordinates = { east, north };
+        if (east < 128 && north < 128) {
+            return coordinates;
+        }
 
+        if (sourceProjection.get() == null || targetProjection.get() == null) {
+            sourceProjection = new WeakReference<PJ>(new PJ("+init=epsg:31255"));
+            targetProjection = new WeakReference<PJ>(new PJ("+proj=latlong +datum=WGS84"));
+        }
         try {
-            source.transform(target, 2, coordinates, 0, 1);
+            sourceProjection.get().transform(targetProjection.get(), 2, coordinates, 0, 1);
             return coordinates;
         } catch (PJException e) {
             return null;
