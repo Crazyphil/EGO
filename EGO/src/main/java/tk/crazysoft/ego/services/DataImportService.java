@@ -6,15 +6,17 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.proj4.PJ;
-import org.proj4.PJException;
+import org.osgeo.proj4j.CRSFactory;
+import org.osgeo.proj4j.CoordinateReferenceSystem;
+import org.osgeo.proj4j.CoordinateTransform;
+import org.osgeo.proj4j.CoordinateTransformFactory;
+import org.osgeo.proj4j.ProjCoordinate;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.regex.Pattern;
 
 import tk.crazysoft.ego.R;
@@ -42,7 +44,7 @@ public class DataImportService extends IntentService {
     private static final String CSV_COMMENT = "#";
 
     private SQLiteDatabase db = null;
-    private WeakReference<PJ> sourceProjection, targetProjection;
+    private CoordinateTransform projection;
 
     public DataImportService() {
         super(DataImportService.class.getName());
@@ -52,7 +54,7 @@ public class DataImportService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
 
-        if (action.equals(ACTION_IMPORT_ADDRESSES)) {
+        if (action != null && action.equals(ACTION_IMPORT_ADDRESSES)) {
             importAddresses();
         }
 
@@ -90,6 +92,11 @@ public class DataImportService extends IntentService {
         reportProgress(0);
         EGODbHelper helper = new EGODbHelper(getBaseContext());
         db = helper.getWritableDatabase();
+        if (db == null) {
+            reportError(getResources().getString(R.string.error_db_object_null));
+            return;
+        }
+
         db.beginTransaction();
         db.delete(EGOContract.Addresses.TABLE_NAME, null, null);
 
@@ -116,8 +123,8 @@ public class DataImportService extends IntentService {
                             mapsheet = fields[7].trim();
                         }
 
-                        double[] geoCoords = convertEPSG31255toWSG84(eastCoord, northCoord);
-                        if (geoCoords == null || !insertAddress(geoCoords[1], geoCoords[0], zipCode, city, street, streetno, mapsheet)) {
+                        ProjCoordinate geoCoords = convertEPSG31255toWSG84(eastCoord, northCoord);
+                        if (geoCoords == null || !insertAddress(geoCoords.y, geoCoords.x, zipCode, city, street, streetno, mapsheet)) {
                             failedEntries++;
                         }
                     } catch (NumberFormatException e) {
@@ -133,43 +140,50 @@ public class DataImportService extends IntentService {
                 }
 
                 // Because BufferedReader reads chunks from the file, line lengths don't correlate with file position
-                if (posRdr.getPosition() / fileLength > lastPercent) {
-                    lastPercent = posRdr.getPosition() / fileLength;
+                double newPercent = posRdr.getPosition() / (double)fileLength;
+                if (newPercent > lastPercent) {
+                    lastPercent = newPercent;
                     reportProgress(lastPercent);
                 }
                 line = rdr.readLine();
             }
 
             rdr.close();
+            posRdr.close();
             doc.delete();
             db.setTransactionSuccessful();
+
             reportResult(numEntries - failedEntries, failedEntries);
         } catch (IOException e) {
             reportError(getResources().getString(R.string.service_dataimport_error_readfail));
         } finally {
             try {
                 rdr.close();
+                posRdr.close();
             } catch (Exception e) { }
             db.endTransaction();
         }
     }
 
-    private double[] convertEPSG31255toWSG84(double east, double north) {
-        double[] coordinates = { east, north };
+    private ProjCoordinate convertEPSG31255toWSG84(double east, double north) {
+        ProjCoordinate src = new ProjCoordinate(east, north);
         if (east < 128 && north < 128) {
-            return coordinates;
+            return src;
         }
 
-        if (sourceProjection.get() == null || targetProjection.get() == null) {
-            sourceProjection = new WeakReference<PJ>(new PJ("+init=epsg:31255"));
-            targetProjection = new WeakReference<PJ>(new PJ("+proj=latlong +datum=WGS84"));
+        if (projection == null) {
+            CRSFactory crsFactory = new CRSFactory();
+            CoordinateTransformFactory transFactory = new CoordinateTransformFactory();
+
+            CoordinateReferenceSystem sourceProjection = crsFactory.createFromName("EPSG:31255");
+            CoordinateReferenceSystem targetProjection = crsFactory.createFromParameters("WSG84", "+proj=latlong +datum=WGS84");
+            projection = transFactory.createTransform(sourceProjection, targetProjection);
+
         }
-        try {
-            sourceProjection.get().transform(targetProjection.get(), 2, coordinates, 0, 1);
-            return coordinates;
-        } catch (PJException e) {
-            return null;
-        }
+
+        ProjCoordinate target = new ProjCoordinate();
+        target = projection.transform(src, target);
+        return target;
     }
 
     private boolean insertAddress(double latitude, double longitude, String zipCode, String city, String street, String streetno, String mapsheet) {

@@ -7,9 +7,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -23,6 +23,7 @@ import tk.crazysoft.ego.services.DataImportService;
 public class DataManagementActivity extends ActionBarActivity {
     private ListView listViewImport;
     private DataImportReceiver importReceiver;
+    private ProgressBar progressBar;
 
     private static final int ITEM_IMPORT_ADDRESSES = 0;
     private static final int ITEM_IMPORT_HOSPITAL_ADMITTANCES = 1;
@@ -32,12 +33,13 @@ public class DataManagementActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.data_management_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listViewImport = (ListView)findViewById(R.id.data_listViewImport);
         listViewImport.setOnItemClickListener(new ImportListOnItemClickListener());
+
+        progressBar = (ProgressBar)findViewById(R.id.data_progressBar);
 
         IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
         importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
@@ -78,6 +80,14 @@ public class DataManagementActivity extends ActionBarActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setManagementProgressBarVisibility(boolean visible) {
+        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setManagementProgress(int progress) {
+        progressBar.setProgress(progress);
     }
 
     private class ImportListOnItemClickListener implements AdapterView.OnItemClickListener {

@@ -3,22 +3,23 @@ package tk.crazysoft.ego.services;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
-public class DataImportReceiver extends WakefulBroadcastReceiver {
-    private WeakReference<ActionBarActivity> activity;
+import tk.crazysoft.ego.DataManagementActivity;
 
-    public DataImportReceiver(ActionBarActivity activity) {
+public class DataImportReceiver extends WakefulBroadcastReceiver {
+    private WeakReference<DataManagementActivity> activity;
+
+    public DataImportReceiver(DataManagementActivity activity) {
         super();
-        this.activity = new WeakReference<ActionBarActivity>(activity);
+        this.activity = new WeakReference<DataManagementActivity>(activity);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ActionBarActivity activity = this.activity.get();
+        DataManagementActivity activity = this.activity.get();
         String action = intent.getAction();
         if (action == null) {
             return;
@@ -29,14 +30,14 @@ public class DataImportReceiver extends WakefulBroadcastReceiver {
             String error = intent.getStringExtra(DataImportService.EXTRA_ERROR_MESSAGE);
             Toast.makeText(appContext, error, Toast.LENGTH_LONG).show();
             if (activity != null) {
-                activity.setSupportProgressBarVisibility(false);
+                activity.setManagementProgressBarVisibility(false);
             }
         } else if (action.equals(DataImportService.BROADCAST_PROGRESS) && activity != null) {
             double progressPercent = intent.getDoubleExtra(DataImportService.EXTRA_PROGRESS_PERCENT, 0);
-            activity.setSupportProgressBarVisibility(true);
-            activity.setSupportProgress((int)(progressPercent * 10000));
+            activity.setManagementProgressBarVisibility(true);
+            activity.setManagementProgress((int)(progressPercent * 10000));
         } else if (action.equals(DataImportService.BROADCAST_RESULT) && activity != null) {
-            activity.setSupportProgressBarVisibility(false);
+            activity.setManagementProgressBarVisibility(false);
         }
     }
 

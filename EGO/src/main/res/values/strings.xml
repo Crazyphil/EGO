@@ -3,6 +3,9 @@
 
     <string name="app_name">EGO</string>
 
+    <!-- General error messages that may appear anywhere -->
+    <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
+
     <!-- Main Activity -->
     <string name="action_data_management">Datenverwaltung</string>
 
