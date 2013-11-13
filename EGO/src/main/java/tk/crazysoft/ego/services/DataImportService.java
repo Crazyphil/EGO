@@ -3,7 +3,10 @@ package tk.crazysoft.ego.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.osgeo.proj4j.CRSFactory;
@@ -17,9 +20,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import tk.crazysoft.ego.R;
+import tk.crazysoft.ego.data.Address;
 import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGODbHelper;
 import tk.crazysoft.ego.io.ExternalStorage;
@@ -34,7 +40,8 @@ public class DataImportService extends IntentService {
     public static final String EXTRA_ERROR_MESSAGE = "tk.crazysoft.ego.services.IMPORT_ERROR_MESSAGE";
     public static final String BROADCAST_PROGRESS = "tk.crazysoft.ego.services.IMPORT_PROGRESS";
     public static final String EXTRA_PROGRESS_PERCENT = "tk.crazysoft.ego.services.IMPORT_PROGRESS_PERCENT";
-    public static final String BROADCAST_RESULT = "tk.crazysoft.ego.services.IMPORT_RESULT";
+    public static final String BROADCAST_RESULT_IMPORT = "tk.crazysoft.ego.services.IMPORT_RESULT_IMPORT";
+    public static final String BROADCAST_RESULT_MERGE = "tk.crazysoft.ego.services.IMPORT_RESULT_MERGE";
     public static final String EXTRA_RESULT_COUNTS = "tk.crazysoft.ego.services.IMPORT_RESULT_COUNTS";
 
     private static final String ADDRESSES_PATH = "ego/import/adressen.csv";
@@ -42,6 +49,7 @@ public class DataImportService extends IntentService {
     private static final String STANDBY_PATH = "ego/import/bereitschaft.csv";
     private static final String CSV_SEPARATOR = ";";
     private static final String CSV_COMMENT = "#";
+    private static final int MAX_STREET_MERGE_METERS = 1000;
 
     private SQLiteDatabase db = null;
     private CoordinateTransform projection;
@@ -149,20 +157,113 @@ public class DataImportService extends IntentService {
             }
 
             rdr.close();
-            posRdr.close();
-            doc.delete();
+            if (!doc.delete()) {
+                doc.deleteOnExit();
+            }
             db.setTransactionSuccessful();
+            db.endTransaction();
 
-            reportResult(numEntries - failedEntries, failedEntries);
+            reportResultImport(numEntries - failedEntries, failedEntries);
+            mergeStreets();
         } catch (IOException e) {
             reportError(getResources().getString(R.string.service_dataimport_error_readfail));
         } finally {
             try {
                 rdr.close();
-                posRdr.close();
             } catch (Exception e) { }
             db.endTransaction();
         }
+    }
+
+    private void mergeStreets() {
+        reportProgress(0);
+        Cursor result = db.rawQuery(EGOContract.Addresses.SQL_SELECT_DUPLICATE_STREETS, null);
+        db.beginTransaction();
+        int mergedStreets = 0;
+        double count = (double)result.getCount();
+        while (result.moveToNext()) {
+            reportProgress(result.getPosition() / count);
+            String street = result.getString(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_STREET));
+            ArrayList<Address> addresses = getAddressList(street);
+            if (mergeStreet(addresses)) {
+                mergedStreets++;
+            }
+        }
+        result.close();
+        db.setTransactionSuccessful();
+        reportResultMerge(result.getCount(), mergedStreets);
+    }
+
+    private boolean mergeStreet(ArrayList<Address> addresses) {
+        boolean merged = false;
+        for (Address address : addresses) {
+            for (Address compareAddress : addresses) {
+                if (address.equals(compareAddress)) {
+                    continue;
+                }
+
+                if (address.isDistinct(compareAddress)) {
+                    double nearestDistance = address.getNearestDistance(compareAddress);
+                    if (nearestDistance < MAX_STREET_MERGE_METERS) {
+                        if (copyStreet(compareAddress, address)) {
+                            merged = true;
+                        }
+                    }
+                }
+            }
+        }
+        return merged;
+    }
+
+    private ArrayList<Address> getAddressList(String street) {
+        String[] projection = new String[] {
+                EGOContract.Addresses.COLUMN_NAME_ZIP,
+                EGOContract.Addresses.COLUMN_NAME_CITY,
+                EGOContract.Addresses.COLUMN_NAME_STREET_NO,
+                EGOContract.Addresses.COLUMN_NAME_LATITUDE,
+                EGOContract.Addresses.COLUMN_NAME_LONGITUDE
+        };
+        String[] selectionArgs = new String[] { street };
+        Cursor result = db.query(EGOContract.Addresses.TABLE_NAME, projection, EGOContract.Addresses.COLUMN_NAME_STREET + " = ?", selectionArgs, null, null, null);
+
+        HashMap<String, Address> streets = new HashMap<String, Address>();
+        ArrayList<Address> addresses = new ArrayList<Address>();
+        while (result.moveToNext()) {
+            String zipCode = result.getString(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_ZIP));
+            String city = result.getString(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_CITY));
+            String streetNo = result.getString(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_STREET_NO));
+            double latitude = result.getDouble(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_LATITUDE));
+            double longitude = result.getDouble(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_LONGITUDE));
+
+            if (!streets.containsKey(zipCode)) {
+                Address address = new Address(zipCode, city, street);
+
+                addresses.add(address);
+                streets.put(zipCode, address);
+            }
+            streets.get(zipCode).getAddresses().add(new Address.House(streetNo, new ProjCoordinate(longitude, latitude)));
+        }
+
+        result.close();
+        return addresses;
+    }
+
+    private boolean copyStreet(Address source, Address target) {
+        SQLiteStatement sql = db.compileStatement(EGOContract.Addresses.SQL_COPY_STREET);
+        sql.bindString(1, target.getZipCode());
+        sql.bindString(2, target.getCity());
+        sql.bindString(3, source.getZipCode());
+        sql.bindString(4, source.getCity());
+        sql.bindString(5, source.getStreet());
+
+        int affectedRows = 1;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            affectedRows = sql.executeUpdateDelete();
+        } else {
+            sql.execute();
+        }
+        sql.close();
+        return affectedRows > 0;
     }
 
     private ProjCoordinate convertEPSG31255toWSG84(double east, double north) {
@@ -208,8 +309,13 @@ public class DataImportService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void reportResult(int imported, int failures) {
-        Intent intent = new Intent(BROADCAST_RESULT).putExtra(EXTRA_RESULT_COUNTS, new int[] { imported, failures });
+    private void reportResultImport(int imported, int failures) {
+        Intent intent = new Intent(BROADCAST_RESULT_IMPORT).putExtra(EXTRA_RESULT_COUNTS, new int[] { imported, failures });
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void reportResultMerge(int processed, int merged) {
+        Intent intent = new Intent(BROADCAST_RESULT_MERGE).putExtra(EXTRA_RESULT_COUNTS, new int[] { processed, merged });
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

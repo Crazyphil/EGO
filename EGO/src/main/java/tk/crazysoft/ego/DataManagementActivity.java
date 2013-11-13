@@ -21,7 +21,6 @@ import tk.crazysoft.ego.services.DataImportReceiver;
 import tk.crazysoft.ego.services.DataImportService;
 
 public class DataManagementActivity extends ActionBarActivity {
-    private ListView listViewImport;
     private DataImportReceiver importReceiver;
     private ProgressBar progressBar;
 
@@ -36,14 +35,15 @@ public class DataManagementActivity extends ActionBarActivity {
         setContentView(R.layout.data_management_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        listViewImport = (ListView)findViewById(R.id.data_listViewImport);
+        ListView listViewImport = (ListView) findViewById(R.id.data_listViewImport);
         listViewImport.setOnItemClickListener(new ImportListOnItemClickListener());
 
         progressBar = (ProgressBar)findViewById(R.id.data_progressBar);
 
         IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
         importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
-        importFilter.addAction(DataImportService.BROADCAST_RESULT);
+        importFilter.addAction(DataImportService.BROADCAST_RESULT_IMPORT);
+        importFilter.addAction(DataImportService.BROADCAST_RESULT_MERGE);
         importReceiver = new DataImportReceiver(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(importReceiver, importFilter);
     }
@@ -70,6 +70,12 @@ public class DataManagementActivity extends ActionBarActivity {
         SimpleAdapter adapter = new SimpleAdapter(this, items, R.layout.two_line_list_item, new String[] { "line1", "line2" }, new int[] { android.R.id.text1, android.R.id.text2 } );
         ListView view = (ListView)findViewById(R.id.data_listViewImport);
         view.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(importReceiver);
     }
 
     @Override

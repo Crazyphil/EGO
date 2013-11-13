@@ -36,6 +36,7 @@
     <string name="service_dataimport_error_nosd">Es befindet sich keine SD-Karte im Gerät.</string>
     <string name="service_dataimport_error_notfound">Die gewünschte Import-Datei ist nicht vorhanden oder nicht lesbar.</string>
     <string name="service_dataimport_error_readfail">Der Import ist fehlgeschlagen.</string>
-    <string name="service_dataimport_result">%1$d Einträge wurden importiert, %2$d waren fehlerhaft.</string>
+    <string name="service_dataimport_result_import">%1$,d Einträge wurden importiert, %2$,d waren fehlerhaft.</string>
+    <string name="service_dataimport_result_merge">%1$,d Straßen existieren in mehreren Gemeinden, %2$,d überschreiten Grenzen.</string>
 
 </resources>

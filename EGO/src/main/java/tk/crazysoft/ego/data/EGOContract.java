@@ -15,6 +15,31 @@ public final class EGOContract {
         public static final String COLUMN_NAME_STREET = "street";
         public static final String COLUMN_NAME_STREET_NO = "streetno";
         public static final String COLUMN_NAME_MAP_SHEET = "mapsheet";
+
+        public static final String SQL_SELECT_DUPLICATE_STREETS =
+                "SELECT " + COLUMN_NAME_STREET +
+                        " FROM (SELECT " + COLUMN_NAME_STREET +
+                        " FROM " + TABLE_NAME +
+                        " GROUP BY " + COLUMN_NAME_ZIP + ", " +
+                        COLUMN_NAME_STREET + " ORDER BY " +
+                        COLUMN_NAME_STREET + " ASC) GROUP BY " +
+                        COLUMN_NAME_STREET + " HAVING COUNT(" +
+                        COLUMN_NAME_STREET + ") > 1";
+
+        public static final String SQL_COPY_STREET =
+                "INSERT INTO " + TABLE_NAME + " " +
+                        "SELECT NULL AS " + _ID + ", " +
+                        COLUMN_NAME_LATITUDE + ", " +
+                        COLUMN_NAME_LONGITUDE + ", " +
+                        "? AS " + COLUMN_NAME_ZIP + ", " +
+                        "? AS " + COLUMN_NAME_CITY + ", " +
+                        COLUMN_NAME_STREET + ", " +
+                        COLUMN_NAME_STREET_NO + ", " +
+                        COLUMN_NAME_MAP_SHEET + " FROM " +
+                        TABLE_NAME + " WHERE " +
+                        COLUMN_NAME_ZIP + " = ? AND " +
+                        COLUMN_NAME_CITY + " = ? AND " +
+                        COLUMN_NAME_STREET + " = ?";
     }
 
     public static abstract class HospitalAdmission implements BaseColumns {

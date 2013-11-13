@@ -35,8 +35,8 @@ public class AddressFragment extends Fragment/* implements LoaderManager.LoaderC
         imageButtonClearStreet = (ImageButton)getView().findViewById(R.id.address_imageButtonClearStreet);
         imageButtonClearStreetNo = (ImageButton)getView().findViewById(R.id.address_imageButtonClearStreetNo);
 
-        setDataOnSpinner(spinnerCity, R.array.city_array, false);
-        setDataOnSpinner(spinnerZip, R.array.zip_array, false);
+        setDataOnSpinner(spinnerCity, R.array.city_array, true);
+        setDataOnSpinner(spinnerZip, R.array.zip_array, true);
         setDataOnSpinner(spinnerStreet, R.array.street_array, true);
         setDataOnSpinner(spinnerStreetNo, R.array.streetno_array, true);
 
