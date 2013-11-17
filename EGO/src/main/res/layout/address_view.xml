@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <tk.crazysoft.ego.components.NoDefaultSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_spinnerCity"
@@ -47,7 +47,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <tk.crazysoft.ego.components.NoDefaultSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_spinnerZip"
@@ -70,7 +70,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <tk.crazysoft.ego.components.NoDefaultSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_spinnerStreet"
@@ -93,7 +93,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <tk.crazysoft.ego.components.NoDefaultSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_spinnerStreetNo"

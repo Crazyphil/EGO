@@ -67,15 +67,15 @@ public class DataManagementActivity extends ActionBarActivity {
             items.add(map);
         }
 
-        SimpleAdapter adapter = new SimpleAdapter(this, items, R.layout.two_line_list_item, new String[] { "line1", "line2" }, new int[] { android.R.id.text1, android.R.id.text2 } );
+        SimpleAdapter adapter = new SimpleAdapter(this, items, android.R.layout.simple_list_item_2, new String[] { "line1", "line2" }, new int[] { android.R.id.text1, android.R.id.text2 } );
         ListView view = (ListView)findViewById(R.id.data_listViewImport);
         view.setAdapter(adapter);
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(importReceiver);
+        super.onDestroy();
     }
 
     @Override
