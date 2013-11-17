@@ -7,7 +7,8 @@
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
 
     <!-- Main Activity -->
-    <string name="action_data_management">Datenverwaltung</string>
+    <string name="main_activity_action_data_management">Datenverwaltung</string>
+    <string name="main_activity_action_about">Über EGO</string>
 
     <!-- Address View Fragment -->
     <string name="address_view_address">Adresse</string>
@@ -18,7 +19,7 @@
     <string name="address_view_results">Ergebnisse</string>
 
     <!-- Data Management Activity -->
-    <string name="title_data_management_activity">Datenverwaltung</string>
+    <string name="data_management_activity_title">Datenverwaltung</string>
     <string name="data_management_activity_import">Daten importieren</string>
 
     <string-array name="data_management_import_titles">
@@ -31,6 +32,14 @@
         <item>aus %sego/import/aufnahmen.csv</item>
         <item>aus %sego/import/bereitschaft.csv</item>
     </string-array>
+
+    <!-- About Activity -->
+    <string name="about_activity_title">Über EGO</string>
+    <string name="about_activity_header">Ein Projekt der Ortsstelle\nSt. Veit im Mühlkreis</string>
+    <string name="about_activity_concept_header">Konzept</string>
+    <string name="about_activity_concept_text">Peter Grubmair</string>
+    <string name="about_activity_development_header">Entwicklung</string>
+    <string name="about_activity_development_text">Philipp Kapfer\nFlorian Helml</string>
 
     <!-- Data Import Service class -->
     <string name="service_dataimport_error_nosd">Es befindet sich keine SD-Karte im Gerät.</string>

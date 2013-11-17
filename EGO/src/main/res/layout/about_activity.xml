@@ -1,0 +1,107 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context=".AboutActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/about_imageViewRK"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/logo_rk"
+        android:cropToPadding="false"
+        android:adjustViewBounds="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/about_activity_header"
+                    android:id="@+id/about_textViewHeader"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_concept_header"
+                    android:id="@+id/about_textViewConceptHeader"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/activity_element_margin" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_concept_text"
+                    android:id="@+id/about_textViewConceptText"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/activity_vertical_margin" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_development_header"
+                    android:id="@+id/about_textViewDevelopmentHeader"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/activity_element_margin" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_development_text"
+                    android:id="@+id/about_textViewDevelopmentText"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/activity_vertical_margin" />
+
+            </LinearLayout>
+
+        </ScrollView>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/about_imageViewJKUTNF"
+        android:src="@drawable/logo_jku_tnf"
+        android:cropToPadding="false"
+        android:adjustViewBounds="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_gravity="bottom"
+        android:paddingBottom="@dimen/activity_vertical_margin" />
+
+</LinearLayout>

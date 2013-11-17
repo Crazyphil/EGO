@@ -1,6 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_data_management"
-        android:title="@string/action_data_management"
+        android:title="@string/main_activity_action_data_management"
         android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_about"
+        android:title="@string/main_activity_action_about"
+        android:orderInCategory="900"
         android:showAsAction="never" />
 </menu>

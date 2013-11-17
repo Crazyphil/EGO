@@ -26,12 +26,25 @@
         </activity>
         <activity
             android:name="tk.crazysoft.ego.DataManagementActivity"
-            android:label="@string/title_data_management_activity"
+            android:label="@string/data_management_activity_title"
             android:parentActivityName="tk.crazysoft.ego.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.crazysoft.ego.MainActivity" />
         </activity>
+        <activity
+            android:name="tk.crazysoft.ego.AboutActivity"
+            android:label="@string/about_activity_title"
+            android:parentActivityName="tk.crazysoft.ego.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.crazysoft.ego.MainActivity" />
+        </activity>
+
         <service
-            android:name=".services.DataImportService"
+            android:name="tk.crazysoft.ego.services.DataImportService"
             android:exported="false" />
+
     </application>
 
 </manifest>

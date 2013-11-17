@@ -48,6 +48,9 @@ public class MainActivity extends ActionBarActivity {
         if (item.getItemId() == R.id.action_data_management) {
             Intent dataManagementIntent = new Intent(this, DataManagementActivity.class);
             startActivity(dataManagementIntent);
+        } else if (item.getItemId() == R.id.action_about) {
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
         }
         return true;
     }
