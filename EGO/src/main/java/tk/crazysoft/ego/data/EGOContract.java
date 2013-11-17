@@ -17,8 +17,9 @@ public final class EGOContract {
         public static final String COLUMN_NAME_MAP_SHEET = "mapsheet";
 
         public static final String SQL_SELECT_DUPLICATE_STREETS =
-                "SELECT " + COLUMN_NAME_STREET +
-                        " FROM (SELECT " + COLUMN_NAME_STREET +
+                "SELECT MAX(last_id) AS last_id, " + COLUMN_NAME_STREET +
+                        " FROM (SELECT MAX(" + _ID + ") AS last_id, " +
+                        COLUMN_NAME_STREET +
                         " FROM " + TABLE_NAME +
                         " GROUP BY " + COLUMN_NAME_ZIP + ", " +
                         COLUMN_NAME_STREET + " ORDER BY " +
@@ -37,6 +38,7 @@ public final class EGOContract {
                         COLUMN_NAME_STREET_NO + ", " +
                         COLUMN_NAME_MAP_SHEET + " FROM " +
                         TABLE_NAME + " WHERE " +
+                        _ID + " <= ? AND " +
                         COLUMN_NAME_ZIP + " = ? AND " +
                         COLUMN_NAME_CITY + " = ? AND " +
                         COLUMN_NAME_STREET + " = ?";

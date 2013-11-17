@@ -183,9 +183,10 @@ public class DataImportService extends IntentService {
         double count = (double)result.getCount();
         while (result.moveToNext()) {
             reportProgress(result.getPosition() / count);
+            int lastAddressId = result.getInt(result.getColumnIndex("last_id"));
             String street = result.getString(result.getColumnIndex(EGOContract.Addresses.COLUMN_NAME_STREET));
             ArrayList<Address> addresses = getAddressList(street);
-            if (mergeStreet(addresses)) {
+            if (mergeStreet(addresses, lastAddressId)) {
                 mergedStreets++;
             }
         }
@@ -194,7 +195,7 @@ public class DataImportService extends IntentService {
         reportResultMerge(result.getCount(), mergedStreets);
     }
 
-    private boolean mergeStreet(ArrayList<Address> addresses) {
+    private boolean mergeStreet(ArrayList<Address> addresses, int lastAddressId) {
         boolean merged = false;
         for (Address address : addresses) {
             for (Address compareAddress : addresses) {
@@ -205,7 +206,7 @@ public class DataImportService extends IntentService {
                 if (address.isDistinct(compareAddress)) {
                     double nearestDistance = address.getNearestDistance(compareAddress);
                     if (nearestDistance < MAX_STREET_MERGE_METERS) {
-                        if (copyStreet(compareAddress, address)) {
+                        if (copyStreet(compareAddress, address, lastAddressId)) {
                             merged = true;
                         }
                     }
@@ -248,13 +249,14 @@ public class DataImportService extends IntentService {
         return addresses;
     }
 
-    private boolean copyStreet(Address source, Address target) {
+    private boolean copyStreet(Address source, Address target, int lastAddressId) {
         SQLiteStatement sql = db.compileStatement(EGOContract.Addresses.SQL_COPY_STREET);
         sql.bindString(1, target.getZipCode());
         sql.bindString(2, target.getCity());
-        sql.bindString(3, source.getZipCode());
-        sql.bindString(4, source.getCity());
-        sql.bindString(5, source.getStreet());
+        sql.bindLong(3, lastAddressId);     // Avoids duplicating already copied entries
+        sql.bindString(4, source.getZipCode());
+        sql.bindString(5, source.getCity());
+        sql.bindString(6, source.getStreet());
 
         int affectedRows = 1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
