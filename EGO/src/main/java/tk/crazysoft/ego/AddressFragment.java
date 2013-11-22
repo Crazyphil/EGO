@@ -45,6 +45,18 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            spinnerCitySelected = savedInstanceState.getString("city");
+            spinnerZipSelected = savedInstanceState.getString("zip");
+            spinnerStreetSelected = savedInstanceState.getString("street");
+            spinnerStreetNoSelected = savedInstanceState.getString("streetNo");
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -99,6 +111,16 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         }
 
         spinner.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("city", getSelectedItem(spinnerCity));
+        outState.putString("zip", getSelectedItem(spinnerZip));
+        outState.putString("street", getSelectedItem(spinnerStreet));
+        outState.putString("streetNo", getSelectedItem(spinnerStreetNo));
     }
 
     @Override
@@ -249,6 +271,16 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    private String getSelectedItem(Spinner spinner) {
+        if (spinner.getSelectedItemPosition() > 0) {
+            Cursor c = (Cursor)spinner.getSelectedItem();
+            if (c != null) {
+                return c.getString(1);
+            }
+        }
+        return null;
+    }
+
     private String getStoredSelectedItem(AdapterView<?> spinner) {
         if (spinner.equals(spinnerCity)) {
             return spinnerCitySelected;
@@ -332,31 +364,21 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         private void resetLoaders(Spinner spinner) {
             getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
             if (spinner != spinnerCity) {
-                spinnerCitySelected = getSelected(spinnerCity);
+                spinnerCitySelected = getSelectedItem(spinnerCity);
                 getLoaderManager().restartLoader(LOADER_CITY, null, AddressFragment.this);
             }
             if (spinner != spinnerZip) {
-                spinnerZipSelected = getSelected(spinnerZip);
+                spinnerZipSelected = getSelectedItem(spinnerZip);
                 getLoaderManager().restartLoader(LOADER_ZIP_CODE, null, AddressFragment.this);
             }
             if (spinner != spinnerStreet) {
-                spinnerStreetSelected = getSelected(spinnerStreet);
+                spinnerStreetSelected = getSelectedItem(spinnerStreet);
                 getLoaderManager().restartLoader(LOADER_STREET, null, AddressFragment.this);
             }
             if (spinner != spinnerStreetNo) {
-                spinnerStreetNoSelected = getSelected(spinnerStreetNo);
+                spinnerStreetNoSelected = getSelectedItem(spinnerStreetNo);
                 getLoaderManager().restartLoader(LOADER_STREET_NO, null, AddressFragment.this);
             }
-        }
-
-        private String getSelected(Spinner spinner) {
-            if (spinner.getSelectedItemPosition() > 0) {
-                Cursor c = (Cursor)spinner.getSelectedItem();
-                if (c != null) {
-                    return c.getString(1);
-                }
-            }
-            return null;
         }
     }
 }

@@ -1,4 +1,4 @@
-package tk.crazysoft.ego;
+package tk.crazysoft.ego.components;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -23,7 +23,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
         mClass = clz;
     }
 
-    /* The following are each of the ActionBar.tk.crazysoft.ego.TabListener callbacks */
+    /* The following are each of the ActionBar.TabListener callbacks */
 
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         // Check if the fragment is already initialized

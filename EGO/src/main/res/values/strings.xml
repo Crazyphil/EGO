@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EGO</string>
+    <string name="app_name">Einsatz-Gesamtorganisation</string>
 
     <!-- General error messages that may appear anywhere -->
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
@@ -9,6 +9,9 @@
     <!-- Main Activity -->
     <string name="main_activity_action_data_management">Datenverwaltung</string>
     <string name="main_activity_action_about">Über EGO</string>
+    <string name="main_activity_tab_addresses">Adressen</string>
+    <string name="main_activity_tab_hospitals_doctors">Arzt &amp; KH</string>
+    <string name="main_activity_tab_map">Karte</string>
 
     <!-- Address View Fragment -->
     <string name="address_view_address">Adresse</string>
