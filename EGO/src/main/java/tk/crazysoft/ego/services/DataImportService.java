@@ -157,9 +157,6 @@ public class DataImportService extends IntentService {
             }
 
             rdr.close();
-            if (!doc.delete()) {
-                doc.deleteOnExit();
-            }
             db.setTransactionSuccessful();
             db.endTransaction();
 
