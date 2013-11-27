@@ -1,6 +1,10 @@
 package tk.crazysoft.ego;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -11,26 +15,29 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import tk.crazysoft.ego.components.NothingSelectedSpinnerAdapter;
 import tk.crazysoft.ego.data.EGOContract;
+import tk.crazysoft.ego.data.EGOCursorAdapter;
 import tk.crazysoft.ego.data.EGOCursorLoader;
 import tk.crazysoft.ego.data.EGODbHelper;
 
 public class AddressFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private Spinner spinnerCity, spinnerZip, spinnerStreet, spinnerStreetNo;
-    private String spinnerCitySelected, spinnerZipSelected, spinnerStreetSelected, spinnerStreetNoSelected;
+    private Button buttonCity, buttonZip, buttonStreet, buttonStreetNo;
+    private AlertDialog alertDialogCity, alertDialogZip, alertDialogStreet, alertDialogStreetNo;
+    private String selectedCity, selectedZip, selectedStreet, selectedStreetNo;
     private ImageButton imageButtonClearCity, imageButtonClearZip, imageButtonClearStreet, imageButtonClearStreetNo;
     private ListView listViewResults;
-    private EGOCursorLoader loaderResult, loaderCity, loaderZip, loaderStreet, loaderStreetNo;
+    private HashMap<AlertDialog, CursorAdapter> adapterMapping = new HashMap<AlertDialog, CursorAdapter>(4);
+    private Typeface normalTypeface, italicTypeface;
 
     private static final int LOADER_RESULTS = 0;
     private static final int LOADER_CITY = 1;
@@ -49,10 +56,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            spinnerCitySelected = savedInstanceState.getString("city");
-            spinnerZipSelected = savedInstanceState.getString("zip");
-            spinnerStreetSelected = savedInstanceState.getString("street");
-            spinnerStreetNoSelected = savedInstanceState.getString("streetNo");
+            selectedCity = savedInstanceState.getString("city");
+            selectedZip = savedInstanceState.getString("zip");
+            selectedStreet = savedInstanceState.getString("street");
+            selectedStreetNo = savedInstanceState.getString("streetNo");
         }
     }
 
@@ -60,20 +67,28 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     public void onStart() {
         super.onStart();
 
-        spinnerCity = (Spinner)getView().findViewById(R.id.address_spinnerCity);
-        spinnerZip = (Spinner)getView().findViewById(R.id.address_spinnerZip);
-        spinnerStreet = (Spinner)getView().findViewById(R.id.address_spinnerStreet);
-        spinnerStreetNo = (Spinner)getView().findViewById(R.id.address_spinnerStreetNo);
+        buttonCity = (Button)getView().findViewById(R.id.address_buttonCity);
+        buttonZip = (Button)getView().findViewById(R.id.address_buttonZip);
+        buttonStreet = (Button)getView().findViewById(R.id.address_buttonStreet);
+        buttonStreetNo = (Button)getView().findViewById(R.id.address_buttonStreetNo);
+
+        italicTypeface = buttonCity.getTypeface();
+        normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
+
+        buttonCity.setOnClickListener(new FilterButtonOnClickListener());
+        buttonZip.setOnClickListener(new FilterButtonOnClickListener());
+        buttonStreet.setOnClickListener(new FilterButtonOnClickListener());
+        buttonStreetNo.setOnClickListener(new FilterButtonOnClickListener());
+
+        alertDialogCity = buildFilterAlertDialog(buttonCity, R.string.address_view_city, EGOContract.Addresses.COLUMN_NAME_CITY, true);
+        alertDialogZip = buildFilterAlertDialog(buttonZip, R.string.address_view_zipcode, EGOContract.Addresses.COLUMN_NAME_ZIP, true);
+        alertDialogStreet = buildFilterAlertDialog(buttonStreet, R.string.address_view_street, EGOContract.Addresses.COLUMN_NAME_STREET, true);
+        alertDialogStreetNo = buildFilterAlertDialog(buttonStreetNo, R.string.address_view_streetno, EGOContract.Addresses.COLUMN_NAME_STREET_NO, false);
 
         imageButtonClearCity = (ImageButton)getView().findViewById(R.id.address_imageButtonClearCity);
         imageButtonClearZip = (ImageButton)getView().findViewById(R.id.address_imageButtonClearZip);
         imageButtonClearStreet = (ImageButton)getView().findViewById(R.id.address_imageButtonClearStreet);
         imageButtonClearStreetNo = (ImageButton)getView().findViewById(R.id.address_imageButtonClearStreetNo);
-
-        setDataOnSpinner(spinnerCity, EGOContract.Addresses.COLUMN_NAME_CITY, true);
-        setDataOnSpinner(spinnerZip, EGOContract.Addresses.COLUMN_NAME_ZIP, true);
-        setDataOnSpinner(spinnerStreet, EGOContract.Addresses.COLUMN_NAME_STREET, true);
-        setDataOnSpinner(spinnerStreetNo, EGOContract.Addresses.COLUMN_NAME_STREET_NO, true);
 
         imageButtonClearCity.setOnClickListener(new ClearButtonOnClickListener());
         imageButtonClearZip.setOnClickListener(new ClearButtonOnClickListener());
@@ -92,6 +107,28 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         listViewResults.setAdapter(adapter);
         listViewResults.setEmptyView(progressBar);
 
+        // Restore selected items after Activity is restarted
+        if (selectedCity != null) {
+            buttonCity.setText(selectedCity);
+            buttonCity.setTypeface(normalTypeface);
+            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+        }
+        if (selectedZip != null) {
+            buttonZip.setText(selectedZip);
+            buttonZip.setTypeface(normalTypeface);
+            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+        }
+        if (selectedStreet != null) {
+            buttonStreet.setText(selectedStreet);
+            buttonStreet.setTypeface(normalTypeface);
+            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+        }
+        if (selectedStreetNo != null) {
+            buttonStreetNo.setText(selectedStreetNo);
+            buttonStreetNo.setTypeface(normalTypeface);
+            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+        }
+
         getLoaderManager().initLoader(LOADER_RESULTS, null, this);
         getLoaderManager().initLoader(LOADER_CITY, null, this);
         getLoaderManager().initLoader(LOADER_ZIP_CODE, null, this);
@@ -99,28 +136,38 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(LOADER_STREET_NO, null, this);
     }
 
-    private void setDataOnSpinner(Spinner spinner, String element, boolean isEnabled) {
-        String[] fromColumns = { element };
+    private AlertDialog buildFilterAlertDialog(Button button, int titleRes, String column, boolean index) {
+        String[] fromColumns = { column };
         int[] toViews = { android.R.id.text1 };
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getView().getContext(), android.R.layout.simple_spinner_item, null, fromColumns, toViews, 0);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(new NothingSelectedSpinnerAdapter(adapter, android.R.layout.simple_spinner_item, getView().getContext()));
+        EGOCursorAdapter adapter = new EGOCursorAdapter(getView().getContext(), android.R.layout.simple_list_item_1, null, fromColumns, toViews, 0, index ? 1 : -1);
 
-        if (!isEnabled) {
-            spinner.setEnabled(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+        builder.setTitle(titleRes).setAdapter(adapter, new FilterAlertDialogOnClickListener(button));
+        AlertDialog dialog = builder.create();
+        adapterMapping.put(dialog, adapter);
+        dialog.getListView().setFastScrollEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            dialog.getListView().setFastScrollAlwaysVisible(true);
         }
-
-        spinner.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
+        return dialog;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("city", getSelectedItem(spinnerCity));
-        outState.putString("zip", getSelectedItem(spinnerZip));
-        outState.putString("street", getSelectedItem(spinnerStreet));
-        outState.putString("streetNo", getSelectedItem(spinnerStreetNo));
+        outState.putString("city", getFilter(buttonCity));
+        outState.putString("zip", getFilter(buttonZip));
+        outState.putString("street", getFilter(buttonStreet));
+        outState.putString("streetNo", getFilter(buttonStreetNo));
+    }
+
+    private String getFilter(Button button) {
+        if (button.getTypeface().isItalic()) {
+            return (String)button.getText();
+        }
+        return null;
     }
 
     @Override
@@ -157,8 +204,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO + "*1, " +
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO;
 
-        loaderResult = createLoader(false, projection, sortOrder, "100", null);
-        return loaderResult;
+        return createLoader(false, projection, sortOrder, "100", null);
     }
 
     private Loader<Cursor> createCityLoader() {
@@ -167,8 +213,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses.COLUMN_NAME_CITY
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_CITY;
-        loaderCity = createLoader(true, projection, sortOrder, null, spinnerCity);
-        return loaderCity;
+        return createLoader(true, projection, sortOrder, null, buttonCity);
     }
 
     private Loader<Cursor> createZipCodeLoader() {
@@ -177,8 +222,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses.COLUMN_NAME_ZIP
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_ZIP;
-        loaderZip = createLoader(true, projection, sortOrder, null, spinnerZip);
-        return loaderZip;
+        return createLoader(true, projection, sortOrder, null, buttonZip);
     }
 
     private Loader<Cursor> createStreetLoader() {
@@ -187,8 +231,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses.COLUMN_NAME_STREET
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_STREET;
-        loaderStreet = createLoader(true, projection, sortOrder, null, spinnerStreet);
-        return loaderStreet;
+        return createLoader(true, projection, sortOrder, null, buttonStreet);
     }
 
     private Loader<Cursor> createStreetNoLoader() {
@@ -198,13 +241,12 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_STREET_NO + "*1, " +
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO;
-        loaderStreetNo = createLoader(true, projection, sortOrder, null, spinnerStreetNo);
-        return loaderStreetNo;
+        return createLoader(true, projection, sortOrder, null, buttonStreetNo);
     }
 
-    private EGOCursorLoader createLoader(boolean distinct, String[] projection, String sortOrder, String limit, Spinner spinner) {
+    private EGOCursorLoader createLoader(boolean distinct, String[] projection, String sortOrder, String limit, Button button) {
         ArrayList<String> selectionArgs = new ArrayList<String>(4);
-        String selection = fillSelection(selectionArgs, spinner);
+        String selection = fillSelection(selectionArgs, button);
         String[] selectionArgArr = selectionArgs.toArray(new String[selectionArgs.size()]);
 
         EGOCursorLoader loader;
@@ -216,169 +258,178 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         return loader;
     }
 
-    private String fillSelection(ArrayList<String> selectionArgs, Spinner spinner) {
+    private String fillSelection(ArrayList<String> selectionArgs, Button button) {
         ArrayList<String> selectColumns = new ArrayList<String>(4);
-        Cursor c;
-        if (spinner != spinnerCity && spinnerCity.getSelectedItemPosition() > 0) {
-            c = (Cursor)spinnerCity.getSelectedItem();
-            if (c != null) {
-                selectColumns.add(EGOContract.Addresses.COLUMN_NAME_CITY);
-                selectionArgs.add(c.getString(1));
-            }
+        if (button != buttonCity && !buttonCity.getTypeface().isItalic()) {
+            selectColumns.add(EGOContract.Addresses.COLUMN_NAME_CITY);
+            selectionArgs.add((String)buttonCity.getText());
         }
-        if (spinner != spinnerZip && spinnerZip.getSelectedItemPosition() > 0) {
-            c = (Cursor)spinnerZip.getSelectedItem();
-            if (c != null) {
-                selectColumns.add(EGOContract.Addresses.COLUMN_NAME_ZIP);
-                selectionArgs.add(c.getString(1));
-            }
+        if (button != buttonZip && !buttonZip.getTypeface().isItalic()) {
+            selectColumns.add(EGOContract.Addresses.COLUMN_NAME_ZIP);
+            selectionArgs.add((String)buttonZip.getText());
         }
-        if (spinner != spinnerStreet && spinnerStreet.getSelectedItemPosition() > 0) {
-            c = (Cursor)spinnerStreet.getSelectedItem();
-            if (c != null) {
-                selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET);
-                selectionArgs.add(c.getString(1));
-            }
+        if (button != buttonStreet && !buttonStreet.getTypeface().isItalic()) {
+            selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET);
+            selectionArgs.add((String)buttonStreet.getText());
         }
-        if (spinner != spinnerStreetNo && spinnerStreetNo.getSelectedItemPosition() > 0) {
-            c = (Cursor)spinnerStreetNo.getSelectedItem();
-            if (c != null) {
-                selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET_NO);
-                selectionArgs.add(c.getString(1));
-            }
+        if (button != buttonStreetNo && !buttonStreetNo.getTypeface().isItalic()) {
+            selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET_NO);
+            selectionArgs.add((String)buttonStreetNo.getText());
         }
         return EGODbHelper.createSimpleSelection(selectColumns.toArray(new String[selectColumns.size()]), EGODbHelper.BooleanComposition.AND);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        AdapterView<?> adapterView = getAdapterViewForCursorLoader(cursorLoader);
-        CursorAdapter adapter;
-        if (adapterView instanceof Spinner) {
-            adapter = (CursorAdapter)((NothingSelectedSpinnerAdapter)adapterView.getAdapter()).getAdapter();
-            adapter.swapCursor(cursor);
-            String selectedItem = getStoredSelectedItem(adapterView);
+        CursorAdapter adapter = getAdapterForCursorLoader(cursorLoader);
+        adapter.swapCursor(cursor);
+
+        AlertDialog dialog = getDialogForAdapter(adapter);
+        if (dialog != null) {
+            String selectedItem = getStoredSelectedItem(dialog);
             if (selectedItem != null) {
-                // Set selection listener to null when changing selected item to avoid unnecessary second reload of all cursors
-                AdapterView.OnItemSelectedListener listener = adapterView.getOnItemSelectedListener();
-                adapterView.setOnItemSelectedListener(null);
-                findAndSelect(adapterView, selectedItem);
-                adapterView.setOnItemSelectedListener(listener);
+                findAndScroll(dialog, selectedItem);
             }
+        }
+    }
+
+    private CursorAdapter getAdapterForCursorLoader(Loader<Cursor> cursorLoader) {
+        CursorAdapter adapter;
+        if (cursorLoader.getId() == LOADER_RESULTS) {
+            return (CursorAdapter)listViewResults.getAdapter();
+        } else if (cursorLoader.getId() == LOADER_CITY) {
+            adapter = adapterMapping.get(alertDialogCity);
+        } else if (cursorLoader.getId() == LOADER_ZIP_CODE) {
+            adapter = adapterMapping.get(alertDialogZip);
+        } else if (cursorLoader.getId() == LOADER_STREET) {
+            adapter = adapterMapping.get(alertDialogStreet);
         } else {
-            adapter = (CursorAdapter)adapterView.getAdapter();
-            adapter.swapCursor(cursor);
+            adapter = adapterMapping.get(alertDialogStreetNo);
         }
+        return adapter;
     }
 
-    private String getSelectedItem(Spinner spinner) {
-        if (spinner.getSelectedItemPosition() > 0) {
-            Cursor c = (Cursor)spinner.getSelectedItem();
-            if (c != null) {
-                return c.getString(1);
+    private AlertDialog getDialogForAdapter(CursorAdapter adapter) {
+        for (Map.Entry<AlertDialog, CursorAdapter> entry : adapterMapping.entrySet()) {
+            if (entry.getValue() == adapter) {
+                return entry.getKey();
             }
         }
         return null;
     }
 
-    private String getStoredSelectedItem(AdapterView<?> spinner) {
-        if (spinner.equals(spinnerCity)) {
-            return spinnerCitySelected;
-        } else if (spinner.equals(spinnerZip)) {
-            return spinnerZipSelected;
-        } else if (spinner.equals(spinnerStreet)) {
-            return spinnerStreetSelected;
-        } else if (spinner.equals(spinnerStreetNo)) {
-            return spinnerStreetNoSelected;
+    private String getStoredSelectedItem(AlertDialog dialog) {
+        if (dialog == alertDialogCity) {
+            return selectedCity;
+        } else if (dialog == alertDialogZip) {
+            return selectedZip;
+        } else if (dialog == alertDialogStreet) {
+            return selectedStreet;
+        } else if (dialog == alertDialogStreetNo) {
+            return selectedStreetNo;
         }
         return null;
     }
 
-    private void findAndSelect(AdapterView<?> adapterView, String selectedItem) {
-        Spinner spinner = (Spinner)adapterView;
-        CursorAdapter adapter = (CursorAdapter)((NothingSelectedSpinnerAdapter)adapterView.getAdapter()).getAdapter();
+    private void findAndScroll(AlertDialog dialog, String selectedItem) {
+        ListView listView = dialog.getListView();
+        CursorAdapter adapter = adapterMapping.get(dialog);
         Cursor c = adapter.getCursor();
         while (c.moveToNext()) {
             if (c.getString(1).equals(selectedItem)) {
-                spinner.setSelection(c.getPosition() + NothingSelectedSpinnerAdapter.EXTRA);
+                listView.smoothScrollToPosition(c.getPosition());
                 return;
             }
         }
-        spinner.setSelection(0);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        AdapterView<?> adapterView = getAdapterViewForCursorLoader(cursorLoader);
-        CursorAdapter adapter;
-        if (adapterView instanceof Spinner) {
-            adapter = (CursorAdapter)((NothingSelectedSpinnerAdapter)adapterView.getAdapter()).getAdapter();
-        } else {
-            adapter = (CursorAdapter)adapterView.getAdapter();
-        }
+        CursorAdapter adapter = getAdapterForCursorLoader(cursorLoader);
         adapter.swapCursor(null);
     }
 
-    private AdapterView<?> getAdapterViewForCursorLoader(Loader<Cursor> cursorLoader) {
-        Spinner spinner;
-        if (cursorLoader.equals(loaderResult)) {
-            return listViewResults;
-        } else if (cursorLoader.equals(loaderCity)) {
-            spinner = spinnerCity;
-        } else if (cursorLoader.equals(loaderZip)) {
-            spinner = spinnerZip;
-        } else if (cursorLoader.equals(loaderStreet)) {
-            spinner = spinnerStreet;
-        } else {
-            spinner = spinnerStreetNo;
+    private void resetLoaders(Button button) {
+        getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
+        if (button != buttonCity) {
+            selectedCity = getFilter(button);
+            getLoaderManager().restartLoader(LOADER_CITY, null, AddressFragment.this);
         }
-        return spinner;
+        if (button != buttonZip) {
+            selectedZip = getFilter(buttonZip);
+            getLoaderManager().restartLoader(LOADER_ZIP_CODE, null, AddressFragment.this);
+        }
+        if (button != buttonStreet) {
+            selectedStreet = getFilter(buttonStreet);
+            getLoaderManager().restartLoader(LOADER_STREET, null, AddressFragment.this);
+        }
+        if (button != buttonStreetNo) {
+            selectedStreetNo = getFilter(buttonStreetNo);
+            getLoaderManager().restartLoader(LOADER_STREET_NO, null, AddressFragment.this);
+        }
+    }
+
+    private class FilterButtonOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (v == buttonCity) {
+                alertDialogCity.show();
+            } else if (v == buttonZip) {
+                alertDialogZip.show();
+            } else if (v == buttonStreet) {
+                alertDialogStreet.show();
+            } else {
+                alertDialogStreetNo.show();
+            }
+        }
     }
 
     private class ClearButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             if (v == imageButtonClearCity) {
-                spinnerCity.setSelection(0);
+                buttonCity.setText(R.string.address_view_city);
+                buttonCity.setTypeface(italicTypeface);
+                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                alertDialogCity.getListView().scrollTo(0, 0);
+                resetLoaders(buttonCity);
             } else if (v == imageButtonClearZip) {
-                spinnerZip.setSelection(0);
+                buttonZip.setText(R.string.address_view_zipcode);
+                buttonZip.setTypeface(italicTypeface);
+                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                alertDialogZip.getListView().scrollTo(0, 0);
+                resetLoaders(buttonZip);
             } else if (v == imageButtonClearStreet) {
-                spinnerStreet.setSelection(0);
+                buttonStreet.setText(R.string.address_view_street);
+                buttonStreet.setTypeface(italicTypeface);
+                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                alertDialogStreet.getListView().scrollTo(0, 0);
+                resetLoaders(buttonStreet);
             } else {
-                spinnerStreetNo.setSelection(0);
+                buttonStreetNo.setText(R.string.address_view_streetno);
+                buttonStreetNo.setTypeface(italicTypeface);
+                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                alertDialogStreetNo.getListView().scrollTo(0, 0);
+                resetLoaders(buttonStreetNo);
             }
         }
     }
 
-    private class SpinnerOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            resetLoaders((Spinner)parent);
+    private class FilterAlertDialogOnClickListener implements AlertDialog.OnClickListener {
+        private Button button;
+
+        private FilterAlertDialogOnClickListener(Button button) {
+            this.button = button;
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            resetLoaders((Spinner)parent);
-        }
-
-        private void resetLoaders(Spinner spinner) {
-            getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
-            if (spinner != spinnerCity) {
-                spinnerCitySelected = getSelectedItem(spinnerCity);
-                getLoaderManager().restartLoader(LOADER_CITY, null, AddressFragment.this);
-            }
-            if (spinner != spinnerZip) {
-                spinnerZipSelected = getSelectedItem(spinnerZip);
-                getLoaderManager().restartLoader(LOADER_ZIP_CODE, null, AddressFragment.this);
-            }
-            if (spinner != spinnerStreet) {
-                spinnerStreetSelected = getSelectedItem(spinnerStreet);
-                getLoaderManager().restartLoader(LOADER_STREET, null, AddressFragment.this);
-            }
-            if (spinner != spinnerStreetNo) {
-                spinnerStreetNoSelected = getSelectedItem(spinnerStreetNo);
-                getLoaderManager().restartLoader(LOADER_STREET_NO, null, AddressFragment.this);
-            }
+        public void onClick(DialogInterface dialog, int which) {
+            AlertDialog alertDialog = (AlertDialog)dialog;
+            Cursor c = (Cursor)alertDialog.getListView().getAdapter().getItem(which);
+            button.setText(c.getString(1));
+            button.setTypeface(normalTypeface);
+            button.setTextColor(getResources().getColor(android.R.color.black));
+            resetLoaders(button);
         }
     }
 }

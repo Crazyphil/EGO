@@ -5,6 +5,7 @@
 
     <!-- General error messages that may appear anywhere -->
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
+    <string name="button_ok">Verstanden.</string>
 
     <!-- Main Activity -->
     <string name="main_activity_action_data_management">Datenverwaltung</string>
@@ -20,6 +21,12 @@
     <string name="address_view_street">Straße</string>
     <string name="address_view_streetno">Hausnummer</string>
     <string name="address_view_results">Ergebnisse</string>
+    <string name="address_view_remove">Filter entfernen</string>
+
+    <!-- Map Fragment -->
+    <string name="map_view_gps">Meine Position</string>
+    <string name="map_view_nomaps_title">Kartenmaterial</string>
+    <string name="map_view_nomaps_text">Teile des Kartenmaterials konnten nicht geladen werden.\n\nFolgende Dateien werden benötigt:\n%1$s\n%2$s</string>
 
     <!-- Data Management Activity -->
     <string name="data_management_activity_title">Datenverwaltung</string>

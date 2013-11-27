@@ -24,92 +24,96 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <Spinner
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/address_spinnerCity"
-                android:prompt="@string/address_view_city"
-                android:layout_marginTop="@dimen/activity_element_margin"
-                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:id="@+id/address_buttonCity"
                 android:layout_column="1"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                style="@style/Widget.AppCompat.Base.Spinner"
+                android:textStyle="italic"
+                android:text="@string/address_view_city"
+                android:textColor="@android:color/secondary_text_light" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearCity"
-                android:layout_column="2"
-                android:src="@android:drawable/ic_input_delete" />
+                android:layout_column="5"
+                android:src="@android:drawable/ic_input_delete"
+                android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <Spinner
+            <Button
+                style="@style/Widget.AppCompat.Base.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/address_spinnerZip"
-                android:prompt="@string/address_view_zipcode"
-                android:layout_marginTop="@dimen/activity_element_margin"
-                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:id="@+id/address_buttonZip"
                 android:layout_column="1"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:textStyle="italic"
+                android:text="@string/address_view_zipcode"
+                android:textColor="@android:color/secondary_text_light" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearZip"
-                android:layout_column="2"
-                android:src="@android:drawable/ic_input_delete" />
+                android:layout_column="5"
+                android:src="@android:drawable/ic_input_delete"
+                android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <Spinner
+            <Button
+                style="@style/Widget.AppCompat.Base.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/address_spinnerStreet"
-                android:prompt="@string/address_view_street"
-                android:layout_marginTop="@dimen/activity_element_margin"
-                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:id="@+id/address_buttonStreet"
                 android:layout_column="1"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:textStyle="italic"
+                android:text="@string/address_view_street"
+                android:textColor="@android:color/secondary_text_light" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearStreet"
-                android:layout_column="2"
-                android:src="@android:drawable/ic_input_delete" />
+                android:layout_column="5"
+                android:src="@android:drawable/ic_input_delete"
+                android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <Spinner
+            <Button
+                style="@style/Widget.AppCompat.Base.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/address_spinnerStreetNo"
-                android:prompt="@string/address_view_streetno"
-                android:layout_marginTop="@dimen/activity_element_margin"
-                android:layout_marginBottom="@dimen/activity_element_margin"
+                android:id="@+id/address_buttonStreetNo"
                 android:layout_column="1"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical" />
+                android:textStyle="italic"
+                android:text="@string/address_view_streetno"
+                android:textColor="@android:color/secondary_text_light" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearStreetNo"
-                android:layout_column="2"
-                android:src="@android:drawable/ic_input_delete" />
+                android:layout_column="5"
+                android:src="@android:drawable/ic_input_delete"
+                android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
     </TableLayout>
