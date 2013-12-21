@@ -19,6 +19,7 @@ public class MainActivity extends ActionBarActivity {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, "addresses", AddressFragment.class)));
+        actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_map).setTabListener(new TabListener<MapFragment>(this, "map", MapFragment.class)));
 
         if (savedInstanceState != null) {
             actionBar.selectTab(actionBar.getTabAt(savedInstanceState.getInt("tab")));
