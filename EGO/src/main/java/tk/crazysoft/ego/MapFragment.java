@@ -23,11 +23,14 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import tk.crazysoft.ego.data.QuadTreeTileSource;
 import tk.crazysoft.ego.io.ExternalStorage;
@@ -38,8 +41,9 @@ public class MapFragment extends Fragment {
     private static final IGeoPoint DEFAULT_CENTER_POINT = new GeoPoint(48.54694331, 14.10540563);
 
     private MapView mapView;
+    private ImageButton imageButtonGPS, imageButtonDestination;
     private MyLocationNewOverlay gpsOverlay;
-    private ImageButton imageButtonGPS;
+    private ItemizedIconOverlay<OverlayItem> destinationOverlay;
     private boolean mapFileNotFoundDialogShown = false;
 
     @Override
@@ -57,6 +61,17 @@ public class MapFragment extends Fragment {
                     } else {
                         gpsOverlay.enableFollowLocation();
                     }
+                }
+            }
+        });
+
+        imageButtonDestination = (ImageButton)view.findViewById(R.id.map_imageButtonDestination);
+        imageButtonDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (destinationOverlay != null && destinationOverlay.size() > 0) {
+                    gpsOverlay.disableFollowLocation();
+                    mapView.getController().animateTo(destinationOverlay.getItem(0).getPoint());
                 }
             }
         });
@@ -84,7 +99,7 @@ public class MapFragment extends Fragment {
             }
         }
 
-        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 18, 256, ".jpg", "http://maps.wien.gv.at/basemap/geolandbasemap/");
+        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 17, 256, ".jpg", "http://maps.wien.gv.at/basemap/geolandbasemap/");
         ITileSource orthophotoSource = new QuadTreeTileSource("geoimage.at", ResourceProxy.string.offline_mode, 5, 17, 256, ".png", "http://srv.doris.at/arcgis/rest/services/");
 
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
@@ -99,8 +114,11 @@ public class MapFragment extends Fragment {
         TilesOverlay orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
         orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
         gpsOverlay = new MyLocationNewOverlay(view.getContext(), new GpsMyLocationProvider(view.getContext()), mapView);
+        destinationOverlay = new ItemizedIconOverlay<OverlayItem>(view.getContext(), new ArrayList<OverlayItem>(1), null);
+
         mapView.getOverlayManager().add(orthophotoOverlay);
         mapView.getOverlayManager().add(gpsOverlay);
+        mapView.getOverlayManager().add(destinationOverlay);
         mapView.setUseDataConnection(false);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -148,5 +166,16 @@ public class MapFragment extends Fragment {
             gpsOverlay.disableFollowLocation();
             gpsOverlay.disableMyLocation();
         }
+    }
+
+    public void setDestination(double latitude, double longitude, String title) {
+        if (destinationOverlay.size() > 0) {
+            destinationOverlay.removeAllItems();
+        }
+
+        OverlayItem destination = new OverlayItem(title, null, new GeoPoint(latitude, longitude));
+        destinationOverlay.addItem(destination);
+        mapView.getController().animateTo(destination.getPoint());
+        imageButtonDestination.setVisibility(View.VISIBLE);
     }
 }

@@ -1,5 +1,6 @@
 package tk.crazysoft.ego;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -39,11 +41,26 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     private HashMap<AlertDialog, CursorAdapter> adapterMapping = new HashMap<AlertDialog, CursorAdapter>(4);
     private Typeface normalTypeface, italicTypeface;
 
+    private OnAddressClickListener onAddressClickListener;
+
     private static final int LOADER_RESULTS = 0;
     private static final int LOADER_CITY = 1;
     private static final int LOADER_ZIP_CODE = 2;
     private static final int LOADER_STREET = 3;
     private static final int LOADER_STREET_NO = 4;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            onAddressClickListener = (OnAddressClickListener)activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnAddressClickListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,6 +123,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         listViewResults = (ListView)getView().findViewById(R.id.address_listViewResults);
         listViewResults.setAdapter(adapter);
         listViewResults.setEmptyView(progressBar);
+        listViewResults.setOnItemClickListener(new ResultsListOnItemClickListener());
 
         // Restore selected items after Activity is restarted
         if (selectedCity != null) {
@@ -369,6 +387,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    public interface OnAddressClickListener {
+        public void onAddressClick(long id);
+    }
+
     private class FilterButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -430,6 +452,13 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             button.setTypeface(normalTypeface);
             button.setTextColor(getResources().getColor(android.R.color.black));
             resetLoaders(button);
+        }
+    }
+
+    private class ResultsListOnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            onAddressClickListener.onAddressClick(id);
         }
     }
 }

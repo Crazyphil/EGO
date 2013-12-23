@@ -19,4 +19,17 @@
         android:src="@android:drawable/ic_menu_mylocation"
         android:contentDescription="@string/map_view_gps" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/map_imageButtonDestination"
+        android:layout_marginRight="@dimen/activity_element_margin"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:contentDescription="@string/map_view_gps"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:layout_toLeftOf="@+id/map_imageButtonGPS"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -9,8 +9,8 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -46,11 +46,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.crazysoft.ego.MainActivity" />
         </activity>
+        <activity
+            android:name="tk.crazysoft.ego.HouseActivity"
+            android:label="@string/house_activity_title"
+            android:parentActivityName="MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
 
         <service
             android:name="tk.crazysoft.ego.services.DataImportService"
             android:exported="false" />
-
     </application>
 
 </manifest>

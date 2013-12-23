@@ -14,13 +14,17 @@ public class EGOCursorLoader extends SimpleCursorLoader {
         this(context, table, null, null, null, null);
     }
 
-    public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder, boolean distinct) {
-        this(context, table, projection, selection, selectionArgs, sortOrder);
-        this.distinct = distinct;
+    public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs) {
+        this(context, table, projection, selection, selectionArgs, null);
     }
 
     public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         this(context, table, projection, selection, selectionArgs, sortOrder, null);
+    }
+
+    public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder, boolean distinct) {
+        this(context, table, projection, selection, selectionArgs, sortOrder);
+        this.distinct = distinct;
     }
 
     public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder, String limit) {

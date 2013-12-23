@@ -5,6 +5,7 @@
 
     <!-- General error messages that may appear anywhere -->
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
+    <string name="error_no_navigation_app">Es ist keine passende Navigations-App installiert. Bitte Administrator kontaktieren.</string>
     <string name="button_ok">Verstanden.</string>
 
     <!-- Main Activity -->
@@ -25,8 +26,17 @@
 
     <!-- Map Fragment -->
     <string name="map_view_gps">Meine Position</string>
+    <string name="map_view_destination">Ziel</string>
     <string name="map_view_nomaps_title">Kartenmaterial</string>
     <string name="map_view_nomaps_text">Teile des Kartenmaterials konnten nicht geladen werden.\n\nFolgende Dateien werden benötigt:\n%1$s\n%2$s</string>
+
+    <!-- House Fragment -->
+    <string name="house_view_navigate">Navigieren</string>
+    <string name="house_view_coordinate_north">N</string>
+    <string name="house_view_coordinate_east">O</string>
+    <string name="house_view_coordinate_south">S</string>
+    <string name="house_view_coordinate_west">W</string>
+    <string name="house_view_mapsheet">Kartenblatt %1$s</string>
 
     <!-- Data Management Activity -->
     <string name="data_management_activity_title">Datenverwaltung</string>
@@ -50,6 +60,9 @@
     <string name="about_activity_concept_text">Peter Grubmair</string>
     <string name="about_activity_development_header">Entwicklung</string>
     <string name="about_activity_development_text">Philipp Kapfer\nFlorian Helml</string>
+
+    <!-- House Activity -->
+    <string name="house_activity_title">Adressdetails</string>
 
     <!-- Data Import Service class -->
     <string name="service_dataimport_error_nosd">Es befindet sich keine SD-Karte im Gerät.</string>
