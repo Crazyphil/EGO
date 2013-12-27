@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.MapTileProviderArray;
 import org.osmdroid.tileprovider.modules.ArchiveFileFactory;
@@ -34,11 +33,11 @@ import java.util.ArrayList;
 
 import tk.crazysoft.ego.data.QuadTreeTileSource;
 import tk.crazysoft.ego.io.ExternalStorage;
+import tk.crazysoft.ego.preferences.Preferences;
 
 public class MapFragment extends Fragment {
     private static final String BASEMAP_PATH = "ego/karten/basemap.sqlite";
     private static final String ORTHOPHOTO_PATH = "ego/karten/orthofoto.sqlite";
-    private static final IGeoPoint DEFAULT_CENTER_POINT = new GeoPoint(48.54694331, 14.10540563);
 
     private MapView mapView;
     private ImageButton imageButtonGPS, imageButtonDestination;
@@ -142,10 +141,13 @@ public class MapFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Preferences preferences = new Preferences(getView().getContext());
+        GeoPoint defaultCenter = new GeoPoint(preferences.getMapLatitude(), preferences.getMapLongitude());
+
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
         mapView.getController().setZoom(17);
-        mapView.getController().setCenter(DEFAULT_CENTER_POINT);
+        mapView.getController().setCenter(defaultCenter);
         mapView.invalidate();
     }
 

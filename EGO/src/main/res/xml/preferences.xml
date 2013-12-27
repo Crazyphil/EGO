@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/preferences_activity_import_title"
+        android:key="pref_key_import">
+
+        <tk.crazysoft.ego.preferences.DataImportPreference
+            android:key="pref_key_import_addresses"
+            android:title="@string/preferences_activity_import_addresses_title"
+            android:summary="@string/preferences_activity_import_addresses_summary">
+
+            <intent android:action="tk.crazysoft.ego.services.IMPORT_ADDRESSES" />
+        </tk.crazysoft.ego.preferences.DataImportPreference>
+        <tk.crazysoft.ego.preferences.DataImportPreference
+            android:key="pref_key_import_hospitals"
+            android:title="@string/preferences_activity_import_hospitals_title"
+            android:summary="@string/preferences_activity_import_hospitals_summary">
+
+            <intent android:action="tk.crazysoft.ego.services.IMPORT_ADMITTANCES" />
+        </tk.crazysoft.ego.preferences.DataImportPreference>
+        <tk.crazysoft.ego.preferences.DataImportPreference
+            android:key="pref_key_import_doctors"
+            android:title="@string/preferences_activity_import_doctors_title"
+            android:summary="@string/preferences_activity_import_doctors_summary">
+
+            <intent android:action="tk.crazysoft.ego.services.IMPORT_STANDBY" />
+        </tk.crazysoft.ego.preferences.DataImportPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_activity_map_title"
+        android:key="pref_key_map">
+
+        <tk.crazysoft.ego.preferences.CoordinatePreference
+            android:key="pref_key_map_latitude"
+            android:title="@string/preferences_activity_map_latitude_title"
+            android:summary="@string/preferences_activity_map_latitude_summary"
+            android:defaultValue="48.46594215" />
+        <tk.crazysoft.ego.preferences.CoordinatePreference
+            android:key="pref_key_map_longitude"
+            android:title="@string/preferences_activity_map_longitude_title"
+            android:summary="@string/preferences_activity_map_longitude_summary"
+            android:defaultValue="14.16284773"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_activity_navigation_title"
+        android:key="pref_key_navigation">
+
+        <ListPreference
+            android:key="pref_key_navigation_api"
+            android:title="@string/preferences_activity_navigation_api_title"
+            android:summary="@string/preferences_activity_navigation_api_summary"
+            android:dialogTitle="@string/preferences_activity_navigation_api_title"
+            android:entries="@array/preferences_activity_navigation_api_entries"
+            android:entryValues="@array/preferences_activity_navigation_api_values"
+            android:defaultValue="@string/preferences_activity_navigation_api_default"/>
+    </PreferenceCategory>
+</PreferenceScreen>

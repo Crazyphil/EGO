@@ -38,20 +38,39 @@
     <string name="house_view_coordinate_west">W</string>
     <string name="house_view_mapsheet">Kartenblatt %1$s</string>
 
-    <!-- Data Management Activity -->
-    <string name="data_management_activity_title">Datenverwaltung</string>
-    <string name="data_management_activity_import">Daten importieren</string>
+    <!-- Preferences Activity -->
+    <string name="preferences_activity_title">Datenverwaltung</string>
 
-    <string-array name="data_management_import_titles">
-        <item>Adressen</item>
-        <item>Krankenhausaufnahmen</item>
-        <item>Bereitschaftsdienste</item>
+    <string name="preferences_activity_import_title">Daten importieren</string>
+    <string name="preferences_activity_import_addresses_title">Adressen</string>
+    <string name="preferences_activity_import_addresses_summary">aus %sego/import/adressen.csv</string>
+    <string name="preferences_activity_import_hospitals_title">Krankenhausaufnahmen</string>
+    <string name="preferences_activity_import_hospitals_summary">aus %sego/import/aufnahmen.csv</string>
+    <string name="preferences_activity_import_doctors_title">Bereitschaftsdienste</string>
+    <string name="preferences_activity_import_doctors_summary">aus %sego/import/bereitschaft.csv</string>
+
+    <string name="preferences_activity_map_title">Kartenansicht</string>
+    <string name="preferences_activity_map_latitude_title">Breitengrad</string>
+    <string name="preferences_activity_map_latitude_summary">Nördliche/Südliche Breite des standardmäßig auf der Karte zentrierten Ortes</string>
+    <string name="preferences_activity_map_longitude_title">Längengrad</string>
+    <string name="preferences_activity_map_longitude_summary">Östliche/Westliche Länge des standardmäßig auf der Karte zentrierten Ortes</string>
+
+    <string name="preferences_activity_navigation_title">Externe Navigations-App</string>
+    <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
+    <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
+    <string-array name="preferences_activity_navigation_api_entries">
+        <item>Geografischer Punkt</item>
+        <item>Google-Navigation (und kompatibel)</item>
+        <item>Google Maps</item>
+        <item>Navigon</item>
     </string-array>
-    <string-array name="data_management_import_descriptions">
-        <item>aus %sego/import/adressen.csv</item>
-        <item>aus %sego/import/aufnahmen.csv</item>
-        <item>aus %sego/import/bereitschaft.csv</item>
+    <string-array name="preferences_activity_navigation_api_values">
+        <item>geo</item>
+        <item>google.navigation</item>
+        <item>geo_q</item>
+        <item>navigon</item>
     </string-array>
+    <string name="preferences_activity_navigation_api_default">geo</string>
 
     <!-- About Activity -->
     <string name="about_activity_title">Über EGO</string>
@@ -70,5 +89,4 @@
     <string name="service_dataimport_error_readfail">Der Import ist fehlgeschlagen.</string>
     <string name="service_dataimport_result_import">%1$,d Einträge wurden importiert, %2$,d waren fehlerhaft.</string>
     <string name="service_dataimport_result_merge">%1$,d Straßen existieren in mehreren Gemeinden, %2$,d überschreiten Grenzen.</string>
-
 </resources>

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import tk.crazysoft.ego.components.TabListener;
+import tk.crazysoft.ego.preferences.Preferences;
 
 public class MainActivity extends ActionBarActivity implements AddressFragment.OnAddressClickListener {
     private static final String NAVIGON_PUBLIC_INTENT = "android.intent.action.navigon.START_PUBLIC";
@@ -25,6 +27,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize default preferences if the app is started for the first time
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -53,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_data_management) {
-            Intent dataManagementIntent = new Intent(this, DataManagementActivity.class);
+            Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
             startActivity(dataManagementIntent);
         } else if (item.getItemId() == R.id.action_about) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
@@ -70,15 +75,26 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     }
 
     public static void sendNavigationIntent(Activity activity, double latitude, double longitude) {
-        // Build the intent
-        //Uri location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f?q=%1$f,%2$f", latitude, longitude));
-        //Uri location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f", latitude, longitude));
-        Uri location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%1$f,%2$f", latitude, longitude));
-        Intent navIntent = new Intent(Intent.ACTION_VIEW, location);
+        String intentPreference = new Preferences(activity).getNavigationApi();
+        String[] options = activity.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
 
-        /*Intent navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
-        navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE, latitude);
-        navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE, longitude);*/
+        // Build the intent
+        Intent navIntent;
+        if (intentPreference.equals(options[3])) {  // navigon
+            navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
+            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE, latitude);
+            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE, longitude);
+        } else {
+            Uri location;
+            if (intentPreference.equals(options[2])) {  // geo_q
+                location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f?q=%1$f,%2$f", latitude, longitude));
+            } else if (intentPreference.equals(options[1])) {   // google.navigation
+                location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%1$f,%2$f", latitude, longitude));
+            } else {   // geo or unknown option
+                location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f", latitude, longitude));
+            }
+            navIntent = new Intent(Intent.ACTION_VIEW, location);
+        }
 
         // Verify it resolves
         PackageManager packageManager = activity.getPackageManager();

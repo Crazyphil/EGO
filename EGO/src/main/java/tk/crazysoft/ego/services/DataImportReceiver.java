@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.widget.Toast;
 
-import tk.crazysoft.ego.DataManagementActivity;
+import tk.crazysoft.ego.PreferencesActivity;
 import tk.crazysoft.ego.R;
 
 public class DataImportReceiver extends WakefulBroadcastReceiver {
-    private DataManagementActivity activity;
+    private PreferencesActivity activity;
 
-    public DataImportReceiver(DataManagementActivity activity) {
+    public DataImportReceiver(PreferencesActivity activity) {
         super();
         this.activity = activity;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        DataManagementActivity activity = this.activity;
+        PreferencesActivity activity = this.activity;
         String action = intent.getAction();
         if (action == null) {
             return;
