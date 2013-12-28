@@ -46,6 +46,7 @@ public class MapFragment extends Fragment {
     private boolean mapFileNotFoundDialogShown = false;
     private GeoPoint mapCenter;
     private int mapZoom;
+    private boolean followLocation = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class MapFragment extends Fragment {
         if (savedInstanceState != null) {
             mapCenter = savedInstanceState.getParcelable("center");
             mapZoom = savedInstanceState.getInt("zoom");
+            followLocation = savedInstanceState.getBoolean("follow");
         }
     }
 
@@ -180,8 +182,9 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (gpsOverlay != null) {
-            gpsOverlay.enableMyLocation();
+        gpsOverlay.enableMyLocation();
+        if (followLocation || mapCenter == null) {
+            gpsOverlay.enableFollowLocation();
         }
     }
 
@@ -189,10 +192,9 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        if (gpsOverlay != null) {
-            gpsOverlay.disableFollowLocation();
-            gpsOverlay.disableMyLocation();
-        }
+        followLocation = gpsOverlay.isFollowLocationEnabled();
+        gpsOverlay.disableFollowLocation();
+        gpsOverlay.disableMyLocation();
     }
 
     @Override
@@ -201,6 +203,7 @@ public class MapFragment extends Fragment {
 
         outState.putParcelable("center", (GeoPoint)mapView.getMapCenter());
         outState.putInt("zoom", mapView.getZoomLevel());
+        outState.putBoolean("follow", gpsOverlay.isFollowLocationEnabled());
     }
 
     @Override
@@ -209,12 +212,15 @@ public class MapFragment extends Fragment {
 
         mapCenter = (GeoPoint)mapView.getMapCenter();
         mapZoom = mapView.getZoomLevel();
-        mapView = null;
     }
 
     public void setDestination(double latitude, double longitude, String title) {
         if (destinationOverlay.size() > 0) {
             destinationOverlay.removeAllItems();
+        }
+
+        if (gpsOverlay.isFollowLocationEnabled()) {
+            gpsOverlay.disableFollowLocation();
         }
 
         OverlayItem destination = new OverlayItem(title, null, new GeoPoint(latitude, longitude));
