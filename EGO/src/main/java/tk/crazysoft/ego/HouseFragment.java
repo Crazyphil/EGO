@@ -36,7 +36,9 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         View view = inflater.inflate(R.layout.house_view, container, false);
         if (savedInstanceState == null) {
             mapFragment = new MapFragment();
-            getChildFragmentManager().beginTransaction().add(R.id.house_mapContainer, mapFragment).commit();
+            getChildFragmentManager().beginTransaction().add(R.id.house_mapContainer, mapFragment, "map").commit();
+        } else {
+            mapFragment = (MapFragment)getChildFragmentManager().findFragmentByTag("map");
         }
 
         buttonNavigate = (Button)view.findViewById(R.id.house_buttonNavigate);

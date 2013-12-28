@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PreferencesActivity"
+            android:name="tk.crazysoft.ego.PreferencesActivity"
             android:label="@string/preferences_activity_title"
             android:parentActivityName="tk.crazysoft.ego.MainActivity" >
             <meta-data
@@ -52,7 +52,7 @@
             android:parentActivityName="tk.crazysoft.ego.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+                android:value="tk.crazysoft.ego.MainActivity" />
         </activity>
 
         <service

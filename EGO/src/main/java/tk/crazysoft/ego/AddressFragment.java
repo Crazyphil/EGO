@@ -70,14 +70,14 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState != null) {
             selectedCity = savedInstanceState.getString("city");
             selectedZip = savedInstanceState.getString("zip");
             selectedStreet = savedInstanceState.getString("street");
             selectedStreetNo = savedInstanceState.getString("streetNo");
         }
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         buttonStreet = (Button)getView().findViewById(R.id.address_buttonStreet);
         buttonStreetNo = (Button)getView().findViewById(R.id.address_buttonStreetNo);
 
-        italicTypeface = buttonCity.getTypeface();
+        italicTypeface = Typeface.create(buttonCity.getTypeface(), Typeface.ITALIC);
         normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
 
         buttonCity.setOnClickListener(new FilterButtonOnClickListener());
@@ -134,17 +134,17 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         if (selectedZip != null) {
             buttonZip.setText(selectedZip);
             buttonZip.setTypeface(normalTypeface);
-            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+            buttonZip.setTextColor(getResources().getColor(android.R.color.black));
         }
         if (selectedStreet != null) {
             buttonStreet.setText(selectedStreet);
             buttonStreet.setTypeface(normalTypeface);
-            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+            buttonStreet.setTextColor(getResources().getColor(android.R.color.black));
         }
         if (selectedStreetNo != null) {
             buttonStreetNo.setText(selectedStreetNo);
             buttonStreetNo.setTypeface(normalTypeface);
-            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+            buttonStreetNo.setTextColor(getResources().getColor(android.R.color.black));
         }
 
         getLoaderManager().initLoader(LOADER_RESULTS, null, this);
@@ -152,6 +152,16 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(LOADER_ZIP_CODE, null, this);
         getLoaderManager().initLoader(LOADER_STREET, null, this);
         getLoaderManager().initLoader(LOADER_STREET_NO, null, this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("city", getFilter(buttonCity));
+        outState.putString("zip", getFilter(buttonZip));
+        outState.putString("street", getFilter(buttonStreet));
+        outState.putString("streetNo", getFilter(buttonStreetNo));
     }
 
     private AlertDialog buildFilterAlertDialog(Button button, int titleRes, String column, boolean index) {
@@ -171,18 +181,8 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         return dialog;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString("city", getFilter(buttonCity));
-        outState.putString("zip", getFilter(buttonZip));
-        outState.putString("street", getFilter(buttonStreet));
-        outState.putString("streetNo", getFilter(buttonStreetNo));
-    }
-
     private String getFilter(Button button) {
-        if (button.getTypeface().isItalic()) {
+        if (!button.getTypeface().isItalic()) {
             return (String)button.getText();
         }
         return null;
@@ -369,20 +369,22 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
 
     private void resetLoaders(Button button) {
         getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
+
+        selectedCity = getFilter(buttonCity);
+        selectedZip = getFilter(buttonZip);
+        selectedStreet = getFilter(buttonStreet);
+        selectedStreetNo = getFilter(buttonStreetNo);
+
         if (button != buttonCity) {
-            selectedCity = getFilter(button);
             getLoaderManager().restartLoader(LOADER_CITY, null, AddressFragment.this);
         }
         if (button != buttonZip) {
-            selectedZip = getFilter(buttonZip);
             getLoaderManager().restartLoader(LOADER_ZIP_CODE, null, AddressFragment.this);
         }
         if (button != buttonStreet) {
-            selectedStreet = getFilter(buttonStreet);
             getLoaderManager().restartLoader(LOADER_STREET, null, AddressFragment.this);
         }
         if (button != buttonStreetNo) {
-            selectedStreetNo = getFilter(buttonStreetNo);
             getLoaderManager().restartLoader(LOADER_STREET_NO, null, AddressFragment.this);
         }
     }
@@ -418,19 +420,19 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             } else if (v == imageButtonClearZip) {
                 buttonZip.setText(R.string.address_view_zipcode);
                 buttonZip.setTypeface(italicTypeface);
-                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonZip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogZip.getListView().scrollTo(0, 0);
                 resetLoaders(buttonZip);
             } else if (v == imageButtonClearStreet) {
                 buttonStreet.setText(R.string.address_view_street);
                 buttonStreet.setTypeface(italicTypeface);
-                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonStreet.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogStreet.getListView().scrollTo(0, 0);
                 resetLoaders(buttonStreet);
             } else {
                 buttonStreetNo.setText(R.string.address_view_streetno);
                 buttonStreetNo.setTypeface(italicTypeface);
-                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonStreetNo.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogStreetNo.getListView().scrollTo(0, 0);
                 resetLoaders(buttonStreetNo);
             }

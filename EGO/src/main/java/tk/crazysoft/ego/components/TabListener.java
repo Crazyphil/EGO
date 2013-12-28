@@ -1,14 +1,14 @@
 package tk.crazysoft.ego.components;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
 public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 
     private Fragment mFragment;
-    private final Activity mActivity;
+    private final ActionBarActivity mActivity;
     private final String mTag;
     private final Class<T> mClass;
 
@@ -17,10 +17,20 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
      * @param tag  The identifier tag for the fragment
      * @param clz  The fragment's Class, used to instantiate the fragment
      */
-    public TabListener(Activity activity, String tag, Class<T> clz) {
+    public TabListener(ActionBarActivity activity, String tag, Class<T> clz) {
         mActivity = activity;
         mTag = tag;
         mClass = clz;
+
+        // Check to see if we already have a fragment for this tab, probably
+        // from a previously saved state.  If so, deactivate it, because our
+        // initial state is that a tab isn't shown.
+        mFragment = mActivity.getSupportFragmentManager().findFragmentByTag(mTag);
+        if (mFragment != null && !mFragment.isDetached()) {
+            FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+            ft.detach(mFragment);
+            ft.commit();
+        }
     }
 
     /* The following are each of the ActionBar.TabListener callbacks */
