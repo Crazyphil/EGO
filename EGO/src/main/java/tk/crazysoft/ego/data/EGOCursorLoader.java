@@ -3,6 +3,7 @@ package tk.crazysoft.ego.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 public class EGOCursorLoader extends SimpleCursorLoader {
     SQLiteDatabase db;
@@ -30,19 +31,34 @@ public class EGOCursorLoader extends SimpleCursorLoader {
     public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder, String limit) {
         super(context, projection, selection, selectionArgs, sortOrder);
         EGODbHelper helper = new EGODbHelper(context);
-        db = helper.getReadableDatabase();
+
+        try {
+            db = helper.getReadableDatabase();
+        } catch (SQLiteException e) {
+            db = null;
+        }
+
         this.table = table;
         this.limit = limit;
     }
 
+    public boolean isDbReady() {
+        return db != null;
+    }
+
     @Override
     public Cursor loadInBackground() {
-        return db.query(distinct, table, getProjection(), getSelection(), getSelectionArgs(), null, null, getSortOrder(), limit);
+        if (isDbReady()) {
+            return db.query(distinct, table, getProjection(), getSelection(), getSelectionArgs(), null, null, getSortOrder(), limit);
+        }
+        return null;
     }
 
     @Override
     protected void finalize() throws Throwable {
-        db.close();
+        if (isDbReady()) {
+            db.close();
+        }
         super.finalize();
     }
 }

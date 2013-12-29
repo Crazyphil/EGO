@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import tk.crazysoft.ego.PreferencesActivity;
 import tk.crazysoft.ego.R;
+import tk.crazysoft.ego.data.AddressImporter;
 
 public class DataImportReceiver extends WakefulBroadcastReceiver {
     private PreferencesActivity activity;
@@ -42,15 +43,18 @@ public class DataImportReceiver extends WakefulBroadcastReceiver {
             }
             String message = String.format((String)context.getResources().getText(R.string.service_dataimport_result_import), counts[0], counts[1]);
             Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
-        } else if (action.equals(DataImportService.BROADCAST_RESULT_MERGE)) {
+        } else if (action.equals(DataImportService.BROADCAST_RESULT_POSTPROCESS)) {
             activity.setManagementProgressBarVisibility(false);
 
             int[] counts = intent.getIntArrayExtra(DataImportService.EXTRA_RESULT_COUNTS);
             if (counts == null || counts.length != 2) {
                 return;
             }
-            String message = String.format((String)context.getResources().getText(R.string.service_dataimport_result_merge), counts[0], counts[1]);
-            Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
+
+            if (intent.getStringExtra(AddressImporter.ADDRESS_IMPORTER_POSTPOCESS_ACTION) != null) {
+                String message = String.format((String)context.getResources().getText(R.string.service_dataimport_result_merge), counts[0], counts[1]);
+                Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

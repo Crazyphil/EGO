@@ -36,7 +36,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
         importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
         importFilter.addAction(DataImportService.BROADCAST_RESULT_IMPORT);
-        importFilter.addAction(DataImportService.BROADCAST_RESULT_MERGE);
+        importFilter.addAction(DataImportService.BROADCAST_RESULT_POSTPROCESS);
         importReceiver = new DataImportReceiver(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(importReceiver, importFilter);
     }
