@@ -169,7 +169,20 @@ public class DataImportService extends IntentService {
                 rdr.close();
             } catch (Exception e) { }
             db.endTransaction();
+            db.close();
         }
+    }
+
+    private boolean insertAddress(double latitude, double longitude, String zipCode, String city, String street, String streetno, String mapsheet) {
+        ContentValues values = new ContentValues();
+        values.put(EGOContract.Addresses.COLUMN_NAME_LATITUDE, latitude);
+        values.put(EGOContract.Addresses.COLUMN_NAME_LONGITUDE, longitude);
+        values.put(EGOContract.Addresses.COLUMN_NAME_ZIP, zipCode);
+        values.put(EGOContract.Addresses.COLUMN_NAME_CITY, city);
+        values.put(EGOContract.Addresses.COLUMN_NAME_STREET, street);
+        values.put(EGOContract.Addresses.COLUMN_NAME_STREET_NO, streetno);
+        values.put(EGOContract.Addresses.COLUMN_NAME_MAP_SHEET, mapsheet);
+        return db.insert(EGOContract.Addresses.TABLE_NAME, null, values) > -1;
     }
 
     private void mergeStreets() {
@@ -284,18 +297,6 @@ public class DataImportService extends IntentService {
         ProjCoordinate target = new ProjCoordinate();
         target = projection.transform(src, target);
         return target;
-    }
-
-    private boolean insertAddress(double latitude, double longitude, String zipCode, String city, String street, String streetno, String mapsheet) {
-        ContentValues values = new ContentValues();
-        values.put(EGOContract.Addresses.COLUMN_NAME_LATITUDE, latitude);
-        values.put(EGOContract.Addresses.COLUMN_NAME_LONGITUDE, longitude);
-        values.put(EGOContract.Addresses.COLUMN_NAME_ZIP, zipCode);
-        values.put(EGOContract.Addresses.COLUMN_NAME_CITY, city);
-        values.put(EGOContract.Addresses.COLUMN_NAME_STREET, street);
-        values.put(EGOContract.Addresses.COLUMN_NAME_STREET_NO, streetno);
-        values.put(EGOContract.Addresses.COLUMN_NAME_MAP_SHEET, mapsheet);
-        return db.insert(EGOContract.Addresses.TABLE_NAME, null, values) > -1;
     }
 
     private void reportError(String message) {

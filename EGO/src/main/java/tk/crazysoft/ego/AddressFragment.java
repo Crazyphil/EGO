@@ -25,7 +25,6 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGOCursorAdapter;
@@ -36,6 +35,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     private Button buttonCity, buttonZip, buttonStreet, buttonStreetNo;
     private AlertDialog alertDialogCity, alertDialogZip, alertDialogStreet, alertDialogStreetNo;
     private String selectedCity, selectedZip, selectedStreet, selectedStreetNo;
+    private boolean cityHasData, zipHasData, streetHasData, streetNoHasData;
     private ImageButton imageButtonClearCity, imageButtonClearZip, imageButtonClearStreet, imageButtonClearStreetNo;
     private ListView listViewResults;
     private HashMap<AlertDialog, CursorAdapter> adapterMapping = new HashMap<AlertDialog, CursorAdapter>(4);
@@ -72,9 +72,13 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     public void onActivityCreated(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             selectedCity = savedInstanceState.getString("city");
+            cityHasData = selectedCity != null;
             selectedZip = savedInstanceState.getString("zip");
+            zipHasData = selectedZip != null;
             selectedStreet = savedInstanceState.getString("street");
+            streetHasData = selectedStreet != null;
             selectedStreetNo = savedInstanceState.getString("streetNo");
+            streetNoHasData = selectedStreetNo != null;
         }
 
         super.onActivityCreated(savedInstanceState);
@@ -126,24 +130,24 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         listViewResults.setOnItemClickListener(new ResultsListOnItemClickListener());
 
         // Restore selected items after Activity is restarted
-        if (selectedCity != null) {
+        if (cityHasData) {
             buttonCity.setText(selectedCity);
-            buttonCity.setTypeface(normalTypeface);
+            buttonCity.setTypeface(normalTypeface, Typeface.NORMAL);
             buttonCity.setTextColor(getResources().getColor(android.R.color.black));
         }
-        if (selectedZip != null) {
+        if (zipHasData) {
             buttonZip.setText(selectedZip);
-            buttonZip.setTypeface(normalTypeface);
+            buttonZip.setTypeface(normalTypeface, Typeface.NORMAL);
             buttonZip.setTextColor(getResources().getColor(android.R.color.black));
         }
-        if (selectedStreet != null) {
+        if (streetHasData) {
             buttonStreet.setText(selectedStreet);
-            buttonStreet.setTypeface(normalTypeface);
+            buttonStreet.setTypeface(normalTypeface, Typeface.NORMAL);
             buttonStreet.setTextColor(getResources().getColor(android.R.color.black));
         }
-        if (selectedStreetNo != null) {
+        if (streetNoHasData) {
             buttonStreetNo.setText(selectedStreetNo);
-            buttonStreetNo.setTypeface(normalTypeface);
+            buttonStreetNo.setTypeface(normalTypeface, Typeface.NORMAL);
             buttonStreetNo.setTextColor(getResources().getColor(android.R.color.black));
         }
 
@@ -158,10 +162,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("city", getFilter(buttonCity));
-        outState.putString("zip", getFilter(buttonZip));
-        outState.putString("street", getFilter(buttonStreet));
-        outState.putString("streetNo", getFilter(buttonStreetNo));
+        outState.putString("city", getFilter(buttonCity, cityHasData));
+        outState.putString("zip", getFilter(buttonZip, zipHasData));
+        outState.putString("street", getFilter(buttonStreet, streetHasData));
+        outState.putString("streetNo", getFilter(buttonStreetNo, streetHasData));
     }
 
     private AlertDialog buildFilterAlertDialog(Button button, int titleRes, String column, boolean index) {
@@ -181,8 +185,8 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         return dialog;
     }
 
-    private String getFilter(Button button) {
-        if (!button.getTypeface().isItalic()) {
+    private String getFilter(Button button, boolean hasData) {
+        if (hasData) {
             return (String)button.getText();
         }
         return null;
@@ -278,21 +282,21 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
 
     private String fillSelection(ArrayList<String> selectionArgs, Button button) {
         ArrayList<String> selectColumns = new ArrayList<String>(4);
-        if (button != buttonCity && !buttonCity.getTypeface().isItalic()) {
+        if (button != buttonCity && cityHasData) {
             selectColumns.add(EGOContract.Addresses.COLUMN_NAME_CITY);
-            selectionArgs.add((String)buttonCity.getText());
+            selectionArgs.add(selectedCity);
         }
-        if (button != buttonZip && !buttonZip.getTypeface().isItalic()) {
+        if (button != buttonZip && zipHasData) {
             selectColumns.add(EGOContract.Addresses.COLUMN_NAME_ZIP);
-            selectionArgs.add((String)buttonZip.getText());
+            selectionArgs.add(selectedZip);
         }
-        if (button != buttonStreet && !buttonStreet.getTypeface().isItalic()) {
+        if (button != buttonStreet && streetHasData) {
             selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET);
-            selectionArgs.add((String)buttonStreet.getText());
+            selectionArgs.add(selectedStreet);
         }
-        if (button != buttonStreetNo && !buttonStreetNo.getTypeface().isItalic()) {
+        if (button != buttonStreetNo && streetNoHasData) {
             selectColumns.add(EGOContract.Addresses.COLUMN_NAME_STREET_NO);
-            selectionArgs.add((String)buttonStreetNo.getText());
+            selectionArgs.add(selectedStreetNo);
         }
         return EGODbHelper.createSimpleSelection(selectColumns.toArray(new String[selectColumns.size()]), EGODbHelper.BooleanComposition.AND);
     }
@@ -301,14 +305,6 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         CursorAdapter adapter = getAdapterForCursorLoader(cursorLoader);
         adapter.swapCursor(cursor);
-
-        AlertDialog dialog = getDialogForAdapter(adapter);
-        if (dialog != null) {
-            String selectedItem = getStoredSelectedItem(dialog);
-            if (selectedItem != null) {
-                findAndScroll(dialog, selectedItem);
-            }
-        }
     }
 
     private CursorAdapter getAdapterForCursorLoader(Loader<Cursor> cursorLoader) {
@@ -327,53 +323,29 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         return adapter;
     }
 
-    private AlertDialog getDialogForAdapter(CursorAdapter adapter) {
-        for (Map.Entry<AlertDialog, CursorAdapter> entry : adapterMapping.entrySet()) {
-            if (entry.getValue() == adapter) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
-    private String getStoredSelectedItem(AlertDialog dialog) {
-        if (dialog == alertDialogCity) {
-            return selectedCity;
-        } else if (dialog == alertDialogZip) {
-            return selectedZip;
-        } else if (dialog == alertDialogStreet) {
-            return selectedStreet;
-        } else if (dialog == alertDialogStreetNo) {
-            return selectedStreetNo;
-        }
-        return null;
-    }
-
-    private void findAndScroll(AlertDialog dialog, String selectedItem) {
-        ListView listView = dialog.getListView();
-        CursorAdapter adapter = adapterMapping.get(dialog);
-        Cursor c = adapter.getCursor();
-        while (c.moveToNext()) {
-            if (c.getString(1).equals(selectedItem)) {
-                listView.smoothScrollToPosition(c.getPosition());
-                return;
-            }
-        }
-    }
-
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         CursorAdapter adapter = getAdapterForCursorLoader(cursorLoader);
         adapter.swapCursor(null);
     }
 
-    private void resetLoaders(Button button) {
-        getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
+    private void resetLoaders(Button button, boolean hasData) {
+        if (button == buttonCity) {
+            cityHasData = hasData;
+        } else if (button == buttonZip) {
+            zipHasData = hasData;
+        } else if (button == buttonStreet) {
+            streetHasData = hasData;
+        } else if (button == buttonStreetNo) {
+            streetNoHasData = hasData;
+        }
 
-        selectedCity = getFilter(buttonCity);
-        selectedZip = getFilter(buttonZip);
-        selectedStreet = getFilter(buttonStreet);
-        selectedStreetNo = getFilter(buttonStreetNo);
+        selectedCity = getFilter(buttonCity, cityHasData);
+        selectedZip = getFilter(buttonZip, zipHasData);
+        selectedStreet = getFilter(buttonStreet, streetHasData);
+        selectedStreetNo = getFilter(buttonStreetNo, streetNoHasData);
+
+        getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
 
         if (button != buttonCity) {
             getLoaderManager().restartLoader(LOADER_CITY, null, AddressFragment.this);
@@ -398,12 +370,32 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         public void onClick(View v) {
             if (v == buttonCity) {
                 alertDialogCity.show();
+                findAndScroll(alertDialogCity, selectedCity);
             } else if (v == buttonZip) {
                 alertDialogZip.show();
+                findAndScroll(alertDialogZip, selectedZip);
             } else if (v == buttonStreet) {
                 alertDialogStreet.show();
+                findAndScroll(alertDialogStreet, selectedStreet);
             } else {
                 alertDialogStreetNo.show();
+                findAndScroll(alertDialogStreetNo, selectedStreetNo);
+            }
+        }
+
+        private void findAndScroll(AlertDialog dialog, String selectedItem) {
+            if (selectedItem == null) {
+                return;
+            }
+
+            ListView listView = dialog.getListView();
+            CursorAdapter adapter = adapterMapping.get(dialog);
+            Cursor c = adapter.getCursor();
+            while (c.moveToNext()) {
+                if (c.getString(1).equals(selectedItem)) {
+                    listView.setSelection(c.getPosition());
+                    return;
+                }
             }
         }
     }
@@ -413,28 +405,28 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         public void onClick(View v) {
             if (v == imageButtonClearCity) {
                 buttonCity.setText(R.string.address_view_city);
-                buttonCity.setTypeface(italicTypeface);
+                buttonCity.setTypeface(italicTypeface, Typeface.ITALIC);
                 buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogCity.getListView().scrollTo(0, 0);
-                resetLoaders(buttonCity);
+                resetLoaders(buttonCity, false);
             } else if (v == imageButtonClearZip) {
                 buttonZip.setText(R.string.address_view_zipcode);
-                buttonZip.setTypeface(italicTypeface);
+                buttonZip.setTypeface(italicTypeface, Typeface.ITALIC);
                 buttonZip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogZip.getListView().scrollTo(0, 0);
-                resetLoaders(buttonZip);
+                resetLoaders(buttonZip, false);
             } else if (v == imageButtonClearStreet) {
                 buttonStreet.setText(R.string.address_view_street);
-                buttonStreet.setTypeface(italicTypeface);
+                buttonStreet.setTypeface(italicTypeface, Typeface.ITALIC);
                 buttonStreet.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogStreet.getListView().scrollTo(0, 0);
-                resetLoaders(buttonStreet);
+                resetLoaders(buttonStreet, false);
             } else {
                 buttonStreetNo.setText(R.string.address_view_streetno);
-                buttonStreetNo.setTypeface(italicTypeface);
+                buttonStreetNo.setTypeface(italicTypeface, Typeface.ITALIC);
                 buttonStreetNo.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
                 alertDialogStreetNo.getListView().scrollTo(0, 0);
-                resetLoaders(buttonStreetNo);
+                resetLoaders(buttonStreetNo, false);
             }
         }
     }
@@ -451,9 +443,9 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             AlertDialog alertDialog = (AlertDialog)dialog;
             Cursor c = (Cursor)alertDialog.getListView().getAdapter().getItem(which);
             button.setText(c.getString(1));
-            button.setTypeface(normalTypeface);
+            button.setTypeface(normalTypeface, Typeface.NORMAL);
             button.setTextColor(getResources().getColor(android.R.color.black));
-            resetLoaders(button);
+            resetLoaders(button, true);
         }
     }
 
