@@ -47,8 +47,7 @@ public final class EGOContract {
     public static abstract class HospitalAdmission implements BaseColumns {
         public static final String TABLE_NAME = "hospital_admission";
         public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_TIME_FROM = "timefrom";
-        public static final String COLUMN_NAME_TIME_TO = "timeto";
+        public static final String COLUMN_NAME_TAKEOVER_TIME = "takeovertime";
         public static final String COLUMN_NAME_HOSPITAL_NAME = "hospitalname";
     }
 
@@ -77,8 +76,7 @@ public final class EGOContract {
             "CREATE TABLE " + HospitalAdmission.TABLE_NAME + " (" +
                     HospitalAdmission._ID + " INTEGER PRIMARY KEY, " +
                     HospitalAdmission.COLUMN_NAME_DATE + " NUMERIC, " +
-                    HospitalAdmission.COLUMN_NAME_TIME_FROM + " INTEGER, " +
-                    HospitalAdmission.COLUMN_NAME_TIME_TO + " INTEGER, " +
+                    HospitalAdmission.COLUMN_NAME_TAKEOVER_TIME + " INTEGER, " +
                     HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " TEXT)";
     public static final String SQL_DELETE_HOSPITAL_ADMISSION =
             "DROP TABLE IF EXISTS " + HospitalAdmission.TABLE_NAME;

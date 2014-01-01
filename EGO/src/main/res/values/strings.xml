@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Einsatz-Gesamtorganisation</string>
+    <string name="app_name">EGO</string>
 
     <!-- General error messages that may appear anywhere -->
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
@@ -36,7 +36,7 @@
     <string name="house_view_coordinate_east">O</string>
     <string name="house_view_coordinate_south">S</string>
     <string name="house_view_coordinate_west">W</string>
-    <string name="house_view_mapsheet">Kartenblatt %1$s</string>
+    <string name="house_view_mapsheet">Kartenblatt %s</string>
 
     <!-- Preferences Activity -->
     <string name="preferences_activity_title">Datenverwaltung</string>
@@ -72,9 +72,12 @@
     </string-array>
     <string name="preferences_activity_navigation_api_default">geo</string>
 
+    <string name="preferences_activity_hospitals_doctors_takeover_title">Übernahme der Krankenhausaufnahme</string>
+    <string name="preferences_activity_hospitals_doctors_takeover_summary">Das Aufnahmekrankenhaus wechselt täglich um %1$02d:%2$02d Uhr</string>
+
     <!-- About Activity -->
     <string name="about_activity_title">Über EGO</string>
-    <string name="about_activity_header">Ein Projekt der Ortsstelle\nSt. Veit im Mühlkreis</string>
+    <string name="about_activity_header">Einsatz-Gesamtorganisation\n\nEin Projekt der Ortsstelle\nSt. Veit im Mühlkreis</string>
     <string name="about_activity_concept_header">Konzept</string>
     <string name="about_activity_concept_text">Peter Grubmair</string>
     <string name="about_activity_development_header">Entwicklung</string>

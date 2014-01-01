@@ -8,6 +8,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 
 import tk.crazysoft.ego.io.ExternalStorage;
@@ -94,6 +95,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (key.equals(Preferences.PREFERENCE_NAVIGATION_API)) {
             ListPreference apiPreference = (ListPreference)getPreferenceScreen().findPreference(key);
             pref.setSummary(getResources().getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+        } else if (key.equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER)) {
+            ((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
         }
     }
 }

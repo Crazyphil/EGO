@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import tk.crazysoft.ego.R;
 import tk.crazysoft.ego.data.AddressImporter;
+import tk.crazysoft.ego.data.AdmittanceImporter;
 import tk.crazysoft.ego.data.EGODbHelper;
 import tk.crazysoft.ego.data.Importer;
 import tk.crazysoft.ego.io.ExternalStorage;
@@ -53,10 +54,11 @@ public class DataImportService extends IntentService {
             Importer importer = null;
             String path = "";
             if (action.equals(ACTION_IMPORT_ADDRESSES)) {
-                importer = new AddressImporter();
+                importer = new AddressImporter(this);
                 path = ADDRESSES_PATH;
             } else if (action.equals(ACTION_IMPORT_HOSPITAL_ADMITTANCES)) {
-                // TODO: Import hospital admittances
+                importer = new AdmittanceImporter(this);
+                path = ADMITTANCES_PATH;
             } else if (action.equals(ACTION_IMPORT_DOCTOR_STANDBY)) {
                 // TODO: Import doctors on standby
             }
@@ -129,11 +131,11 @@ public class DataImportService extends IntentService {
             String line = rdr.readLine();
             while (line != null) {
                 String[] fields = csvPattern.split(line);
-                if (!fields[0].startsWith(CSV_COMMENT)) {
+                if (fields.length > 0 && !fields[0].startsWith(CSV_COMMENT)) {
                     int result = importer.process(fields);
-                    if (result >= 0) {
+                    if (result != Importer.PROCESS_IGNORED) {
                         numEntries++;
-                        if (result > 0) {
+                        if (result == Importer.PROCESS_ERROR) {
                             failedEntries++;
                         }
                     }
@@ -164,6 +166,7 @@ public class DataImportService extends IntentService {
             if (db.inTransaction()) {
                 db.endTransaction();
             }
+            db.close();
         }
     }
 

@@ -1,17 +1,24 @@
 package tk.crazysoft.ego.data;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.regex.Pattern;
 
 public abstract class Importer {
+    public static final int PROCESS_SUCCESS = 0, PROCESS_IGNORED = -1, PROCESS_ERROR = 1;
+
+    private Context context;
     private SQLiteDatabase db;
     private Pattern csvTrimPattern;
     private OnProgressListener listener;
 
-    public Importer() { }
+    public Importer(Context context) {
+        this(context, null);
+    }
 
-    public Importer(SQLiteDatabase db) {
+    public Importer(Context context, SQLiteDatabase db) {
+        this.context = context;
         this.db = db;
     }
 
@@ -54,6 +61,10 @@ public abstract class Importer {
             throw new IllegalStateException("The database must be set before calling any processing method");
         }
         return db;
+    }
+
+    protected Context getContext() {
+        return context;
     }
 
     public interface OnProgressListener {

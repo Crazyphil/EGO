@@ -1,6 +1,7 @@
 package tk.crazysoft.ego.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
@@ -31,6 +32,10 @@ public class AddressImporter extends Importer {
     private AddressColumns columns;
     private CoordinateTransform projection;
 
+    public AddressImporter(Context context) {
+        super(context);
+    }
+
     @Override
     public void preProcess() {
         getDatabase().delete(EGOContract.Addresses.TABLE_NAME, null, null);
@@ -40,7 +45,7 @@ public class AddressImporter extends Importer {
     public int process(String[] line) {
         if (columns == null) {
             columns = findAddressColumnPositions(line);
-            return -1;
+            return PROCESS_IGNORED;
         }
 
         try {
@@ -57,19 +62,19 @@ public class AddressImporter extends Importer {
             }
 
             if (subcode != 1) {
-                return -1;
+                return PROCESS_IGNORED;
             }
 
             ProjCoordinate geoCoords = convertEPSG31255toWSG84(eastCoord, northCoord);
             if (geoCoords == null || !insertAddress(geoCoords.y, geoCoords.x, zipCode, city, street, streetno, mapsheet)) {
-                return 1;
+                return PROCESS_ERROR;
             }
         } catch (NumberFormatException e) {
-            return 1;
+            return PROCESS_ERROR;
         } catch (ArrayIndexOutOfBoundsException e) {
-            return 1;
+            return PROCESS_ERROR;
         }
-        return 0;
+        return PROCESS_SUCCESS;
     }
 
     private AddressColumns findAddressColumnPositions(String[] fields) {

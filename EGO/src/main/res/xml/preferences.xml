@@ -55,4 +55,14 @@
             android:entryValues="@array/preferences_activity_navigation_api_values"
             android:defaultValue="@string/preferences_activity_navigation_api_default"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/main_activity_tab_hospitals_doctors"
+        android:key="pref_key_hospitals_doctors">
+
+        <tk.crazysoft.ego.preferences.TimePickerPreference
+            android:key="pref_key_hospitals_doctors_takeover"
+            android:title="@string/preferences_activity_hospitals_doctors_takeover_title"
+            android:summary="@string/preferences_activity_hospitals_doctors_takeover_summary"
+            android:defaultValue="420" /> <!-- 07:00h -->
+    </PreferenceCategory>
 </PreferenceScreen>
