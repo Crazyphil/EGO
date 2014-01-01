@@ -3,7 +3,9 @@ package tk.crazysoft.ego;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -61,9 +63,17 @@ public class AboutActivity extends ActionBarActivity {
             }
 
             data = params[0];
-            ImageView imageView = imageViewReference.get();
+            Point size = new Point();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                ImageView imageView = imageViewReference.get();
+                size.x = imageView.getMaxWidth();
+                size.y = imageView.getMaxHeight();
+            } else {
+                size.x = getWindowManager().getDefaultDisplay().getWidth();
+                size.y = getWindowManager().getDefaultDisplay().getHeight();
+            }
 
-            return decodeSampledBitmapFromResource(getResources(), data, imageView.getMaxWidth(), imageView.getMaxHeight());
+            return decodeSampledBitmapFromResource(getResources(), data, size.y, size.x);
         }
 
         private Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {

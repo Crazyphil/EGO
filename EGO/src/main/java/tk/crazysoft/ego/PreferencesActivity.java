@@ -54,6 +54,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         DataImportPreference addressPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_ADDRESSES);
         DataImportPreference hospitalsPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_HOSPITALS);
         DataImportPreference doctorsPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_DOCTORS);
+        ListPreference apiPreference = (ListPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_NAVIGATION_API);
 
         addressPreference.setSummary(String.format(addressPreference.getSummary().toString(), sdPath));
         addressPreference.setBroadcastReceiver(importReceiver);
@@ -61,6 +62,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         hospitalsPreference.setBroadcastReceiver(importReceiver);
         doctorsPreference.setSummary(String.format(doctorsPreference.getSummary().toString(), sdPath));
         doctorsPreference.setBroadcastReceiver(importReceiver);
+        apiPreference.setSummary(getResources().getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
     }
 
     @Override
