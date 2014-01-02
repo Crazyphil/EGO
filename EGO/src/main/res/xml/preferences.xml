@@ -26,6 +26,11 @@
 
             <intent android:action="tk.crazysoft.ego.services.IMPORT_STANDBY" />
         </tk.crazysoft.ego.preferences.DataImportPreference>
+        <CheckBoxPreference
+            android:key="pref_key_import_use_sd"
+            android:title="@string/preferences_activity_import_use_sd_title"
+            android:summary="@string/preferences_activity_import_use_sd_summary_checked"
+            android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_activity_map_title"
@@ -64,5 +69,14 @@
             android:title="@string/preferences_activity_hospitals_doctors_takeover_title"
             android:summary="@string/preferences_activity_hospitals_doctors_takeover_summary"
             android:defaultValue="420" /> <!-- 07:00h -->
+        <Preference
+            android:key="pref_key_hospitals_doctors_permanent_admittances"
+            android:title="@string/preferences_activity_hospitals_doctors_permanent_admittances_title"
+            android:summary="@string/preferences_activity_hospitals_doctors_permanent_admittances_summary">
+
+            <intent
+                android:targetPackage="tk.crazysoft.ego"
+                android:targetClass="tk.crazysoft.ego.PermanentAdmittancesActivity" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

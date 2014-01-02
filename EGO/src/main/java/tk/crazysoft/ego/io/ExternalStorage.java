@@ -1,5 +1,6 @@
 package tk.crazysoft.ego.io;
 
+import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import tk.crazysoft.ego.preferences.Preferences;
 
 // Source: http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location/5695129#15612964
 public class ExternalStorage {
@@ -31,8 +34,8 @@ public class ExternalStorage {
      * Returns the path to the first available SD Card, with preference for external, removable ones.
      * @return The SD Card storage path with trailing /
      */
-    public static String getSdCardPath() {
-        return getSdCardPath(false);
+    public static String getSdCardPath(Context context) {
+        return getSdCardPath(context, false);
     }
 
     /**
@@ -40,9 +43,12 @@ public class ExternalStorage {
      * @param alwaysInternal Indicates if the "internal" external storage should always be returned
      * @return The SD Card storage path with trailing /
      */
-    public static String getSdCardPath(boolean alwaysInternal) {
+    public static String getSdCardPath(Context context, boolean alwaysInternal) {
+        Preferences preferences = new Preferences(context);
+        boolean preferenceUseSd = preferences.getImportUseSd();
+
         String path = null;
-        if (alwaysInternal) {
+        if (!preferenceUseSd || alwaysInternal) {
             return Environment.getExternalStorageDirectory().getPath() + "/";
         }
         else {
@@ -63,7 +69,6 @@ public class ExternalStorage {
     public static boolean isWritable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
-
     }
 
     /**

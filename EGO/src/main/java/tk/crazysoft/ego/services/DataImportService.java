@@ -82,7 +82,7 @@ public class DataImportService extends IntentService {
     }
 
     private void startImport(String path, Importer importer) {
-        String sdCard = ExternalStorage.getSdCardPath();
+        String sdCard = ExternalStorage.getSdCardPath(this);
         if (sdCard == null) {
             reportError(getResources().getString(R.string.service_dataimport_error_nosd));
             return;

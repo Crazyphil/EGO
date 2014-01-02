@@ -10,6 +10,7 @@ public class Preferences {
     public static final String PREFERENCE_IMPORT_ADDRESSES = "pref_key_import_addresses";
     public static final String PREFERENCE_IMPORT_HOSPITALS = "pref_key_import_hospitals";
     public static final String PREFERENCE_IMPORT_DOCTORS = "pref_key_import_doctors";
+    public static final String PREFERENCE_IMPORT_USE_SD = "pref_key_import_use_sd";
 
     public static final String PREFERENCE_MAP_LATITUDE = "pref_key_map_latitude";
     public static final String PREFERENCE_MAP_LONGITUDE = "pref_key_map_longitude";
@@ -28,6 +29,10 @@ public class Preferences {
 
     public static SharedPreferences getPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public boolean getImportUseSd() {
+        return preferences.getBoolean(PREFERENCE_IMPORT_USE_SD, true);
     }
 
     public double getMapLatitude() {

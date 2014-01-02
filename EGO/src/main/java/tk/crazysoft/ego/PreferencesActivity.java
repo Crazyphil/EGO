@@ -3,6 +3,7 @@ package tk.crazysoft.ego;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -46,23 +47,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     protected void onStart() {
         super.onStart();
 
-        String sdPath = ExternalStorage.getSdCardPath();
-        if (sdPath == null) {
-            sdPath = ExternalStorage.getSdCardPath(true);
-        }
+        CheckBoxPreference useSdPreference = (CheckBoxPreference)findPreference(Preferences.PREFERENCE_IMPORT_USE_SD);
+        ListPreference apiPreference = (ListPreference)findPreference(Preferences.PREFERENCE_NAVIGATION_API);
 
-        DataImportPreference addressPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_ADDRESSES);
-        DataImportPreference hospitalsPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_HOSPITALS);
-        DataImportPreference doctorsPreference = (DataImportPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_IMPORT_DOCTORS);
-        ListPreference apiPreference = (ListPreference)getPreferenceManager().findPreference(Preferences.PREFERENCE_NAVIGATION_API);
-
-        addressPreference.setSummary(String.format(addressPreference.getSummary().toString(), sdPath));
-        addressPreference.setBroadcastReceiver(importReceiver);
-        hospitalsPreference.setSummary(String.format(hospitalsPreference.getSummary().toString(), sdPath));
-        hospitalsPreference.setBroadcastReceiver(importReceiver);
-        doctorsPreference.setSummary(String.format(doctorsPreference.getSummary().toString(), sdPath));
-        doctorsPreference.setBroadcastReceiver(importReceiver);
-        apiPreference.setSummary(getResources().getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+        refreshImportFiles();
+        refreshImportUseSd(getPreferenceScreen().getSharedPreferences(), useSdPreference);
+        refreshNavigationApi(apiPreference);
     }
 
     @Override
@@ -94,11 +84,48 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
-        if (key.equals(Preferences.PREFERENCE_NAVIGATION_API)) {
-            ListPreference apiPreference = (ListPreference)getPreferenceScreen().findPreference(key);
-            pref.setSummary(getResources().getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+        if (key.equals(Preferences.PREFERENCE_IMPORT_USE_SD)) {
+            refreshImportUseSd(sharedPreferences, pref);
+            refreshImportFiles();
+        } else if (key.equals(Preferences.PREFERENCE_NAVIGATION_API)) {
+            refreshNavigationApi(pref);
         } else if (key.equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER)) {
-            ((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
+            refreshHospitalsDoctorsTakeover();
         }
+    }
+
+    private void refreshImportFiles() {
+        String sdPath = ExternalStorage.getSdCardPath(this);
+        if (sdPath == null) {
+            sdPath = ExternalStorage.getSdCardPath(this, true);
+        }
+
+        DataImportPreference addressPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_ADDRESSES);
+        DataImportPreference hospitalsPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_HOSPITALS);
+        DataImportPreference doctorsPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_DOCTORS);
+
+        addressPreference.setSummary(String.format(getString(R.string.preferences_activity_import_addresses_summary), sdPath));
+        addressPreference.setBroadcastReceiver(importReceiver);
+        hospitalsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_hospitals_summary), sdPath));
+        hospitalsPreference.setBroadcastReceiver(importReceiver);
+        doctorsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_doctors_summary), sdPath));
+        doctorsPreference.setBroadcastReceiver(importReceiver);
+    }
+
+    private void refreshImportUseSd(SharedPreferences sharedPreferences, Preference pref) {
+        if (sharedPreferences.getBoolean(Preferences.PREFERENCE_IMPORT_USE_SD, true)) {
+            pref.setSummary(getString(R.string.preferences_activity_import_use_sd_summary_checked));
+        } else {
+            pref.setSummary(getString(R.string.preferences_activity_import_use_sd_summary_unchecked));
+        }
+    }
+
+    private void refreshNavigationApi(Preference pref) {
+        ListPreference apiPreference = (ListPreference)getPreferenceScreen().findPreference(Preferences.PREFERENCE_NAVIGATION_API);
+        pref.setSummary(getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+    }
+
+    private void refreshHospitalsDoctorsTakeover() {
+        ((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
     }
 }

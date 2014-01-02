@@ -68,7 +68,7 @@ public class MapFragment extends Fragment {
     }
 
     private void createMapView(View view) {
-        String sdPath = ExternalStorage.getSdCardPath();
+        String sdPath = ExternalStorage.getSdCardPath(getActivity());
         File basemapFile = new File(sdPath + BASEMAP_PATH);
         File orthophotoFile = new File(sdPath + ORTHOPHOTO_PATH);
 
