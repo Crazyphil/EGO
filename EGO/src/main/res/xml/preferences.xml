@@ -74,9 +74,18 @@
             android:title="@string/preferences_activity_hospitals_doctors_permanent_admittances_title"
             android:summary="@string/preferences_activity_hospitals_doctors_permanent_admittances_summary">
 
-            <intent
+            <intent android:action="tk.crazysoft.ego.preferences.PERMANENT_ADMITTANCES"
                 android:targetPackage="tk.crazysoft.ego"
-                android:targetClass="tk.crazysoft.ego.PermanentAdmittancesActivity" />
+                android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
+        </Preference>
+        <Preference
+            android:key="pref_key_hospitals_doctors_replacement"
+            android:title="@string/preferences_activity_hospitals_doctors_replacement_title"
+            android:summary="@string/preferences_activity_hospitals_doctors_replacement_summary">
+
+            <intent android:action="tk.crazysoft.ego.preferences.REPLACEMENT"
+                android:targetPackage="tk.crazysoft.ego"
+                android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

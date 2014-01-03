@@ -22,6 +22,7 @@ public class EGODbHelper extends SQLiteOpenHelper {
         db.execSQL(EGOContract.SQL_CREATE_ADRESSES);
         db.execSQL(EGOContract.SQL_CREATE_HOSPITAL_ADMISSION);
         db.execSQL(EGOContract.SQL_CREATE_DOCTOR_STANDBY);
+        db.execSQL(EGOContract.SQL_CREATE_NAME_REPLACEMENTS);
     }
 
     @Override

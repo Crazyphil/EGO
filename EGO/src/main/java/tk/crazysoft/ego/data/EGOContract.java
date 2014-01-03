@@ -59,6 +59,12 @@ public final class EGOContract {
         public static final String COLUMN_NAME_DOCTOR_NAME = "doctorname";
     }
 
+    public static abstract class NameReplacements implements BaseColumns {
+        public static final String TABLE_NAME = "name_replacements";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_REPLACEMENT = "replacement";
+    }
+
     public static final String SQL_CREATE_ADRESSES =
             "CREATE TABLE " + Addresses.TABLE_NAME + " (" +
             Addresses._ID + " INTEGER PRIMARY KEY, " +
@@ -90,4 +96,12 @@ public final class EGOContract {
                     DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " TEXT)";
     public static final String SQL_DELETE_DOCTOR_STANDBY =
             "DROP TABLE IF EXISTS " + DoctorStandby.TABLE_NAME;
+
+    public static final String SQL_CREATE_NAME_REPLACEMENTS =
+            "CREATE TABLE " + NameReplacements.TABLE_NAME + " (" +
+                    NameReplacements._ID + " INTEGER PRIMARY KEY, " +
+                    NameReplacements.COLUMN_NAME_NAME + " TEXT, " +
+                    NameReplacements.COLUMN_NAME_REPLACEMENT + " TEXT)";
+    public static final String SQL_DELETE_NAME_REPLACEMENTS =
+            "DROP TABLE IF EXISTS " + NameReplacements.TABLE_NAME;
 }

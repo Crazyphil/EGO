@@ -63,6 +63,8 @@
     <string name="preferences_activity_hospitals_doctors_takeover_summary">Das Aufnahmekrankenhaus wechselt täglich um %1$02d:%2$02d Uhr</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Krankenhäuser mit Daueraufnahme</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Verwalten der Krankenhäuser, die zu jeder Zeit Patienten aufnehmen</string>
+    <string name="preferences_activity_hospitals_doctors_replacement_title">Ersetzungen zur Kontaktsuche</string>
+    <string name="preferences_activity_hospitals_doctors_replacement_summary">Verwalten der Namen, unter denen Krankenhäuser und Ärzte in den Kontakten gesucht werden</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geografischer Punkt</item>
@@ -77,10 +79,17 @@
         <item>navigon</item>
     </string-array>
 
-    <!-- Permanent Admittances Activity -->
-    <string name="permanent_admittances_activity_title">Krankenhäuser mit Daueraufnahme</string>
-    <string name="permanent_admittances_activity_action_add">Hinzufügen</string>
-    <string name="permanent_admittances_activity_action_delete">Löschen</string>
+    <!-- Hospital Management Activity -->
+    <string name="hospital_management_activity_permanent_admittances_title">Krankenhäuser mit Daueraufnahme</string>
+    <string name="hospital_management_activity_replacement_title">Ersetzungen zur Kontaktsuche</string>
+    <string name="hospital_management_activity_action_add">Hinzufügen</string>
+    <string name="hospital_management_activity_action_delete">Löschen</string>
+    <string name="hospital_management_activity_permanent_admittances_dialog_add">Krankenhaus hinzufügen</string>
+    <string name="hospital_management_activity_replacement_dialog_add">Ersetzung hinzufügen</string>
+    <string name="hospital_management_activity_permanent_admittances_dialog_edit">Krankenhaus bearbeiten</string>
+    <string name="hospital_management_activity_replacement_dialog_edit">Ersetzung bearbeiten</string>
+    <string name="hospital_management_activity_permanent_admittances_empty">Es wurden noch keine Krankenhäuser eingetragen.\nAuf das „+“ drücken, um neue Einträge hinzuzufügen.</string>
+    <string name="hospital_management_activity_replacement_empty">Es wurden noch keine Ersetzungen eingetragen.\nAuf das „+“ drücken, um neue Einträge hinzuzufügen.</string>
 
     <!-- About Activity -->
     <string name="about_activity_title">Über EGO</string>

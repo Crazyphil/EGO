@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 public class EGOCursorLoader extends SimpleCursorLoader {
-    SQLiteDatabase db;
+    private SQLiteDatabase db;
     private String table;
     private String limit;
     private boolean distinct = false;
