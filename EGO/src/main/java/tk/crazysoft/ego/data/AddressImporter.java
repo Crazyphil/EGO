@@ -129,8 +129,8 @@ public class AddressImporter extends Importer {
 
     @Override
     public void postProcess() {
-        if (getOnProgressListener() != null) {
-            getOnProgressListener().onProgress(0);
+        if (getOnPostProcessProgressListener() != null) {
+            getOnPostProcessProgressListener().onProgress(0);
         }
 
         Cursor result = getDatabase().rawQuery(EGOContract.Addresses.SQL_SELECT_DUPLICATE_STREETS, null);
@@ -138,8 +138,8 @@ public class AddressImporter extends Importer {
         int mergedStreets = 0;
         double count = (double)result.getCount();
         while (result.moveToNext()) {
-            if (getOnProgressListener() != null) {
-                getOnProgressListener().onProgress(result.getPosition() / count);
+            if (getOnPostProcessProgressListener() != null) {
+                getOnPostProcessProgressListener().onProgress(result.getPosition() / count);
             }
 
             int lastAddressId = result.getInt(result.getColumnIndex("last_id"));
@@ -152,8 +152,8 @@ public class AddressImporter extends Importer {
         result.close();
         getDatabase().setTransactionSuccessful();
 
-        if (getOnProgressListener() != null) {
-            getOnProgressListener().onResult(ADDRESS_IMPORTER_POSTPOCESS_ACTION, result.getCount(), mergedStreets);
+        if (getOnPostProcessProgressListener() != null) {
+            getOnPostProcessProgressListener().onResult(ADDRESS_IMPORTER_POSTPOCESS_ACTION, result.getCount(), mergedStreets);
         }
     }
 

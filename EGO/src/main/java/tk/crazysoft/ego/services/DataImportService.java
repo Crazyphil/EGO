@@ -63,7 +63,7 @@ public class DataImportService extends IntentService {
                 // TODO: Import doctors on standby
             }
             if (importer != null) {
-                importer.setOnProgressListener(new Importer.OnProgressListener() {
+                importer.setOnPostProcessProgressListener(new Importer.OnPostProcessProgressListener() {
                     @Override
                     public void onProgress(double progressPercent) {
                         reportProgress(progressPercent);

@@ -11,7 +11,7 @@ public abstract class Importer {
     private Context context;
     private SQLiteDatabase db;
     private Pattern csvTrimPattern;
-    private OnProgressListener listener;
+    private OnPostProcessProgressListener listener;
 
     public Importer(Context context) {
         this(context, null);
@@ -44,11 +44,11 @@ public abstract class Importer {
         return csvTrimPattern.matcher(field).replaceAll("");
     }
 
-    public void setOnProgressListener(OnProgressListener listener) {
+    public void setOnPostProcessProgressListener(OnPostProcessProgressListener listener) {
         this.listener = listener;
     }
 
-    protected OnProgressListener getOnProgressListener() {
+    protected OnPostProcessProgressListener getOnPostProcessProgressListener() {
         return listener;
     }
 
@@ -67,7 +67,7 @@ public abstract class Importer {
         return context;
     }
 
-    public interface OnProgressListener {
+    public interface OnPostProcessProgressListener {
         public void onProgress(double progressPercent);
         public void onResult(String action, int processed, int modified);
     }

@@ -329,8 +329,14 @@ public class HospitalManagementActivity extends ActionBarActivity {
             editText1.setAdapter(localAutoCompleteAdapter);
             getLoaderManager().initLoader(LOADER_LOCAL_AUTOCOMPLETE, null, this);
 
-            fromColumns = new String[] { ContactsContract.Contacts.DISPLAY_NAME  };
-            toViews = new int[] { android.R.id.text1 };
+            prepareContactsAutoCompleteAdapter();
+            editText2.setAdapter(contactsAutoCompleteAdapter);
+            getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
+        }
+
+        private void prepareContactsAutoCompleteAdapter() {
+            String[] fromColumns = { ContactsContract.Contacts.DISPLAY_NAME  };
+            int[] toViews = { android.R.id.text1 };
             contactsAutoCompleteAdapter = new SimpleCursorAdapter(getListView().getContext(), android.R.layout.simple_list_item_1, null, fromColumns, toViews, 0);
             contactsAutoCompleteAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
                 @Override
@@ -338,19 +344,21 @@ public class HospitalManagementActivity extends ActionBarActivity {
                     return cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 }
             });
-            editText2.setAdapter(contactsAutoCompleteAdapter);
-            getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
         }
 
         private void createPermanentAdmittanceDialogContent(AlertDialog.Builder builder, Bundle savedInstanceState) {
-            EditText editText;
+            AutoCompleteTextView editText;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                editText = new EditText(builder.getContext());
+                editText = new AutoCompleteTextView(builder.getContext());
             } else {
-                editText = new EditText(getActivity());
+                editText = new AutoCompleteTextView(getActivity());
             }
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
             editText.setId(android.R.id.text1);
+
+            prepareContactsAutoCompleteAdapter();
+            editText.setAdapter(contactsAutoCompleteAdapter);
+
             dialogContent = editText;
             if (itemPos >= 0) {
                 if (savedInstanceState == null) {
@@ -361,6 +369,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
                 }
                 editText.setTag(itemId);
             }
+            getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
         }
 
         public void deleteEntries() {

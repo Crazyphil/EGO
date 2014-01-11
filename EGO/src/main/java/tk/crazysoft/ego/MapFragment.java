@@ -201,9 +201,11 @@ public class MapFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelable("center", (GeoPoint)mapView.getMapCenter());
-        outState.putInt("zoom", mapView.getZoomLevel());
-        outState.putBoolean("follow", gpsOverlay.isFollowLocationEnabled());
+        if (mapView != null) {
+            outState.putParcelable("center", (GeoPoint)mapView.getMapCenter());
+            outState.putInt("zoom", mapView.getZoomLevel());
+            outState.putBoolean("follow", gpsOverlay.isFollowLocationEnabled());
+        }
     }
 
     @Override

@@ -22,10 +22,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     private DataImportReceiver importReceiver;
     private ProgressBar progressBar;
 
-    private static final int ITEM_IMPORT_ADDRESSES = 0;
-    private static final int ITEM_IMPORT_HOSPITAL_ADMITTANCES = 1;
-    private static final int ITEM_IMPORT_DOCTOR_STANDBY = 2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
