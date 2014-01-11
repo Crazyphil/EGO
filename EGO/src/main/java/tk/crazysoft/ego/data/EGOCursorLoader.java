@@ -54,6 +54,10 @@ public class EGOCursorLoader extends SimpleCursorLoader {
         return null;
     }
 
+    protected SQLiteDatabase getDatabase() {
+        return db;
+    }
+
     @Override
     protected void finalize() throws Throwable {
         if (isDbReady()) {

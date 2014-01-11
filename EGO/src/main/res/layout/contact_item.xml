@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TwoLineListItem
+        android:id="@+id/texts"
+        android:paddingTop="2dip"
+        android:paddingBottom="2dip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:mode="twoLine"
+        android:layout_weight="1">
+
+        <TextView android:id="@android:id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dip"
+            android:layout_marginTop="6dip"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            />
+
+        <TextView android:id="@android:id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/text1"
+            android:layout_alignLeft="@android:id/text1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
+
+    </TwoLineListItem>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/texts"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="@dimen/activity_element_margin"
+        android:layout_marginBottom="@dimen/activity_element_margin" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@android:drawable/ic_menu_directions"
+        android:scaleType="center"
+        android:padding="@dimen/activity_element_full_margin"
+        android:id="@+id/navigate"
+        android:contentDescription="@string/house_view_navigate" />
+
+</LinearLayout>

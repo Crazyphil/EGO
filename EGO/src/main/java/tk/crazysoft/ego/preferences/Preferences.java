@@ -54,7 +54,7 @@ public class Preferences {
         return new Time(hour, minute);
     }
 
-    public class Time {
+    public static class Time {
         private int hour;
         private int minute;
 
@@ -67,12 +67,26 @@ public class Preferences {
             return hour;
         }
 
+        public void setHour(int value) {
+            hour = value;
+        }
+
         public int getMinute() {
             return minute;
         }
 
+        public void setMinute(int value) {
+            minute = value;
+        }
+
         public int toInt() {
             return hour * 60 + minute;
+        }
+
+        public static Time fromInt(int value) {
+            int hour = value / 60;
+            int minute = value - hour * 60;
+            return new Time(hour, minute);
         }
     }
 }

@@ -23,6 +23,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     private static final String NAVIGON_PUBLIC_INTENT = "android.intent.action.navigon.START_PUBLIC";
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE = "latitude";
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE = "longitude";
+    private static final String NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS = "free_text_address";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, "addresses", AddressFragment.class)));
         actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_map).setTabListener(new TabListener<MapFragment>(this, "map", MapFragment.class)));
+        actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_hospitals_doctors).setTabListener(new TabListener<HospitalsDoctorsFragment>(this, "hospitals_doctors", HospitalsDoctorsFragment.class)));
 
         if (savedInstanceState != null) {
             actionBar.selectTab(actionBar.getTabAt(savedInstanceState.getInt("tab")));
@@ -95,7 +97,31 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             }
             navIntent = new Intent(Intent.ACTION_VIEW, location);
         }
+        sendNavigationIntent(activity, navIntent);
+    }
 
+    public static void sendNavigationIntent(Activity activity, String address) {
+        String intentPreference = new Preferences(activity).getNavigationApi();
+        String[] options = activity.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
+
+        // Build the intent
+        Intent navIntent;
+        if (intentPreference.equals(options[3])) {  // navigon
+            navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
+            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS, address);
+        } else {
+            Uri location;
+            if (intentPreference.equals(options[1])) {   // google.navigation
+                location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
+            } else {   // geo_q, geo (not applicable for address search) or unknown option
+                location = Uri.parse(String.format(Locale.ENGLISH, "geo:0,0?q=%s", address));
+            }
+            navIntent = new Intent(Intent.ACTION_VIEW, location);
+        }
+        sendNavigationIntent(activity, navIntent);
+    }
+
+    private static void sendNavigationIntent(Activity activity, Intent navIntent) {
         // Verify it resolves
         PackageManager packageManager = activity.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(navIntent, 0);
