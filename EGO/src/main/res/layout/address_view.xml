@@ -126,6 +126,12 @@
         android:id="@+id/address_textViewResults"
         android:layout_marginTop="@dimen/activity_vertical_margin" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/address_progressBarEmpty"
+        android:layout_gravity="center" />
+
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

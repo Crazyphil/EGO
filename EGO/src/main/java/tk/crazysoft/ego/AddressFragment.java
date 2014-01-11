@@ -12,16 +12,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,13 +117,9 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         int[] toViews = { android.R.id.text1, android.R.id.text2 };
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getView().getContext(), android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
 
-        ProgressBar progressBar = new ProgressBar(getView().getContext());
-        progressBar.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        progressBar.setIndeterminate(true);
-
         listViewResults = (ListView)getView().findViewById(R.id.address_listViewResults);
         listViewResults.setAdapter(adapter);
-        listViewResults.setEmptyView(progressBar);
+        listViewResults.setEmptyView(getView().findViewById(R.id.address_progressBarEmpty));
         listViewResults.setOnItemClickListener(new ResultsListOnItemClickListener());
 
         // Restore selected items after Activity is restarted
