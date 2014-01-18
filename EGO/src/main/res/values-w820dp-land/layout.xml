@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="address_view" type="layout">@layout/address_view_port</item>
+    <item name="hospitals_doctors_view" type="layout">@layout/hospitals_doctors_view_port</item>
+    <item name="house_view" type="layout">@layout/house_view_port</item>
+</resources>

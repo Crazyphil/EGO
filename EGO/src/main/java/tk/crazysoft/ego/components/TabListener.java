@@ -9,6 +9,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 
     private Fragment mFragment;
     private final ActionBarActivity mActivity;
+    private final int mLayoutId;
     private final String mTag;
     private final Class<T> mClass;
 
@@ -18,7 +19,18 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
      * @param clz  The fragment's Class, used to instantiate the fragment
      */
     public TabListener(ActionBarActivity activity, String tag, Class<T> clz) {
+        this(activity, android.R.id.content, tag, clz);
+    }
+
+    /** Constructor used each time a new tab is created.
+     * @param activity  The host Activity, used to instantiate the fragment
+     * @param layoutId The layout to add the fragment to
+     * @param tag  The identifier tag for the fragment
+     * @param clz  The fragment's Class, used to instantiate the fragment
+     */
+    public TabListener(ActionBarActivity activity, int layoutId, String tag, Class<T> clz) {
         mActivity = activity;
+        mLayoutId = layoutId;
         mTag = tag;
         mClass = clz;
 
@@ -28,7 +40,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
         mFragment = mActivity.getSupportFragmentManager().findFragmentByTag(mTag);
         if (mFragment != null && !mFragment.isDetached()) {
             FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
-            ft.detach(mFragment);
+            transactInCorrectContainer(ft, false);
             ft.commit();
         }
     }
@@ -40,10 +52,11 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
         if (mFragment == null) {
             // If not, instantiate and add it to the activity
             mFragment = Fragment.instantiate(mActivity, mClass.getName());
-            ft.add(android.R.id.content, mFragment, mTag);
+            ft.add(mLayoutId, mFragment, mTag);
         } else {
-            // If it exists, simply attach it in order to show it
-            ft.attach(mFragment);
+            // If it exists, simply attach it in order to show it if it was previously detached
+            // or readd it to it's new parent if it was removed from another one previously
+            transactInCorrectContainer(ft, true);
         }
     }
 
@@ -56,6 +69,36 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
         // User selected the already selected tab. Usually do nothing.
+    }
+
+    private void transactInCorrectContainer(FragmentTransaction ft, boolean shouldAttach) {
+        if (mFragment.getId() == 0) {
+            ft.add(mLayoutId, mFragment, mTag);
+        } else if (mFragment.getId() > 0 && mFragment.getId() != mLayoutId) {
+            Fragment.SavedState savedState = null;
+            if (mActivity.getSupportFragmentManager().findFragmentByTag(mFragment.getTag()) != null) {
+                savedState = mActivity.getSupportFragmentManager().saveFragmentInstanceState(mFragment);
+            }
+
+            if (!shouldAttach) {
+                ft.remove(mFragment);
+            }
+
+            try {
+                mFragment = Fragment.instantiate(mActivity, mFragment.getClass().getName());
+                mFragment.setInitialSavedState(savedState);
+            } catch (Exception e) { // InstantiationException, IllegalAccessException
+                throw new RuntimeException("Cannot reinstantiate fragment " + mFragment.getClass().getName(), e);
+            }
+
+            if (shouldAttach) {
+                ft.add(mLayoutId, mFragment, mTag);
+            }
+        } else if (shouldAttach) {
+            ft.attach(mFragment);
+        } else {
+            ft.detach(mFragment);
+        }
     }
 
 }

@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_element_margin">4dp</dimen>
     <dimen name="activity_element_full_margin">8dp</dimen>
+
+    <string name="layout_mode">portrait</string>
 </resources>

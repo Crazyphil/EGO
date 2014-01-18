@@ -60,13 +60,9 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.address_view, container, false);
-    }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             selectedCity = savedInstanceState.getString("city");
             cityHasData = selectedCity != null;
@@ -77,8 +73,12 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             selectedStreetNo = savedInstanceState.getString("streetNo");
             streetNoHasData = selectedStreetNo != null;
         }
+    }
 
-        super.onActivityCreated(savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.address_view, container, false);
     }
 
     @Override
@@ -122,7 +122,15 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         listViewResults.setEmptyView(getView().findViewById(R.id.address_progressBarEmpty));
         listViewResults.setOnItemClickListener(new ResultsListOnItemClickListener());
 
-        // Restore selected items after Activity is restarted
+        restoreButtons();
+        getLoaderManager().initLoader(LOADER_RESULTS, null, this);
+        getLoaderManager().initLoader(LOADER_CITY, null, this);
+        getLoaderManager().initLoader(LOADER_ZIP_CODE, null, this);
+        getLoaderManager().initLoader(LOADER_STREET, null, this);
+        getLoaderManager().initLoader(LOADER_STREET_NO, null, this);
+    }
+
+    private void restoreButtons() {
         if (cityHasData) {
             buttonCity.setText(selectedCity);
             buttonCity.setTypeface(normalTypeface, Typeface.NORMAL);
@@ -143,22 +151,16 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             buttonStreetNo.setTypeface(normalTypeface, Typeface.NORMAL);
             buttonStreetNo.setTextColor(getResources().getColor(android.R.color.black));
         }
-
-        getLoaderManager().initLoader(LOADER_RESULTS, null, this);
-        getLoaderManager().initLoader(LOADER_CITY, null, this);
-        getLoaderManager().initLoader(LOADER_ZIP_CODE, null, this);
-        getLoaderManager().initLoader(LOADER_STREET, null, this);
-        getLoaderManager().initLoader(LOADER_STREET_NO, null, this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("city", getFilter(buttonCity, cityHasData));
-        outState.putString("zip", getFilter(buttonZip, zipHasData));
-        outState.putString("street", getFilter(buttonStreet, streetHasData));
-        outState.putString("streetNo", getFilter(buttonStreetNo, streetHasData));
+        outState.putString("city", selectedCity);
+        outState.putString("zip", selectedZip);
+        outState.putString("street", selectedStreet);
+        outState.putString("streetNo", selectedStreetNo);
     }
 
     private AlertDialog buildFilterAlertDialog(Button button, int titleRes, String column, boolean index) {

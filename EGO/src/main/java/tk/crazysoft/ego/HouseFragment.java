@@ -19,16 +19,18 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     private Button buttonNavigate;
     private MapFragment mapFragment;
 
+    private long houseId = -1;
     private double latitude, longitude;
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        textViewAddress = (TextView)getView().findViewById(R.id.house_textViewAddress);
-        textViewCity = (TextView)getView().findViewById(R.id.house_textViewCity);
-        textViewCoordinates = (TextView)getView().findViewById(R.id.house_textViewCoords);
-        textViewMapSheet = (TextView)getView().findViewById(R.id.house_textViewMapSheet);
+        if (getArguments()!= null && getArguments().containsKey("id")) {
+            setHouse(getArguments().getLong("id"));
+        } else if (houseId > -1) {
+            setHouse(houseId);
+        }
     }
 
     @Override
@@ -49,18 +51,23 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
-        if (getArguments()!= null && getArguments().containsKey("id")) {
-            setHouse(getArguments().getLong("id"));
-        }
+        textViewAddress = (TextView)getView().findViewById(R.id.house_textViewAddress);
+        textViewCity = (TextView)getView().findViewById(R.id.house_textViewCity);
+        textViewCoordinates = (TextView)getView().findViewById(R.id.house_textViewCoords);
+        textViewMapSheet = (TextView)getView().findViewById(R.id.house_textViewMapSheet);
     }
 
     public void setHouse(long id) {
-        Bundle loaderArgs = new Bundle(1);
-        loaderArgs.putLong("id", id);
-        getLoaderManager().restartLoader(0, loaderArgs, this);
+        if (isAdded()) {
+            Bundle loaderArgs = new Bundle(1);
+            loaderArgs.putLong("id", id);
+            getLoaderManager().restartLoader(0, loaderArgs, this);
+        } else {
+            houseId = id;
+        }
     }
 
     @Override

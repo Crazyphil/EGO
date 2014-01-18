@@ -195,6 +195,7 @@ public class MapFragment extends Fragment {
         followLocation = gpsOverlay.isFollowLocationEnabled();
         gpsOverlay.disableFollowLocation();
         gpsOverlay.disableMyLocation();
+        mapView.onDetach();
     }
 
     @Override
@@ -205,6 +206,10 @@ public class MapFragment extends Fragment {
             outState.putParcelable("center", (GeoPoint)mapView.getMapCenter());
             outState.putInt("zoom", mapView.getZoomLevel());
             outState.putBoolean("follow", gpsOverlay.isFollowLocationEnabled());
+        } else if (mapCenter != null) {
+            outState.putParcelable("center", mapCenter);
+            outState.putInt("zoom", mapZoom);
+            outState.putBoolean("follow", followLocation);
         }
     }
 
