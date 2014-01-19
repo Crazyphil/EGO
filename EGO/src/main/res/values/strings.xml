@@ -28,6 +28,7 @@
     <!-- Map Fragment -->
     <string name="map_view_gps">Meine Position</string>
     <string name="map_view_destination">Ziel</string>
+    <string name="map_view_mapmode">Orthofoto anzeigen/ausblenden</string>
     <string name="map_view_nomaps_title">Kartenmaterial</string>
     <string name="map_view_nomaps_text">Teile des Kartenmaterials konnten nicht geladen werden.\n\nFolgende Dateien werden benötigt:\n%1$s\n%2$s</string>
 
@@ -104,11 +105,13 @@
 
     <!-- About Activity -->
     <string name="about_activity_title">Über EGO</string>
-    <string name="about_activity_header">Einsatz-Gesamtorganisation\n\nEin Projekt der Ortsstelle\nSt. Veit im Mühlkreis</string>
+    <string name="about_activity_header">Einsatz-Gesamtorganisation\nVersion %s\n\nEin Projekt der Ortsstelle\nSt. Veit im Mühlkreis</string>
     <string name="about_activity_concept_header">Konzept</string>
     <string name="about_activity_concept_text">Peter Grubmair</string>
     <string name="about_activity_development_header">Entwicklung</string>
     <string name="about_activity_development_text">Philipp Kapfer\nFlorian Helml</string>
+    <string name="about_activity_maps_header">Kartenmaterial</string>
+    <string name="about_activity_maps_text">Ortsplan: basemap.at\nOrthofotos: geoimage.at</string>
 
     <!-- House Activity -->
     <string name="house_activity_title">Adressdetails</string>

@@ -40,13 +40,13 @@ public class MapFragment extends Fragment {
     private static final String ORTHOPHOTO_PATH = "ego/karten/orthofoto.sqlite";
 
     private MapView mapView;
-    private ImageButton imageButtonGPS, imageButtonDestination;
+    private ImageButton imageButtonGPS, imageButtonDestination, imageButtonMapmode;
     private MyLocationNewOverlay gpsOverlay;
     private ItemizedIconOverlay<OverlayItem> destinationOverlay;
     private boolean mapFileNotFoundDialogShown = false;
     private GeoPoint mapCenter;
     private int mapZoom;
-    private boolean followLocation = false;
+    private boolean followLocation = false, showOrtophoto = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class MapFragment extends Fragment {
             mapCenter = savedInstanceState.getParcelable("center");
             mapZoom = savedInstanceState.getInt("zoom");
             followLocation = savedInstanceState.getBoolean("follow");
+            showOrtophoto = savedInstanceState.getBoolean("showOrtophoto");
         }
     }
 
@@ -105,6 +106,7 @@ public class MapFragment extends Fragment {
 
         TilesOverlay orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
         orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
+        orthophotoOverlay.setEnabled(showOrtophoto);
         gpsOverlay = new MyLocationNewOverlay(view.getContext(), new GpsMyLocationProvider(view.getContext()), mapView);
         destinationOverlay = new ItemizedIconOverlay<OverlayItem>(view.getContext(), new ArrayList<OverlayItem>(1), null);
 
@@ -121,6 +123,7 @@ public class MapFragment extends Fragment {
         Preferences preferences = new Preferences(view.getContext());
         GeoPoint defaultCenter = new GeoPoint(preferences.getMapLatitude(), preferences.getMapLongitude());
 
+        mapView.setMaxZoomLevel(18);
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
 
@@ -151,13 +154,12 @@ public class MapFragment extends Fragment {
         super.onStart();
 
         mapView = (MapView)getView().findViewWithTag("map");
-        gpsOverlay = (MyLocationNewOverlay)mapView.getOverlayManager().get(1);
-        destinationOverlay = (ItemizedIconOverlay<OverlayItem>)mapView.getOverlayManager().get(2);
 
         imageButtonGPS = (ImageButton)getView().findViewById(R.id.map_imageButtonGPS);
         imageButtonGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MyLocationNewOverlay gpsOverlay = (MyLocationNewOverlay)mapView.getOverlayManager().get(1);
                 if (gpsOverlay.isFollowLocationEnabled()) {
                     gpsOverlay.disableFollowLocation();
                 } else {
@@ -171,9 +173,22 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (destinationOverlay.size() > 0) {
+                    MyLocationNewOverlay gpsOverlay = (MyLocationNewOverlay)mapView.getOverlayManager().get(1);
+                    ItemizedIconOverlay<OverlayItem> destinationOverlay = (ItemizedIconOverlay<OverlayItem>)mapView.getOverlayManager().get(2);
                     gpsOverlay.disableFollowLocation();
                     mapView.getController().animateTo(destinationOverlay.getItem(0).getPoint());
                 }
+            }
+        });
+
+        imageButtonMapmode = (ImageButton)getView().findViewById(R.id.map_imageButtonMapmode);
+        imageButtonMapmode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TilesOverlay orthophotoOverlay = (TilesOverlay)mapView.getOverlayManager().get(0);
+                showOrtophoto = !showOrtophoto;
+                orthophotoOverlay.setEnabled(showOrtophoto);
+                mapView.invalidate();
             }
         });
     }
@@ -181,6 +196,13 @@ public class MapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        // If the fragment was paused and not newly created, recreate map view and restore configuration
+        if (mapView == null) {
+            createMapView(getView());
+            mapView.getController().setZoom(mapZoom);
+            mapView.getController().setCenter(mapCenter);
+        }
 
         gpsOverlay.enableMyLocation();
         if (followLocation || mapCenter == null) {
@@ -193,9 +215,16 @@ public class MapFragment extends Fragment {
         super.onPause();
 
         followLocation = gpsOverlay.isFollowLocationEnabled();
+        mapCenter = (GeoPoint)mapView.getMapCenter();
+        mapZoom = mapView.getZoomLevel();
+
         gpsOverlay.disableFollowLocation();
         gpsOverlay.disableMyLocation();
         mapView.onDetach();
+
+        gpsOverlay = null;
+        destinationOverlay = null;
+        mapView = null;
     }
 
     @Override
@@ -211,14 +240,7 @@ public class MapFragment extends Fragment {
             outState.putInt("zoom", mapZoom);
             outState.putBoolean("follow", followLocation);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        mapCenter = (GeoPoint)mapView.getMapCenter();
-        mapZoom = mapView.getZoomLevel();
+        outState.putBoolean("showOrtophoto", showOrtophoto);
     }
 
     public void setDestination(double latitude, double longitude, String title) {

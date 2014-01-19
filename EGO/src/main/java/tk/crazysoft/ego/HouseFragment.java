@@ -123,9 +123,7 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
+    public void onLoaderReset(Loader<Cursor> cursorLoader) { }
 
     private class NavigateButtonOnClickListener implements View.OnClickListener {
         @Override

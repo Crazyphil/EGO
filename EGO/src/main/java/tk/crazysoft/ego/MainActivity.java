@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import tk.crazysoft.ego.components.TabListener;
 import tk.crazysoft.ego.preferences.Preferences;
@@ -31,7 +32,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE = "longitude";
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS = "free_text_address";
 
-    private long displayedHouse = -1;
+    private Stack<Long> displayedHouses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +71,20 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         if (savedInstanceState != null) {
             String tabTitle = savedInstanceState.getString("tab");
-            displayedHouse = savedInstanceState.getLong("displayedHouse");
+            long[] savedHouses = savedInstanceState.getLongArray("displayedHouses");
+            if (savedHouses != null) {
+                displayedHouses = new Stack<Long>();
+                for (long savedHouse : savedHouses) {
+                    displayedHouses.push(savedHouse);
+                }
+            }
 
             ActionBar.Tab tab = findTabWithTitle(tabTitle);
             if (tab != null) {
                 actionBar.selectTab(tab);
             }
-            if (displayedHouse >= 0) {
-                onAddressClick(displayedHouse);
+            if (displayedHouses != null) {
+                onAddressClick(displayedHouses.peek(), false);
             }
         }
     }
@@ -96,7 +103,21 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("tab", getSupportActionBar().getSelectedTab().getText().toString());
-        outState.putLong("displayedHouse", displayedHouse);
+        if (displayedHouses != null) {
+            Long[] savedHouses = new Long[displayedHouses.size()];
+            displayedHouses.toArray(savedHouses);
+            outState.putLongArray("displayedHouses", toLongArray(savedHouses));
+        } else {
+            outState.putLongArray("displayedHouses", null);
+        }
+    }
+
+    private long[] toLongArray(Long[] array) {
+        long[] longs = new long[array.length];
+        for (int i = 0; i < array.length; i++) {
+            longs[i] = array[i];
+        }
+        return longs;
     }
 
     @Override
@@ -108,14 +129,40 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_data_management) {
-            Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
-            startActivity(dataManagementIntent);
-        } else if (item.getItemId() == R.id.action_about) {
-            Intent aboutIntent = new Intent(this, AboutActivity.class);
-            startActivity(aboutIntent);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentByTag("map");
+                getSupportFragmentManager().popBackStack();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setHomeButtonEnabled(false);
+                displayedHouses = null;
+                break;
+            case R.id.action_data_management:
+                Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
+                startActivity(dataManagementIntent);
+                break;
+            case R.id.action_about:
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+                startActivity(aboutIntent);
+                break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (displayedHouses != null) {
+            displayedHouses.pop();
+            if (displayedHouses.size() > 0) {
+                onAddressClick(displayedHouses.peek(), false);
+                return;
+            } else {
+                displayedHouses = null;
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setHomeButtonEnabled(false);
+            }
+        }
+        super.onBackPressed();
     }
 
     @Override
@@ -123,25 +170,39 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != HouseActivity.RESULT_LAYOUT_MODE_CHANGE) {
-            displayedHouse = -1;
+            displayedHouses = null;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 
     @Override
     public void onAddressClick(long id) {
+        onAddressClick(id, true);
+    }
+
+    private void onAddressClick(long id, boolean addToStack) {
         if (getString(R.string.layout_mode).equals(LAYOUT_MODE_LANDSCAPE_LARGE)) {
             HouseFragment fragment = (HouseFragment)getSupportFragmentManager().findFragmentByTag("house");
             if (fragment == null) {
                 fragment = new HouseFragment();
             }
-            getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.contentRight, fragment, "house").addToBackStack(null).commit();
+            if (!fragment.isVisible()) {
+                getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.contentRight, fragment, "house").addToBackStack(null).commit();
+            }
             fragment.setHouse(id);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             Intent houseIntent = new Intent(this, HouseActivity.class);
             houseIntent.putExtra("id", id);
             startActivityForResult(houseIntent, 0);
         }
-        displayedHouse = id;
+
+        if (addToStack) {
+            if (displayedHouses == null) {
+                displayedHouses = new Stack<Long>();
+            }
+            displayedHouses.push(id);
+        }
     }
 
     public static void sendNavigationIntent(Activity activity, double latitude, double longitude) {

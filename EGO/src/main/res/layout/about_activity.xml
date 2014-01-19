@@ -41,17 +41,16 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/about_activity_header"
-                    android:id="@+id/about_textViewHeader"
                     android:paddingBottom="@dimen/activity_vertical_margin"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal" />
+                    android:gravity="center_horizontal"
+                    android:id="@+id/about_textViewHeader" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/about_activity_concept_header"
-                    android:id="@+id/about_textViewConceptHeader"
                     android:layout_gravity="center_horizontal"
                     android:textAlignment="center"
                     android:textStyle="bold"
@@ -63,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/about_activity_concept_text"
-                    android:id="@+id/about_textViewConceptText"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="@dimen/activity_vertical_margin" />
 
@@ -72,7 +70,6 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/about_activity_development_header"
-                    android:id="@+id/about_textViewDevelopmentHeader"
                     android:layout_gravity="center_horizontal"
                     android:textAlignment="center"
                     android:textStyle="bold"
@@ -83,9 +80,27 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/about_activity_development_text"
-                    android:id="@+id/about_textViewDevelopmentText"
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="@dimen/activity_vertical_margin" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_maps_header"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/activity_element_margin" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_activity_maps_text"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:autoLink="web"/>
 
             </LinearLayout>
 

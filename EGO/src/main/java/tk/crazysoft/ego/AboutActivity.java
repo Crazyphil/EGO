@@ -1,5 +1,6 @@
 package tk.crazysoft.ego;
 
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
@@ -20,6 +22,12 @@ public class AboutActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        try {
+            TextView headerText = (TextView)findViewById(R.id.about_textViewHeader);
+            String appVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            headerText.setText(getString(R.string.about_activity_header, appVersion));
+        } catch (PackageManager.NameNotFoundException e) { }
     }
 
     @Override
