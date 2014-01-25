@@ -57,6 +57,7 @@ public final class EGOContract {
         public static final String COLUMN_NAME_TIME_FROM = "timefrom";
         public static final String COLUMN_NAME_TIME_TO = "timeto";
         public static final String COLUMN_NAME_DOCTOR_NAME = "doctorname";
+        public static final String COLUMN_NAME_NEXT_ID = "nextid";
     }
 
     public static abstract class NameReplacements implements BaseColumns {
@@ -93,7 +94,8 @@ public final class EGOContract {
                     DoctorStandby.COLUMN_NAME_DATE + " NUMERIC, " +
                     DoctorStandby.COLUMN_NAME_TIME_FROM + " INTEGER, " +
                     DoctorStandby.COLUMN_NAME_TIME_TO + " INTEGER, " +
-                    DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " TEXT)";
+                    DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " TEXT, " +
+                    DoctorStandby.COLUMN_NAME_NEXT_ID + " INTEGER)";
     public static final String SQL_DELETE_DOCTOR_STANDBY =
             "DROP TABLE IF EXISTS " + DoctorStandby.TABLE_NAME;
 

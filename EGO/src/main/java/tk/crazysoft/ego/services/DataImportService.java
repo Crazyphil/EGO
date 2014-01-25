@@ -17,6 +17,7 @@ import tk.crazysoft.ego.data.AddressImporter;
 import tk.crazysoft.ego.data.AdmittanceImporter;
 import tk.crazysoft.ego.data.EGODbHelper;
 import tk.crazysoft.ego.data.Importer;
+import tk.crazysoft.ego.data.StandbyImporter;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.io.InputPositionReader;
 
@@ -60,7 +61,8 @@ public class DataImportService extends IntentService {
                 importer = new AdmittanceImporter(this);
                 path = ADMITTANCES_PATH;
             } else if (action.equals(ACTION_IMPORT_DOCTOR_STANDBY)) {
-                // TODO: Import doctors on standby
+                importer = new StandbyImporter(this);
+                path = STANDBY_PATH;
             }
             if (importer != null) {
                 importer.setOnPostProcessProgressListener(new Importer.OnPostProcessProgressListener() {
@@ -130,7 +132,7 @@ public class DataImportService extends IntentService {
             Pattern csvPattern = Pattern.compile(CSV_SEPARATOR);
             String line = rdr.readLine();
             while (line != null) {
-                String[] fields = csvPattern.split(line);
+                String[] fields = csvPattern.split(line, -1);
                 if (fields.length > 0 && !fields[0].startsWith(CSV_COMMENT)) {
                     int result = importer.process(fields);
                     if (result != Importer.PROCESS_IGNORED) {
