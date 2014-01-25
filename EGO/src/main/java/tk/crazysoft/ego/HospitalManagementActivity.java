@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGOCursorLoader;
 import tk.crazysoft.ego.data.EGODbHelper;
@@ -37,10 +38,17 @@ public class HospitalManagementActivity extends ActionBarActivity {
     private static final String ACTION_REPLACEMENT = "tk.crazysoft.ego.preferences.REPLACEMENT";
 
     private HospitalManagementFragment fragment;
+    private AppThemeWatcher themeWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
+            setTheme(getIntent().getIntExtra("theme", R.style.AppTheme));
+            themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
+        }
 
         if (savedInstanceState == null) {
             fragment = new HospitalManagementFragment();
@@ -54,6 +62,33 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragment, "fragment").commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onPause();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onSaveInstanceState(outState);
+        }
     }
 
     @Override

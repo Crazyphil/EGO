@@ -3,6 +3,7 @@ package tk.crazysoft.ego;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import tk.crazysoft.ego.preferences.Preferences;
 
 public class MapFragment extends Fragment {
     private static final String BASEMAP_PATH = "ego/karten/basemap.sqlite";
+    private static final String BASEMAP_NIGHT_PATH = "ego/karten/basemap-nacht.sqlite";
     private static final String ORTHOPHOTO_PATH = "ego/karten/orthofoto.sqlite";
 
     private MapView mapView;
@@ -47,6 +49,8 @@ public class MapFragment extends Fragment {
     private GeoPoint mapCenter;
     private int mapZoom;
     private boolean followLocation = false, showOrtophoto = false;
+    private double destinationLatitude, destinationLongitude;
+    private String destinationTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +74,17 @@ public class MapFragment extends Fragment {
 
     private void createMapView(View view) {
         String sdPath = ExternalStorage.getSdCardPath(getActivity());
-        File basemapFile = new File(sdPath + BASEMAP_PATH);
+
+        File basemapFile;
+        if (MainActivity.hasDarkTheme(getActivity())) {
+            basemapFile = new File(sdPath + BASEMAP_NIGHT_PATH);
+            if (!basemapFile.exists()) {
+                basemapFile = new File(sdPath + BASEMAP_PATH);
+            }
+        } else {
+            basemapFile = new File(sdPath + BASEMAP_PATH);
+        }
+
         File orthophotoFile = new File(sdPath + ORTHOPHOTO_PATH);
 
         IArchiveFile basemapArchive = null;
@@ -78,7 +92,7 @@ public class MapFragment extends Fragment {
         if (!basemapFile.exists()) {
             showMapFilesNotFoundDialog(view, sdPath);
         } else {
-            basemapArchive = ArchiveFileFactory.getArchiveFile(new File(sdPath + BASEMAP_PATH));
+            basemapArchive = ArchiveFileFactory.getArchiveFile(basemapFile);
             if (basemapArchive == null) {
                 showMapFilesNotFoundDialog(view, sdPath);
             }
@@ -86,14 +100,16 @@ public class MapFragment extends Fragment {
         if (!orthophotoFile.exists()) {
             showMapFilesNotFoundDialog(view, sdPath);
         } else {
-            orthophotoArchive = ArchiveFileFactory.getArchiveFile(new File(sdPath + ORTHOPHOTO_PATH));
+            orthophotoArchive = ArchiveFileFactory.getArchiveFile(orthophotoFile);
             if (orthophotoArchive == null) {
                 showMapFilesNotFoundDialog(view, sdPath);
             }
         }
 
-        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 17, 256, ".jpg", "http://maps.wien.gv.at/basemap/geolandbasemap/");
-        ITileSource orthophotoSource = new QuadTreeTileSource("geoimage.at", ResourceProxy.string.offline_mode, 5, 17, 256, ".png", "http://srv.doris.at/arcgis/rest/services/");
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int tileSize = (int)(256 * metrics.density);
+        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 17, tileSize, ".jpg", "http://maps.wien.gv.at/basemap/geolandbasemap/");
+        ITileSource orthophotoSource = new QuadTreeTileSource("geoimage.at", ResourceProxy.string.offline_mode, 5, 17, tileSize, ".png", "http://srv.doris.at/arcgis/rest/services/");
 
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
         MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchive != null ? new IArchiveFile[] { basemapArchive } : null);
@@ -115,7 +131,6 @@ public class MapFragment extends Fragment {
         mapView.getOverlayManager().add(gpsOverlay);
         mapView.getOverlayManager().add(destinationOverlay);
         mapView.setUseDataConnection(false);
-        mapView.setTag("map");
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         ((RelativeLayout)view.findViewById(R.id.map_layoutRoot)).addView(mapView, 0, params);
@@ -123,7 +138,6 @@ public class MapFragment extends Fragment {
         Preferences preferences = new Preferences(view.getContext());
         GeoPoint defaultCenter = new GeoPoint(preferences.getMapLatitude(), preferences.getMapLongitude());
 
-        mapView.setMaxZoomLevel(18);
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
 
@@ -152,8 +166,6 @@ public class MapFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        mapView = (MapView)getView().findViewWithTag("map");
 
         imageButtonGPS = (ImageButton)getView().findViewById(R.id.map_imageButtonGPS);
         imageButtonGPS.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +220,10 @@ public class MapFragment extends Fragment {
         if (followLocation || mapCenter == null) {
             gpsOverlay.enableFollowLocation();
         }
+
+        if (destinationTitle != null) {
+            setDestination(destinationLatitude, destinationLongitude, destinationTitle);
+        }
     }
 
     @Override
@@ -220,6 +236,7 @@ public class MapFragment extends Fragment {
 
         gpsOverlay.disableFollowLocation();
         gpsOverlay.disableMyLocation();
+        mapView.getTileProvider().clearTileCache();
         mapView.onDetach();
 
         gpsOverlay = null;
@@ -244,17 +261,24 @@ public class MapFragment extends Fragment {
     }
 
     public void setDestination(double latitude, double longitude, String title) {
-        if (destinationOverlay.size() > 0) {
-            destinationOverlay.removeAllItems();
-        }
+        if (mapView != null) {
+            if (destinationOverlay.size() > 0) {
+                destinationOverlay.removeAllItems();
+            }
 
-        if (gpsOverlay.isFollowLocationEnabled()) {
-            gpsOverlay.disableFollowLocation();
-        }
+            if (gpsOverlay.isFollowLocationEnabled()) {
+                gpsOverlay.disableFollowLocation();
+            }
 
-        OverlayItem destination = new OverlayItem(title, null, new GeoPoint(latitude, longitude));
-        destinationOverlay.addItem(destination);
-        mapView.getController().animateTo(destination.getPoint());
-        imageButtonDestination.setVisibility(View.VISIBLE);
+            OverlayItem destination = new OverlayItem(title, null, new GeoPoint(latitude, longitude));
+            destinationOverlay.addItem(destination);
+            mapView.getController().animateTo(destination.getPoint());
+            imageButtonDestination.setVisibility(View.VISIBLE);
+        } else {
+            // Save given data until the map view is created (the fragment is probably currently not yet built)
+            destinationLatitude = latitude;
+            destinationLongitude = longitude;
+            destinationTitle = title;
+        }
     }
 }

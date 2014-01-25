@@ -5,20 +5,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
+import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.components.TabListener;
 import tk.crazysoft.ego.preferences.Preferences;
 
@@ -33,10 +39,17 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS = "free_text_address";
 
     private Stack<Long> displayedHouses;
+    private AppThemeWatcher themeWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
+            setTheme(themeWatcher.getCurrentAppTheme());
+            themeWatcher.setOnAppThemeChangedListener(new OnAppThemeChangedListener(this));
+        }
 
         // Initialize default preferences if the app is started for the first time
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -100,8 +113,27 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onPause();
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putString("tab", getSupportActionBar().getSelectedTab().getText().toString());
         if (displayedHouses != null) {
             Long[] savedHouses = new Long[displayedHouses.size()];
@@ -109,6 +141,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             outState.putLongArray("displayedHouses", toLongArray(savedHouses));
         } else {
             outState.putLongArray("displayedHouses", null);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onSaveInstanceState(outState);
         }
     }
 
@@ -139,10 +174,16 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 break;
             case R.id.action_data_management:
                 Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    dataManagementIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+                }
                 startActivity(dataManagementIntent);
                 break;
             case R.id.action_about:
                 Intent aboutIntent = new Intent(this, AboutActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    aboutIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+                }
                 startActivity(aboutIntent);
                 break;
         }
@@ -194,6 +235,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         } else {
             Intent houseIntent = new Intent(this, HouseActivity.class);
             houseIntent.putExtra("id", id);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                houseIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+            }
             startActivityForResult(houseIntent, 0);
         }
 
@@ -203,6 +247,29 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             }
             displayedHouses.push(id);
         }
+    }
+
+    public static boolean hasDarkTheme(ContextThemeWrapper context) {
+        return getThemeId(context) == R.style.AppTheme_Dark;
+    }
+
+    private static int getThemeId(ContextThemeWrapper context) {
+        int themeResId = 0;
+        try {
+            Class<?> clazz = ContextThemeWrapper.class;
+            Method method = clazz.getMethod("getThemeResId");
+            method.setAccessible(true);
+            themeResId = (Integer)method.invoke(context);
+        } catch (NoSuchMethodException e) {
+            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+        } catch (IllegalAccessException e) {
+            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+        } catch (IllegalArgumentException e) {
+            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+        } catch (InvocationTargetException e) {
+            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+        }
+        return themeResId;
     }
 
     public static void sendNavigationIntent(Activity activity, double latitude, double longitude) {
@@ -261,6 +328,22 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             activity.startActivity(navIntent);
         } else {
             Toast.makeText(activity, R.string.error_no_navigation_app, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static class OnAppThemeChangedListener implements AppThemeWatcher.OnAppThemeChangedListener {
+        private Activity activity;
+
+        public OnAppThemeChangedListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onAppThemeChanged(int newTheme) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                activity.getIntent().putExtra("theme", newTheme);
+                activity.recreate();
+            }
         }
     }
 }
