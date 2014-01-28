@@ -37,6 +37,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     private ListView listViewResults;
     private HashMap<AlertDialog, CursorAdapter> adapterMapping = new HashMap<AlertDialog, CursorAdapter>(4);
     private Typeface normalTypeface, italicTypeface;
+    private int normalColor, italicColor;
 
     private OnAddressClickListener onAddressClickListener;
 
@@ -93,6 +94,14 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         italicTypeface = Typeface.create(buttonCity.getTypeface(), Typeface.ITALIC);
         normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
 
+        if (MainActivity.hasDarkTheme(getActivity())) {
+            normalColor = getResources().getColor(android.R.color.primary_text_dark);
+            italicColor = getResources().getColor(android.R.color.secondary_text_dark);
+        } else {
+            normalColor = getResources().getColor(android.R.color.primary_text_light);
+            italicColor = getResources().getColor(android.R.color.secondary_text_light);
+        }
+
         buttonCity.setOnClickListener(new FilterButtonOnClickListener());
         buttonZip.setOnClickListener(new FilterButtonOnClickListener());
         buttonStreet.setOnClickListener(new FilterButtonOnClickListener());
@@ -134,22 +143,30 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         if (cityHasData) {
             buttonCity.setText(selectedCity);
             buttonCity.setTypeface(normalTypeface, Typeface.NORMAL);
-            buttonCity.setTextColor(getResources().getColor(android.R.color.black));
+            buttonCity.setTextColor(normalColor);
+        } else {
+            buttonCity.setTextColor(italicColor);
         }
         if (zipHasData) {
             buttonZip.setText(selectedZip);
             buttonZip.setTypeface(normalTypeface, Typeface.NORMAL);
-            buttonZip.setTextColor(getResources().getColor(android.R.color.black));
+            buttonZip.setTextColor(normalColor);
+        } else {
+            buttonZip.setTextColor(italicColor);
         }
         if (streetHasData) {
             buttonStreet.setText(selectedStreet);
             buttonStreet.setTypeface(normalTypeface, Typeface.NORMAL);
-            buttonStreet.setTextColor(getResources().getColor(android.R.color.black));
+            buttonStreet.setTextColor(normalColor);
+        } else {
+            buttonStreet.setTextColor(italicColor);
         }
         if (streetNoHasData) {
             buttonStreetNo.setText(selectedStreetNo);
             buttonStreetNo.setTypeface(normalTypeface, Typeface.NORMAL);
-            buttonStreetNo.setTextColor(getResources().getColor(android.R.color.black));
+            buttonStreetNo.setTextColor(normalColor);
+        } else {
+            buttonStreetNo.setTextColor(italicColor);
         }
     }
 
@@ -401,25 +418,25 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             if (v == imageButtonClearCity) {
                 buttonCity.setText(R.string.address_view_city);
                 buttonCity.setTypeface(italicTypeface, Typeface.ITALIC);
-                buttonCity.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonCity.setTextColor(italicColor);
                 alertDialogCity.getListView().scrollTo(0, 0);
                 resetLoaders(buttonCity, false);
             } else if (v == imageButtonClearZip) {
                 buttonZip.setText(R.string.address_view_zipcode);
                 buttonZip.setTypeface(italicTypeface, Typeface.ITALIC);
-                buttonZip.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonZip.setTextColor(italicColor);
                 alertDialogZip.getListView().scrollTo(0, 0);
                 resetLoaders(buttonZip, false);
             } else if (v == imageButtonClearStreet) {
                 buttonStreet.setText(R.string.address_view_street);
                 buttonStreet.setTypeface(italicTypeface, Typeface.ITALIC);
-                buttonStreet.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonStreet.setTextColor(italicColor);
                 alertDialogStreet.getListView().scrollTo(0, 0);
                 resetLoaders(buttonStreet, false);
             } else {
                 buttonStreetNo.setText(R.string.address_view_streetno);
                 buttonStreetNo.setTypeface(italicTypeface, Typeface.ITALIC);
-                buttonStreetNo.setTextColor(getResources().getColor(android.R.color.secondary_text_light));
+                buttonStreetNo.setTextColor(italicColor);
                 alertDialogStreetNo.getListView().scrollTo(0, 0);
                 resetLoaders(buttonStreetNo, false);
             }
@@ -439,7 +456,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             Cursor c = (Cursor)alertDialog.getListView().getAdapter().getItem(which);
             button.setText(c.getString(1));
             button.setTypeface(normalTypeface, Typeface.NORMAL);
-            button.setTextColor(getResources().getColor(android.R.color.black));
+            button.setTextColor(normalColor);
             resetLoaders(button, true);
         }
     }

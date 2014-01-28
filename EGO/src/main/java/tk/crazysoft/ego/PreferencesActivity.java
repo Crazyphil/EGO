@@ -2,6 +2,7 @@ package tk.crazysoft.ego;
 
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 
+import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.DataImportPreference;
 import tk.crazysoft.ego.preferences.Preferences;
@@ -21,9 +23,16 @@ import tk.crazysoft.ego.services.DataImportService;
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private DataImportReceiver importReceiver;
     private ProgressBar progressBar;
+    private AppThemeWatcher themeWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
+            setTheme(getIntent().getIntExtra("theme", R.style.AppTheme));
+            themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
+        }
+
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
@@ -54,13 +63,30 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     @Override
     protected void onResume() {
         super.onResume();
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onResume();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onPause();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            themeWatcher.onSaveInstanceState(outState);
+        }
     }
 
     @Override
