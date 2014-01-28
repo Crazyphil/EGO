@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">COOP</string>
+
+    <!-- General error messages that may appear anywhere -->
+    <string name="error_db_object_null">The database cannot be opened. Please contact administrator.</string>
+    <string name="error_no_navigation_app">No matching navigation app is installed. Please contact administrator.</string>
+    <string name="button_ok">Understood.</string>
+    <string name="time_format">%1$02d:%2$02d o\'clock</string>
+
+    <!-- Main Activity -->
+    <string name="main_activity_action_data_management">Data Management</string>
+    <string name="main_activity_action_about">About COOP</string>
+    <string name="main_activity_tab_addresses">Addresses</string>
+    <string name="main_activity_tab_hospitals_doctors">Doctor &amp; ER</string>
+    <string name="main_activity_tab_map">Map</string>
+
+    <!-- Address View Fragment -->
+    <string name="address_view_address">Address</string>
+    <string name="address_view_city">City</string>
+    <string name="address_view_zipcode">ZIP</string>
+    <string name="address_view_street">Street</string>
+    <string name="address_view_streetno">Street No.</string>
+    <string name="address_view_results">Results</string>
+    <string name="address_view_remove">Remove filter</string>
+
+    <!-- Map Fragment -->
+    <string name="map_view_gps">My Position</string>
+    <string name="map_view_destination">Destination</string>
+    <string name="map_view_mapmode">Show/hide orthophoto</string>
+    <string name="map_view_nomaps_title">Map Sources</string>
+    <string name="map_view_nomaps_text">Some map sources couldn\'t be found.\n\nThe following files are needed:\n%1$s\n%2$s</string>
+
+    <!-- Hospitals/Doctors Fragment -->
+    <string name="hospitals_doctors_view_today">Today</string>
+    <string name="hospitals_doctors_view_now">Now</string>
+    <string name="hospitals_doctors_view_hospitals">Admitting Hospitals</string>
+    <string name="hospitals_doctors_view_hospitals_empty">For %1$s at %2$s, no admitting hospitals are defined.</string>
+    <string name="hospitals_doctors_view_doctors">Doctors on Standby</string>
+    <string name="hospitals_doctors_view_doctors_empty">On %1$s at %2$s, no doctor is on standby.</string>
+    <string name="hospitals_doctors_view_date_dialog_title">Select Date</string>
+    <string name="hospitals_doctors_view_time_dialog_title">Select Time</string>
+
+    <!-- House Fragment -->
+    <string name="house_view_navigate">Navigate</string>
+    <string name="house_view_coordinate_north">N</string>
+    <string name="house_view_coordinate_east">E</string>
+    <string name="house_view_coordinate_south">S</string>
+    <string name="house_view_coordinate_west">W</string>
+    <string name="house_view_mapsheet">Map Sheet %s</string>
+
+    <!-- Preferences Activity -->
+    <string name="preferences_activity_title">Data Management</string>
+    <string name="preferences_activity_import_title">Import Data</string>
+    <string name="preferences_activity_import_addresses_title">Addresses</string>
+    <string name="preferences_activity_import_addresses_summary">from %sego/import/adressen.csv</string>
+    <string name="preferences_activity_import_hospitals_title">Hospital admittances</string>
+    <string name="preferences_activity_import_hospitals_summary">from %sego/import/aufnahmen.csv</string>
+    <string name="preferences_activity_import_doctors_title">Doctors on standby</string>
+    <string name="preferences_activity_import_doctors_summary">from %sego/import/bereitschaft.csv</string>
+    <string name="preferences_activity_import_use_sd_title">Use external SD card</string>
+    <string name="preferences_activity_import_use_sd_summary_unchecked">Load import files and map sources from internal device memory</string>
+    <string name="preferences_activity_import_use_sd_summary_checked">Load import files and map sources from external SD card</string>
+    <string name="preferences_activity_map_title">Map View</string>
+    <string name="preferences_activity_map_latitude_title">Latitude</string>
+    <string name="preferences_activity_map_latitude_summary">North/South width of the place centered on the map by default</string>
+    <string name="preferences_activity_map_longitude_title">Longitude</string>
+    <string name="preferences_activity_map_longitude_summary">East/West length of the place centered on the map by default</string>
+    <string name="preferences_activity_navigation_title">External Navigation App</string>
+    <string name="preferences_activity_navigation_api_title">Interface</string>
+    <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
+    <string name="preferences_activity_hospitals_doctors_takeover_title">Hospital admittance takeover time</string>
+    <string name="preferences_activity_hospitals_doctors_takeover_summary">The admitting hospital changes daily at %1$02d:%2$02d o\'clock</string>
+    <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Always admitting hospitals</string>
+    <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Manage the hospitals that admit patients at all times</string>
+    <string name="preferences_activity_hospitals_doctors_replacement_title">Contact search replacements</string>
+    <string name="preferences_activity_hospitals_doctors_replacement_summary">Manage the names by which hospitals and doctors are searched in your contacts</string>
+
+    <string-array name="preferences_activity_navigation_api_entries">
+        <item>Geographical Point</item>
+        <item>Google Navigation (and compatible)</item>
+        <item>Google Maps</item>
+        <item>Navigon</item>
+    </string-array>
+
+    <!-- Hospital Management Activity -->
+    <string name="hospital_management_activity_permanent_admittances_title">Permanently Admitting Hospitals</string>
+    <string name="hospital_management_activity_replacement_title">Contact Search Replacements</string>
+    <string name="hospital_management_activity_action_add">Add</string>
+    <string name="hospital_management_activity_action_delete">Delete</string>
+    <string name="hospital_management_activity_permanent_admittances_dialog_add">Add Hospital</string>
+    <string name="hospital_management_activity_replacement_dialog_add">Add Replacement</string>
+    <string name="hospital_management_activity_permanent_admittances_dialog_edit">Edit Hospital</string>
+    <string name="hospital_management_activity_replacement_dialog_edit">Edit Replacement</string>
+    <string name="hospital_management_activity_permanent_admittances_empty">No hospitals were entered yet.\nClick on „+“ to add new entries.</string>
+    <string name="hospital_management_activity_replacement_empty">No replacements were added yet.\nClick on „+“ to add new entries.</string>
+
+    <!-- About Activity -->
+    <string name="about_activity_title">About COOP</string>
+    <string name="about_activity_header">Complete Operation Organisation &amp; Planning\nVersion %s\n\nA project of subsidiary\nSt. Veit im Mühlkreis</string>
+    <string name="about_activity_concept_header">Concept</string>
+    <string name="about_activity_concept_text">Peter Grubmair</string>
+    <string name="about_activity_development_header">Development</string>
+    <string name="about_activity_development_text">Philipp Kapfer\nFlorian Helml</string>
+    <string name="about_activity_maps_header">Map Sources</string>
+    <string name="about_activity_maps_text">Basemap: basemap.at\nOrthophotos: geoimage.at</string>
+
+    <!-- House Activity -->
+    <string name="house_activity_title">Address Details</string>
+
+    <!-- Data Import Service class -->
+    <string name="service_dataimport_error_nosd">No SD card is inserted into the device.</string>
+    <string name="service_dataimport_error_notfound">The selected import file was not found or isn\'t readable.</string>
+    <string name="service_dataimport_error_readfail">Import has failed.</string>
+    <string name="service_dataimport_result_import">%1$,d entries were imported, %2$,d were erroneous.</string>
+    <string name="service_dataimport_result_merge">%1$,d streets exist in multiple cities, %2$,d cross borders.</string>
+
+</resources>
