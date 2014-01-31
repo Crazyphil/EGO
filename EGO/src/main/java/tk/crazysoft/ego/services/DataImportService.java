@@ -34,6 +34,8 @@ public class DataImportService extends IntentService {
     public static final String BROADCAST_RESULT_POSTPROCESS = "tk.crazysoft.ego.services.IMPORT_RESULT_POSTPROCESS";
     public static final String EXTRA_RESULT_ACTION = "tk.crazysoft.ego.services.IMPORT_RESULT_ACTION";
     public static final String EXTRA_RESULT_COUNTS = "tk.crazysoft.ego.services.IMPORT_RESULT_COUNTS";
+    public static final String BROADCAST_COMPLETED = "tk.crazysoft.ego.services.IMPORT_COMPLETED";
+    public static final String EXTRA_COMPLETED_ACTION = "tk.crazysoft.ego.services.IMPORT_COMPLETED_ACTION";
 
     private static final String ADDRESSES_PATH = "ego/import/adressen.csv";
     private static final String ADMITTANCES_PATH = "ego/import/aufnahmen.csv";
@@ -80,6 +82,7 @@ public class DataImportService extends IntentService {
             }
         }
 
+        reportCompleted(intent.getAction());
         DataImportReceiver.completeWakefulIntent(intent);
     }
 
@@ -189,6 +192,11 @@ public class DataImportService extends IntentService {
 
     private void reportResultPostProcess(String action, int processed, int modified) {
         Intent intent = new Intent(BROADCAST_RESULT_POSTPROCESS).putExtra(EXTRA_RESULT_COUNTS, new int[] { processed, modified }).putExtra(EXTRA_RESULT_ACTION, action);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void reportCompleted(String action) {
+        Intent intent = new Intent(BROADCAST_COMPLETED).putExtra(EXTRA_COMPLETED_ACTION, action);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

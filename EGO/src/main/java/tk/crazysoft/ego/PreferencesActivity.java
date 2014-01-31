@@ -9,9 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
 
 import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.io.ExternalStorage;
@@ -22,7 +20,6 @@ import tk.crazysoft.ego.services.DataImportService;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private DataImportReceiver importReceiver;
-    private ProgressBar progressBar;
     private AppThemeWatcher themeWatcher;
 
     @Override
@@ -34,17 +31,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
 
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.preferences);
-        setContentView(R.layout.preferences_activity);
-
-        progressBar = (ProgressBar)findViewById(R.id.preferences_progressBar);
 
         IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
         importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
         importFilter.addAction(DataImportService.BROADCAST_RESULT_IMPORT);
         importFilter.addAction(DataImportService.BROADCAST_RESULT_POSTPROCESS);
-        importReceiver = new DataImportReceiver(this);
+        importFilter.addAction(DataImportService.BROADCAST_COMPLETED);
+        importReceiver = new DataImportReceiver(savedInstanceState);
         LocalBroadcastManager.getInstance(this).registerReceiver(importReceiver, importFilter);
     }
 
@@ -87,20 +81,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             themeWatcher.onSaveInstanceState(outState);
         }
+        importReceiver.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(importReceiver);
         super.onDestroy();
-    }
-
-    public void setManagementProgressBarVisibility(boolean visible) {
-        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    public void setManagementProgress(int progress) {
-        progressBar.setProgress(progress);
     }
 
     @Override
