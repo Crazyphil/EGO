@@ -94,11 +94,13 @@ public class AppThemeWatcher extends BroadcastReceiver implements SensorEventLis
     }
 
     public void onPause() {
-        if (currentLux >= 0) {
-            manager.unregisterListener(this);
-        } else {
-            context.unregisterReceiver(this);
-        }
+        try {
+            if (currentLux >= 0) {
+                manager.unregisterListener(this);
+            } else {
+                context.unregisterReceiver(this);
+            }
+        } catch (IllegalArgumentException e) { }
         //timer.cancel();
     }
 

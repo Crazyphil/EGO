@@ -61,15 +61,15 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         Fragment mapFragment = getSupportFragmentManager().findFragmentByTag("map");
 
         if (layoutMode.equals(LAYOUT_MODE_PORTRAIT) || layoutMode.equals(LAYOUT_MODE_LANDSCAPE)) {
-            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, "addresses", AddressFragment.class)));
-            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_map).setTabListener(new TabListener<MapFragment>(this, "map", MapFragment.class)));
+            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, "addresses", AddressFragment.class)), false);
+            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_map).setTabListener(new TabListener<MapFragment>(this, "map", MapFragment.class)), false);
             actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_hospitals_doctors).setTabListener(
-                    new TabListener<HospitalsDoctorsFragment>(this, "hospitals_doctors", HospitalsDoctorsFragment.class)));
+                    new TabListener<HospitalsDoctorsFragment>(this, "hospitals_doctors", HospitalsDoctorsFragment.class)), false);
         } else {
             setContentView(R.layout.multipane_view);
-            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, R.id.contentLeft, "addresses", AddressFragment.class)));
+            actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_addresses).setTabListener(new TabListener<AddressFragment>(this, R.id.contentLeft, "addresses", AddressFragment.class)), false);
             actionBar.addTab(actionBar.newTab().setText(R.string.main_activity_tab_hospitals_doctors).setTabListener(
-                    new TabListener<HospitalsDoctorsFragment>(this, R.id.contentLeft, "hospitals_doctors", HospitalsDoctorsFragment.class)));
+                    new TabListener<HospitalsDoctorsFragment>(this, R.id.contentLeft, "hospitals_doctors", HospitalsDoctorsFragment.class)), false);
 
             if (mapFragment != null && mapFragment.getId() != R.id.contentRight) {
                 getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
@@ -99,6 +99,8 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             if (displayedHouses != null) {
                 onAddressClick(displayedHouses.peek(), false);
             }
+        } else {
+            actionBar.selectTab(actionBar.getTabAt(0));
         }
     }
 

@@ -245,7 +245,7 @@ public class StandbyImporter extends Importer {
 
             try {
                 day = Integer.parseInt(line[0]);
-                date.set(year, month, day, 0, 0, 0);
+                date.set(year, month - 1, day, 0, 0, 0);
 
                 // Provoke an IllegalArgumentException if the date is not valid
                 date.get(Calendar.DATE);

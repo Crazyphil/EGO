@@ -61,7 +61,7 @@ public class AddressImporter extends Importer {
                 mapsheet = csvTrim(line[columns.mapsheet]);
             }
 
-            if (subcode != 1) {
+            if (subcode > 1) {
                 return PROCESS_IGNORED;
             }
 
