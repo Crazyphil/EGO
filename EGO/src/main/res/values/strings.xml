@@ -16,7 +16,7 @@
     <string name="main_activity_tab_hospitals_doctors">Arzt &amp; KH</string>
     <string name="main_activity_tab_map">Karte</string>
 
-    <!-- Address View Fragment -->
+    <!-- Address Fragment -->
     <string name="address_view_address">Adresse</string>
     <string name="address_view_city">Ort</string>
     <string name="address_view_zipcode">PLZ</string>
@@ -24,6 +24,7 @@
     <string name="address_view_streetno">Hausnummer</string>
     <string name="address_view_results">Ergebnisse</string>
     <string name="address_view_remove">Filter entfernen</string>
+    <string name="address_view_empty">Es wurden noch keine Adressen importiert.\nIm Menü „Datenverwaltung“ auswählen, um Daten zu laden.</string>
 
     <!-- Map Fragment -->
     <string name="map_view_gps">Meine Position</string>

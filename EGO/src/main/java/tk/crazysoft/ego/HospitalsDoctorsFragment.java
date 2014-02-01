@@ -176,7 +176,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
                 EGOContract.NameReplacements.COLUMN_NAME_REPLACEMENT + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS,
                 "NULL AS " +  EGOContactsCursorLoader.COLUMN_NAME_ADDRESS
         };
-        String sortOrder = EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS + ", " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME;
+        String sortOrder = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " DESC, " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS + ", " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME;
         String selection;
         if (takeoverTime.getHour() > time.getHour() || takeoverTime.getHour() == time.getHour() && takeoverTime.getMinute() > time.getMinute()) {
             // Admittances after midnight but before the takeover time are stored with yesterday's date

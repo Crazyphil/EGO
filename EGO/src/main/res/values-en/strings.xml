@@ -16,7 +16,7 @@
     <string name="main_activity_tab_hospitals_doctors">Doctor &amp; ER</string>
     <string name="main_activity_tab_map">Map</string>
 
-    <!-- Address View Fragment -->
+    <!-- Address Fragment -->
     <string name="address_view_address">Address</string>
     <string name="address_view_city">City</string>
     <string name="address_view_zipcode">ZIP</string>
@@ -24,6 +24,7 @@
     <string name="address_view_streetno">Street No.</string>
     <string name="address_view_results">Results</string>
     <string name="address_view_remove">Remove filter</string>
+    <string name="address_view_empty">No addresses were imported yet.\nChoose “Data Management” in the menu to load data.</string>
 
     <!-- Map Fragment -->
     <string name="map_view_gps">My Position</string>
@@ -93,8 +94,8 @@
     <string name="hospital_management_activity_replacement_dialog_add">Add Replacement</string>
     <string name="hospital_management_activity_permanent_admittances_dialog_edit">Edit Hospital</string>
     <string name="hospital_management_activity_replacement_dialog_edit">Edit Replacement</string>
-    <string name="hospital_management_activity_permanent_admittances_empty">No hospitals were entered yet.\nClick on „+“ to add new entries.</string>
-    <string name="hospital_management_activity_replacement_empty">No replacements were added yet.\nClick on „+“ to add new entries.</string>
+    <string name="hospital_management_activity_permanent_admittances_empty">No hospitals were entered yet.\nClick on “+” to add new entries.</string>
+    <string name="hospital_management_activity_replacement_empty">No replacements were added yet.\nClick on “+” to add new entries.</string>
 
     <!-- About Activity -->
     <string name="about_activity_title">About COOP</string>
