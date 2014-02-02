@@ -30,6 +30,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -124,7 +125,6 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
     public static class HospitalManagementFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, DialogInterface.OnClickListener, TextView.OnEditorActionListener {
         private static final String COLUMN_NAME_REPLACEMENT_COMBINED = "entry";
-        private static final int LOADER_LIST = 0, LOADER_LOCAL_AUTOCOMPLETE = 1, LOADER_CONTACTS_AUTOCOMPLETE = 2;
 
         private boolean isReplacementFragment;
         private int itemPos = -1;
@@ -167,7 +167,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
                 setEmptyText(getString(R.string.hospital_management_activity_permanent_admittances_empty));
             }
 
-            getLoaderManager().initLoader(LOADER_LIST, null, this);
+            getLoaderManager().initLoader(0, null, this);
         }
 
         @Override
@@ -204,18 +204,6 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            switch (id) {
-                case LOADER_LIST:
-                    return createListLoader();
-                case LOADER_LOCAL_AUTOCOMPLETE:
-                    return createLocalAutoCompleteLoader();
-                case LOADER_CONTACTS_AUTOCOMPLETE:
-                    return createContactsAutoCompleteLoader();
-            }
-            return null;
-        }
-
-        private Loader<Cursor> createListLoader() {
             String[] projection, selectionArgs;
             String sortOrder, selection;
 
@@ -240,40 +228,9 @@ public class HospitalManagementActivity extends ActionBarActivity {
             return new EGOCursorLoader(getActivity(), isReplacementFragment ? EGOContract.NameReplacements.TABLE_NAME : EGOContract.HospitalAdmission.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
         }
 
-        private Loader<Cursor> createLocalAutoCompleteLoader() {
-            String[] projection = {
-                    "NULL AS " + EGOContract.NameReplacements._ID,
-                    EGOContract.HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " AS " + EGOContract.NameReplacements.COLUMN_NAME_NAME
-            };
-            String sortOrder = EGOContract.NameReplacements.COLUMN_NAME_NAME;
-            String selection = "1 UNION ALL SELECT DISTINCT " +
-                    "NULL AS " + EGOContract.DoctorStandby._ID + ", " + EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " AS " + EGOContract.NameReplacements.COLUMN_NAME_NAME +
-                    " FROM " + EGOContract.DoctorStandby.TABLE_NAME;
-            return new EGOCursorLoader(getActivity(), EGOContract.HospitalAdmission.TABLE_NAME, projection, selection, null, sortOrder, true);
-        }
-
-        private Loader<Cursor> createContactsAutoCompleteLoader() {
-            String[] projection = {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.DISPLAY_NAME
-            };
-            String sortOrder = ContactsContract.Contacts.DISPLAY_NAME;
-            return new CursorLoader(getActivity(), ContactsContract.Contacts.CONTENT_URI, projection, null, null, sortOrder);
-        }
-
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            CursorAdapter adapter;
-            switch (loader.getId()) {
-                case LOADER_LOCAL_AUTOCOMPLETE:
-                    adapter = localAutoCompleteAdapter;
-                    break;
-                case LOADER_CONTACTS_AUTOCOMPLETE:
-                    adapter = contactsAutoCompleteAdapter;
-                    break;
-                default:
-                    adapter = (CursorAdapter)getListAdapter();
-            }
+            CursorAdapter adapter = (CursorAdapter)getListAdapter();
             if (adapter != null) {
                 adapter.swapCursor(data);
             }
@@ -281,17 +238,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-            CursorAdapter adapter;
-            switch (loader.getId()) {
-                case LOADER_LOCAL_AUTOCOMPLETE:
-                    adapter = localAutoCompleteAdapter;
-                    break;
-                case LOADER_CONTACTS_AUTOCOMPLETE:
-                    adapter = contactsAutoCompleteAdapter;
-                    break;
-                default:
-                    adapter = (CursorAdapter)getListAdapter();
-            }
+            CursorAdapter adapter = (CursorAdapter)getListAdapter();
             if (adapter != null) {
                 adapter.swapCursor(null);
             }
@@ -366,13 +313,38 @@ public class HospitalManagementActivity extends ActionBarActivity {
                     return cursor.getString(cursor.getColumnIndex(EGOContract.NameReplacements.COLUMN_NAME_NAME));
                 }
             });
+            localAutoCompleteAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+                @Override
+                public Cursor runQuery(CharSequence constraint) {
+                    return runLocalAutoCompleteQuery(constraint);
+                }
+            });
             editText1.setAdapter(localAutoCompleteAdapter);
-            getLoaderManager().initLoader(LOADER_LOCAL_AUTOCOMPLETE, null, this);
 
             prepareContactsAutoCompleteAdapter();
             editText2.setAdapter(contactsAutoCompleteAdapter);
             editText2.setOnEditorActionListener(this);
-            getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
+        }
+
+        private Cursor runLocalAutoCompleteQuery(CharSequence filter) {
+            String[] projection = {
+                    "NULL AS " + EGOContract.NameReplacements._ID,
+                    EGOContract.HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " AS " + EGOContract.NameReplacements.COLUMN_NAME_NAME
+            };
+            String sortOrder = EGOContract.NameReplacements.COLUMN_NAME_NAME;
+            String selection = "%1$s UNION ALL SELECT DISTINCT " +
+                    "NULL AS " + EGOContract.DoctorStandby._ID + ", " + EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " AS " + EGOContract.NameReplacements.COLUMN_NAME_NAME +
+                    " FROM " + EGOContract.DoctorStandby.TABLE_NAME + " WHERE %2$s";
+            String[] selectionArgs = null;
+            if (filter != null) {
+                String filterStr = "%" + filter + "%";
+                selection = String.format(selection, EGOContract.HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " LIKE ?", EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " LIKE ?");
+                selectionArgs = new String[] { filterStr, filterStr };
+            } else {
+                selection = String.format(selection, "1", "1");
+            }
+            EGOCursorLoader loader = new EGOCursorLoader(getActivity(), EGOContract.HospitalAdmission.TABLE_NAME, projection, selection, selectionArgs, sortOrder, true);
+            return loader.loadInBackground();
         }
 
         private void prepareContactsAutoCompleteAdapter() {
@@ -385,6 +357,27 @@ public class HospitalManagementActivity extends ActionBarActivity {
                     return cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 }
             });
+            contactsAutoCompleteAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+                @Override
+                public Cursor runQuery(CharSequence constraint) {
+                    return runContactsAutoCompleteQuery(constraint);
+                }
+            });
+        }
+
+        private Cursor runContactsAutoCompleteQuery(CharSequence filter) {
+            String[] projection = {
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.DISPLAY_NAME
+            };
+            String selection = null;
+            String[] selectionArgs = null;
+            if (filter != null) {
+                selection = ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
+                selectionArgs = new String[] { "%" + filter + "%" };
+            }
+            String sortOrder = ContactsContract.Contacts.DISPLAY_NAME;
+            return getActivity().getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
         }
 
         private void createPermanentAdmittanceDialogContent(AlertDialog.Builder builder, Bundle savedInstanceState) {
@@ -412,7 +405,6 @@ public class HospitalManagementActivity extends ActionBarActivity {
                 }
                 editText.setTag(itemId);
             }
-            getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
         }
 
         public void deleteEntries() {
