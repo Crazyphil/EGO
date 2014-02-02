@@ -110,9 +110,9 @@ public class HospitalManagementActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            /*case android.R.id.home:
+            case android.R.id.home:
                 this.finish();
-                return true;*/
+                return true;
             case R.id.action_new:
                 fragment.addEntry();
                 return true;

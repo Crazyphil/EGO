@@ -1,5 +1,6 @@
 package tk.crazysoft.ego;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -88,6 +89,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(importReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        intent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+        super.startActivity(intent);
     }
 
     @Override

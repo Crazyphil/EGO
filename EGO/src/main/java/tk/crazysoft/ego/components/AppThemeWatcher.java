@@ -34,8 +34,6 @@ public class AppThemeWatcher extends BroadcastReceiver implements SensorEventLis
     private float currentLux;
     private OnAppThemeChangedListener listener;
 
-    //private Timer timer;
-
     public AppThemeWatcher(Context context, Bundle savedInstanceState) {
         this.context = context;
         manager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
@@ -70,27 +68,6 @@ public class AppThemeWatcher extends BroadcastReceiver implements SensorEventLis
             context.registerReceiver(this, timeFilter);
             calculateThemeByTime(false);
         }
-
-        /*final Handler handler = new Handler();
-        final Runnable changeLux = new Runnable() {
-            @Override
-            public void run() {
-                if (currentTheme == THEME_DAY) {
-                    currentLux = 200;
-                } else {
-                    currentLux = 600;
-                }
-                calculateThemeByBrightness();
-            }
-        };
-
-        timer = new Timer("test");
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(changeLux);
-            }
-        }, 10000, 10000);*/
     }
 
     public void onPause() {
@@ -101,7 +78,6 @@ public class AppThemeWatcher extends BroadcastReceiver implements SensorEventLis
                 context.unregisterReceiver(this);
             }
         } catch (IllegalArgumentException e) { }
-        //timer.cancel();
     }
 
     public void onSaveInstanceState(Bundle outState) {
