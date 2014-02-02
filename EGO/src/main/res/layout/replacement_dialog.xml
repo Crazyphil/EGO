@@ -8,7 +8,9 @@
         android:layout_height="wrap_content"
         android:id="@android:id/text1"
         android:layout_weight="1"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:nextFocusDown="@android:id/text2" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,5 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@android:id/text2"
         android:layout_weight="1"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
+        android:nextFocusUp="@android:id/text2" />
 </LinearLayout>

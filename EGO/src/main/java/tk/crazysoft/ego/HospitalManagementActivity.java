@@ -18,15 +18,20 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.data.EGOContract;
@@ -117,7 +122,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class HospitalManagementFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, DialogInterface.OnClickListener {
+    public static class HospitalManagementFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, DialogInterface.OnClickListener, TextView.OnEditorActionListener {
         private static final String COLUMN_NAME_REPLACEMENT_COMBINED = "entry";
         private static final int LOADER_LIST = 0, LOADER_LOCAL_AUTOCOMPLETE = 1, LOADER_CONTACTS_AUTOCOMPLETE = 2;
 
@@ -366,6 +371,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
             prepareContactsAutoCompleteAdapter();
             editText2.setAdapter(contactsAutoCompleteAdapter);
+            editText2.setOnEditorActionListener(this);
             getLoaderManager().initLoader(LOADER_CONTACTS_AUTOCOMPLETE, null, this);
         }
 
@@ -389,10 +395,12 @@ public class HospitalManagementActivity extends ActionBarActivity {
                 editText = new AutoCompleteTextView(getActivity());
             }
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             editText.setId(android.R.id.text1);
 
             prepareContactsAutoCompleteAdapter();
             editText.setAdapter(contactsAutoCompleteAdapter);
+            editText.setOnEditorActionListener(this);
 
             dialogContent = editText;
             if (itemPos >= 0) {
@@ -425,13 +433,37 @@ public class HospitalManagementActivity extends ActionBarActivity {
                 if (isReplacementFragment) {
                     EditText editText1 = (EditText)dialogContent.findViewById(android.R.id.text1);
                     EditText editText2 = (EditText)dialogContent.findViewById(android.R.id.text2);
-                    insertOrUpdateTask.execute(new Pair<Long, String>((Long)dialogContent.getTag(), editText1.getText().toString()), new Pair<Long, String>(null, editText2.getText().toString()));
+                    if (TextUtils.isEmpty(editText1.getText()) || TextUtils.isEmpty(editText2.getText())) {
+                        Toast.makeText(getActivity(), R.string.hospital_management_activity_replacement_error_empty, Toast.LENGTH_SHORT).show();
+                        showItemDialog(itemPos, ((AlertDialog)dialog).onSaveInstanceState());
+                    } else {
+                        insertOrUpdateTask.execute(new Pair<Long, String>((Long)dialogContent.getTag(), editText1.getText().toString()), new Pair<Long, String>(null, editText2.getText().toString()));
+                        dialogContent = null;
+                    }
                 } else {
                     EditText editText = (EditText)dialogContent;
-                    insertOrUpdateTask.execute(new Pair<Long, String>((Long)editText.getTag(), editText.getText().toString()));
+                    if (TextUtils.isEmpty(editText.getText())) {
+                        Toast.makeText(getActivity(), R.string.hospital_management_activity_permanent_admittances_error_empty, Toast.LENGTH_SHORT).show();
+                        showItemDialog(itemPos, ((AlertDialog)dialog).onSaveInstanceState());
+                    } else {
+                        insertOrUpdateTask.execute(new Pair<Long, String>((Long)editText.getTag(), editText.getText().toString()));
+                        dialogContent = null;
+                    }
                 }
+                dialog.dismiss();
+            } else {
+                dialogContent = null;
+                dialog.cancel();
             }
-            dialogContent = null;
+        }
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+                return true;
+            }
+            return false;
         }
 
         private class HospitalItemOnLongClickListener implements AdapterView.OnItemLongClickListener {

@@ -103,6 +103,8 @@
     <string name="hospital_management_activity_replacement_dialog_edit">Ersetzung bearbeiten</string>
     <string name="hospital_management_activity_permanent_admittances_empty">Es wurden noch keine Krankenhäuser eingetragen.\nAuf das „+“ drücken, um neue Einträge hinzuzufügen.</string>
     <string name="hospital_management_activity_replacement_empty">Es wurden noch keine Ersetzungen eingetragen.\nAuf das „+“ drücken, um neue Einträge hinzuzufügen.</string>
+    <string name="hospital_management_activity_permanent_admittances_error_empty">Der Krankenhausname darf nicht leer sein.</string>
+    <string name="hospital_management_activity_replacement_error_empty">Weder der Name noch dessen Ersetzung dürfen leer sein.</string>
 
     <!-- About Activity -->
     <string name="about_activity_title">Über EGO</string>
