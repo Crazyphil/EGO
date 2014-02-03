@@ -3,6 +3,7 @@ package tk.crazysoft.ego;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -94,13 +95,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         italicTypeface = Typeface.create(buttonCity.getTypeface(), Typeface.ITALIC);
         normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && MainActivity.hasDarkTheme(getActivity())) {
-            normalColor = getResources().getColor(android.R.color.primary_text_dark);
-            italicColor = getResources().getColor(android.R.color.secondary_text_dark);
-        } else {
-            normalColor = getResources().getColor(android.R.color.primary_text_light);
-            italicColor = getResources().getColor(android.R.color.secondary_text_light);
-        }
+        TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[]{R.attr.primaryTextColor, R.attr.secondaryTextColor});
+        normalColor = a.getColor(0, 0);
+        italicColor = a.getColor(1, 0);
+        a.recycle();
 
         buttonCity.setOnClickListener(new FilterButtonOnClickListener());
         buttonZip.setOnClickListener(new FilterButtonOnClickListener());

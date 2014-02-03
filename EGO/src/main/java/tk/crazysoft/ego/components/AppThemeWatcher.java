@@ -24,7 +24,7 @@ import tk.crazysoft.ego.preferences.Preferences;
 public class AppThemeWatcher extends BroadcastReceiver implements SensorEventListener {
     public static final int THEME_DAY = 0, THEME_NIGHT = 1;
     // Switch to night theme somewhere between a cloudy day and full moon
-    public static final float LIGHT_DARKNESS = 10.0f;
+    public static final float LIGHT_DARKNESS = 5.0f;
 
     private final Context context;
     private final SensorManager manager;

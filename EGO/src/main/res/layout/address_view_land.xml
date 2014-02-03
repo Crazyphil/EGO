@@ -33,7 +33,7 @@
                 style="@style/Widget.AppCompat.Base.Spinner"
                 android:textStyle="italic"
                 android:text="@string/address_view_city"
-                android:textColor="@android:color/secondary_text_light"
+                android:textColor="?attr/secondaryTextColor"
                 android:layout_gravity="center_vertical" />
 
             <ImageButton
@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:textStyle="italic"
                 android:text="@string/address_view_zipcode"
-                android:textColor="@android:color/secondary_text_light"
+                android:textColor="?attr/secondaryTextColor"
                 android:layout_gravity="center_vertical" />
 
             <ImageButton
@@ -79,7 +79,7 @@
                 android:layout_weight="3"
                 android:textStyle="italic"
                 android:text="@string/address_view_street"
-                android:textColor="@android:color/secondary_text_light"
+                android:textColor="?attr/secondaryTextColor"
                 android:layout_gravity="center_vertical" />
 
             <ImageButton
@@ -100,7 +100,7 @@
                 android:layout_weight="1"
                 android:textStyle="italic"
                 android:text="@string/address_view_streetno"
-                android:textColor="@android:color/secondary_text_light"
+                android:textColor="?attr/secondaryTextColor"
                 android:layout_gravity="center_vertical" />
 
             <ImageButton

@@ -10,6 +10,8 @@
     <string name="time_format">%1$02d:%2$02d Uhr</string>
 
     <!-- Main Activity -->
+    <string name="main_activity_action_navigation">Navigation</string>
+    <string name="main_activity_action_contacts">Kontakte</string>
     <string name="main_activity_action_data_management">Datenverwaltung</string>
     <string name="main_activity_action_about">Über EGO</string>
     <string name="main_activity_tab_addresses">Adressen</string>

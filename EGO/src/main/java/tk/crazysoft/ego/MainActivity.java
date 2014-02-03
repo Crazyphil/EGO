@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -174,6 +175,13 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 getSupportActionBar().setHomeButtonEnabled(false);
                 displayedHouses = null;
                 break;
+            case R.id.action_navigation:
+                sendNavigationIntent(this, (String)null);
+                break;
+            case R.id.action_contacts:
+                Intent contactsIntent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
+                startActivity(contactsIntent);
+                break;
             case R.id.action_data_management:
                 Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -306,13 +314,23 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         Intent navIntent;
         if (intentPreference.equals(options[3])) {  // navigon
             navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
-            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS, address);
+            if (address != null) {
+                navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS, address);
+            }
         } else {
             Uri location;
             if (intentPreference.equals(options[1])) {   // google.navigation
-                location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
+                if (address != null) {
+                    location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
+                } else {
+                    location = Uri.parse("google.navigation:");
+                }
             } else {   // geo_q, geo (not applicable for address search) or unknown option
-                location = Uri.parse(String.format(Locale.ENGLISH, "geo:0,0?q=%s", address));
+                if (address != null) {
+                    location = Uri.parse(String.format(Locale.ENGLISH, "geo:0,0?q=%s", address));
+                } else {
+                    location = Uri.parse("geo:0,0");
+                }
             }
             navIntent = new Intent(Intent.ACTION_VIEW, location);
         }
