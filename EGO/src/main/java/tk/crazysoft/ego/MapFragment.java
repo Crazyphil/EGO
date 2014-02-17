@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.ToggleButton;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -42,7 +43,8 @@ public class MapFragment extends Fragment {
     private static final String ORTHOPHOTO_PATH = "ego/karten/orthofoto.sqlite";
 
     private MapView mapView;
-    private ImageButton imageButtonGPS, imageButtonDestination, imageButtonMapmode;
+    private ImageButton imageButtonGPS, imageButtonDestination;
+    private ToggleButton toggleButtonMapmode;
     private MyLocationNewOverlay gpsOverlay;
     private ItemizedIconOverlay<OverlayItem> destinationOverlay;
     private boolean mapFileNotFoundDialogShown = false;
@@ -193,11 +195,11 @@ public class MapFragment extends Fragment {
             }
         });
 
-        imageButtonMapmode = (ImageButton)getView().findViewById(R.id.map_imageButtonMapmode);
-        imageButtonMapmode.setOnClickListener(new View.OnClickListener() {
+        toggleButtonMapmode = (ToggleButton)getView().findViewById(R.id.map_toggleButtonMapmode);
+        toggleButtonMapmode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TilesOverlay orthophotoOverlay = (TilesOverlay)mapView.getOverlayManager().get(0);
+                TilesOverlay orthophotoOverlay = (TilesOverlay) mapView.getOverlayManager().get(0);
                 showOrtophoto = !showOrtophoto;
                 orthophotoOverlay.setEnabled(showOrtophoto);
                 mapView.invalidate();

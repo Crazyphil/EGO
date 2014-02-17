@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="RedCrossDark" parent="@style/_RedCrossDark"/>
+
+    <style name="_RedCrossDark" parent="Theme.AppCompat">
+        <item name="android:editTextStyle">@style/EditTextRedCrossDark</item>
+        <item name="android:textColorHighlight">#99b70e0c</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewRedCrossDark</item>
+        <item name="android:checkboxStyle">@style/CheckBoxRedCrossDark</item>
+        <item name="android:radioButtonStyle">@style/RadioButtonRedCrossDark</item>
+        <item name="android:buttonStyle">@style/ButtonRedCrossDark</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonRedCrossDark</item>
+        <item name="android:spinnerStyle">@style/SpinnerRedCrossDark</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemRedCrossDark</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarRedCrossDark</item>
+        <item name="android:buttonStyleToggle">@style/ToggleRedCrossDark</item>
+        <item name="android:listViewStyle">@style/ListViewRedCrossDark</item>
+        <item name="android:listViewWhiteStyle">@style/ListViewRedCrossDark.White</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemRedCrossDark</item>
+    </style>
+
+</resources>

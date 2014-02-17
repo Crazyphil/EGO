@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Theme.Redcrosslight" parent="@style/Theme.AppCompat.Light">
+    <style name="Theme.RedCrossLight" parent="@style/RedCrossLight">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_redcrosslight</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Redcrosslight</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Redcrosslight</item>

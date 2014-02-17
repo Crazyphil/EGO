@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -96,6 +97,8 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             ActionBar.Tab tab = findTabWithTitle(tabTitle);
             if (tab != null) {
                 actionBar.selectTab(tab);
+            } else {
+                actionBar.selectTab(actionBar.getTabAt(0));
             }
             if (displayedHouses != null) {
                 onAddressClick(displayedHouses.peek(), false);
@@ -267,10 +270,18 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         int themeResId = 0;
         try {
             Class<?> clazz = ContextThemeWrapper.class;
-            Method method = clazz.getMethod("getThemeResId");
-            method.setAccessible(true);
-            themeResId = (Integer)method.invoke(context);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                Method method = clazz.getMethod("getThemeResId");
+                method.setAccessible(true);
+                themeResId = (Integer)method.invoke(context);
+            } else {
+                Field field = clazz.getDeclaredField("mThemeResource");
+                field.setAccessible(true);
+                themeResId = field.getInt(context);
+            }
         } catch (NoSuchMethodException e) {
+            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+        } catch (NoSuchFieldException e) {
             Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
         } catch (IllegalAccessException e) {
             Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="RedCrossDark" parent="Theme.AppCompat">
+        <item name="android:editTextBackground">@drawable/redcrossdark_edit_text_holo_dark</item>
+        <item name="android:textColorHighlight">#99b70e0c</item>
+        <item name="android:textSelectHandleLeft">@drawable/redcrossdark_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/redcrossdark_text_select_handle_right</item>
+        <item name="android:textSelectHandle">@drawable/redcrossdark_text_select_handle_middle</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewRedCrossDark</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/redcrossdark_btn_check_holo_dark</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/redcrossdark_btn_radio_holo_dark</item>
+        <item name="android:buttonStyle">@style/ButtonRedCrossDark</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonRedCrossDark</item>
+        <item name="android:dropDownSpinnerStyle">@style/SpinnerRedCrossDark</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarRedCrossDark</item>
+        <item name="android:buttonStyleToggle">@style/ToggleRedCrossDark</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/redcrossdark_list_selector_holo_dark</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/redcrossdark_activated_background_holo_dark</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/redcrossdark_fastscroll_thumb_holo</item>
+    </style>
+
+</resources>

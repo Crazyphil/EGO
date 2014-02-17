@@ -72,8 +72,8 @@
     <orderEntry type="jdk" jdkName="Android 4.4 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="proj4j-0.1.0" level="project" />
-    <orderEntry type="library" exported="" name="slf4j-api-1.7.5" level="project" />
     <orderEntry type="library" exported="" name="osmdroid-android-4.0" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.6" level="project" />
     <orderEntry type="library" exported="" name="SunriseSunsetCalculator-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.5-7" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />

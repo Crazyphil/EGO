@@ -30,7 +30,7 @@
                 android:id="@+id/address_buttonCity"
                 android:layout_column="1"
                 android:layout_weight="3"
-                style="@style/Widget.AppCompat.Base.Spinner"
+                style="?android:attr/spinnerStyle"
                 android:textStyle="italic"
                 android:text="@string/address_view_city"
                 android:textColor="?attr/secondaryTextColor"
@@ -46,7 +46,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
             <Button
-                style="@style/Widget.AppCompat.Base.Spinner"
+                style="?android:attr/spinnerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_buttonZip"
@@ -71,7 +71,7 @@
             android:layout_height="fill_parent">
 
             <Button
-                style="@style/Widget.AppCompat.Base.Spinner"
+                style="?android:attr/spinnerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_buttonStreet"
@@ -92,7 +92,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
             <Button
-                style="@style/Widget.AppCompat.Base.Spinner"
+                style="?android:attr/spinnerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/address_buttonStreetNo"
