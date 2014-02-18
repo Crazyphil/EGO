@@ -29,7 +29,8 @@
         <CheckBoxPreference
             android:key="pref_key_import_use_sd"
             android:title="@string/preferences_activity_import_use_sd_title"
-            android:summary="@string/preferences_activity_import_use_sd_summary_checked"
+            android:summaryOff="@string/preferences_activity_import_use_sd_summary_unchecked"
+            android:summaryOn="@string/preferences_activity_import_use_sd_summary_checked"
             android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory
@@ -87,5 +88,15 @@
                 android:targetPackage="tk.crazysoft.ego"
                 android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
         </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_activity_bug_fixing_title"
+        android:key="pref_key_bug_fixing">
+
+        <CheckBoxPreference android:key="acra.alwaysaccept"
+            android:title="@string/preferences_activity_bug_fixing_silent_mode_title"
+            android:summaryOff="@string/preferences_activity_bug_fixing_silent_mode_summary_unchecked"
+            android:summaryOn="@string/preferences_activity_bug_fixing_silent_mode_summary_checked"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -51,7 +51,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         ListPreference apiPreference = (ListPreference)findPreference(Preferences.PREFERENCE_NAVIGATION_API);
 
         refreshImportFiles();
-        refreshImportUseSd(getPreferenceScreen().getSharedPreferences(), useSdPreference);
         refreshNavigationApi(apiPreference);
     }
 
@@ -101,7 +100,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
         if (key.equals(Preferences.PREFERENCE_IMPORT_USE_SD)) {
-            refreshImportUseSd(sharedPreferences, pref);
             refreshImportFiles();
         } else if (key.equals(Preferences.PREFERENCE_NAVIGATION_API)) {
             refreshNavigationApi(pref);
@@ -126,14 +124,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         hospitalsPreference.setBroadcastReceiver(importReceiver);
         doctorsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_doctors_summary), sdPath));
         doctorsPreference.setBroadcastReceiver(importReceiver);
-    }
-
-    private void refreshImportUseSd(SharedPreferences sharedPreferences, Preference pref) {
-        if (sharedPreferences.getBoolean(Preferences.PREFERENCE_IMPORT_USE_SD, true)) {
-            pref.setSummary(getString(R.string.preferences_activity_import_use_sd_summary_checked));
-        } else {
-            pref.setSummary(getString(R.string.preferences_activity_import_use_sd_summary_unchecked));
-        }
     }
 
     private void refreshNavigationApi(Preference pref) {

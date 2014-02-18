@@ -9,6 +9,13 @@
     <string name="button_ok">Verstanden.</string>
     <string name="time_format">%1$02d:%2$02d Uhr</string>
 
+    <!-- Messages for error reporting -->
+    <string name="crash_toast_text">Ein unerwartetes Problem ist aufgetreten. Die App wird geschlossen und Informationen zum Problem gesammelt.</string>
+    <string name="crash_dialog_title">Informationen zum letzten Problem</string>
+    <string name="crash_dialog_text">Kürzlich ist ein unerwartetes Problem aufgetreten, weshalb die App beendet werden musste.\nHelfen Sie uns bei der Behebung, indem Sie Fehlerinformationen senden. Dazu drücken Sie einfach „OK“.</string>
+    <string name="crash_dialog_comment_prompt">Optional: Was taten Sie, als das Problem auftrat?</string>
+    <string name="crash_dialog_ok_toast">Vielen Dank!</string>
+
     <!-- Main Activity -->
     <string name="main_activity_action_navigation">Navigation</string>
     <string name="main_activity_action_contacts">Kontakte</string>
@@ -80,6 +87,10 @@
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Verwalten der Krankenhäuser, die zu jeder Zeit Patienten aufnehmen</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Ersetzungen zur Kontaktsuche</string>
     <string name="preferences_activity_hospitals_doctors_replacement_summary">Verwalten der Namen, unter denen Krankenhäuser und Ärzte in den Kontakten gesucht werden</string>
+    <string name="preferences_activity_bug_fixing_title">Fehlerbehebung</string>
+    <string name="preferences_activity_bug_fixing_silent_mode_title">Fehlerberichte automatisch senden</string>
+    <string name="preferences_activity_bug_fixing_silent_mode_summary_unchecked">Fehlerberichte werden nach Bestätigung gesendet</string>
+    <string name="preferences_activity_bug_fixing_silent_mode_summary_checked">Fehlerberichte werden automatisch gesendet</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geografischer Punkt</item>
