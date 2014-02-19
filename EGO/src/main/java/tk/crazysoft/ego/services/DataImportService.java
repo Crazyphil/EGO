@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
+import au.com.bytecode.opencsv.CSVReader;
 import tk.crazysoft.ego.R;
 import tk.crazysoft.ego.data.AddressImporter;
 import tk.crazysoft.ego.data.AdmittanceImporter;
@@ -40,7 +39,7 @@ public class DataImportService extends IntentService {
     private static final String ADDRESSES_PATH = "ego/import/adressen.csv";
     private static final String ADMITTANCES_PATH = "ego/import/aufnahmen.csv";
     private static final String STANDBY_PATH = "ego/import/bereitschaft.csv";
-    private static final String CSV_SEPARATOR = ";";
+    private static final char CSV_SEPARATOR = ';';
     private static final String CSV_COMMENT = "#";
 
     private SQLiteDatabase db = null;
@@ -104,10 +103,10 @@ public class DataImportService extends IntentService {
 
     private void processFile(File doc, Importer importer) {
         InputPositionReader posRdr;
-        BufferedReader rdr;
+        CSVReader rdr;
         try {
             posRdr = new InputPositionReader(new FileReader(doc));
-            rdr = new BufferedReader(posRdr);
+            rdr = new CSVReader(posRdr, CSV_SEPARATOR);
         } catch (FileNotFoundException e) {
             // Shouldn't occur, because the caller checks for existence
             e.printStackTrace();
@@ -132,10 +131,8 @@ public class DataImportService extends IntentService {
             int numEntries = 0;
             int failedEntries = 0;
 
-            Pattern csvPattern = Pattern.compile(CSV_SEPARATOR);
-            String line = rdr.readLine();
-            while (line != null) {
-                String[] fields = csvPattern.split(line, -1);
+            String[] fields = rdr.readNext();
+            while (fields != null) {
                 if (fields.length > 0 && !fields[0].startsWith(CSV_COMMENT)) {
                     int result = importer.process(fields);
                     if (result != Importer.PROCESS_IGNORED) {
@@ -152,7 +149,7 @@ public class DataImportService extends IntentService {
                     lastPercent = newPercent;
                     reportProgress(lastPercent);
                 }
-                line = rdr.readLine();
+                fields = rdr.readNext();
             }
 
             rdr.close();
