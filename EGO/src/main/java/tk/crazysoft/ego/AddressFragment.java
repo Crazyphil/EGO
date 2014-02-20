@@ -13,17 +13,23 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FilterQueryProvider;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import tk.crazysoft.ego.components.ClearableEditText;
 import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGOCursorAdapter;
 import tk.crazysoft.ego.data.EGOCursorLoader;
@@ -182,16 +188,42 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         String[] fromColumns = { column };
         int[] toViews = { android.R.id.text1 };
         EGOCursorAdapter adapter = new EGOCursorAdapter(getView().getContext(), android.R.layout.simple_list_item_1, null, fromColumns, toViews, 0, index ? 1 : -1);
+        adapter.setFilterQueryProvider(new FilterDialogQueryProvider(button));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
         builder.setTitle(titleRes).setAdapter(adapter, new FilterAlertDialogOnClickListener(button));
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
         adapterMapping.put(dialog, adapter);
         dialog.getListView().setFastScrollEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             dialog.getListView().setFastScrollAlwaysVisible(true);
         }
+
+        final ClearableEditText filterText = new ClearableEditText(dialog.getContext());
+        filterText.getText().setHint(R.string.address_view_filter);
+        filterText.setPadding(0, 0, (int)(20 * getResources().getDisplayMetrics().density), 0);
+        filterText.getText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Filterable adapter = (Filterable) dialog.getListView().getAdapter();
+                adapter.getFilter().filter(s.length() == 0 ? null : s);
+            }
+        });
+        dialog.getListView().addHeaderView(filterText);
+        dialog.getListView().setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);   // Workaround for EditText no longer having focus after list content changes
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                filterText.clearText();
+            }
+        });
         return dialog;
     }
 
@@ -210,16 +242,16 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 loader = createResultsLoader();
                 break;
             case LOADER_CITY:
-                loader = createCityLoader();
+                loader = createCityLoader(null);
                 break;
             case LOADER_ZIP_CODE:
-                loader = createZipCodeLoader();
+                loader = createZipCodeLoader(null);
                 break;
             case LOADER_STREET:
-                loader = createStreetLoader();
+                loader = createStreetLoader(null);
                 break;
             case LOADER_STREET_NO:
-                loader = createStreetNoLoader();
+                loader = createStreetNoLoader(null);
                 break;
         }
         return loader;
@@ -236,49 +268,56 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO + "*1, " +
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO;
 
-        return createLoader(false, projection, sortOrder, "100", null);
+        return createLoader(false, projection, sortOrder, "100", null, null);
     }
 
-    private Loader<Cursor> createCityLoader() {
+    private Loader<Cursor> createCityLoader(String filter) {
         String[] projection = {
                 "NULL AS " + EGOContract.Addresses._ID,
                 EGOContract.Addresses.COLUMN_NAME_CITY
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_CITY;
-        return createLoader(true, projection, sortOrder, null, buttonCity);
+        return createLoader(true, projection, sortOrder, null, filter, buttonCity);
     }
 
-    private Loader<Cursor> createZipCodeLoader() {
+    private Loader<Cursor> createZipCodeLoader(String filter) {
         String[] projection = {
                 "NULL AS " + EGOContract.Addresses._ID,
                 EGOContract.Addresses.COLUMN_NAME_ZIP
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_ZIP;
-        return createLoader(true, projection, sortOrder, null, buttonZip);
+        return createLoader(true, projection, sortOrder, null, filter, buttonZip);
     }
 
-    private Loader<Cursor> createStreetLoader() {
+    private Loader<Cursor> createStreetLoader(String filter) {
         String[] projection = {
                 "NULL AS " + EGOContract.Addresses._ID,
                 EGOContract.Addresses.COLUMN_NAME_STREET
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_STREET;
-        return createLoader(true, projection, sortOrder, null, buttonStreet);
+        return createLoader(true, projection, sortOrder, null, filter, buttonStreet);
     }
 
-    private Loader<Cursor> createStreetNoLoader() {
+    private Loader<Cursor> createStreetNoLoader(String filter) {
         String[] projection = {
                 "NULL AS " + EGOContract.Addresses._ID,
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_STREET_NO + "*1, " +
                 EGOContract.Addresses.COLUMN_NAME_STREET_NO;
-        return createLoader(true, projection, sortOrder, null, buttonStreetNo);
+        return createLoader(true, projection, sortOrder, null, filter, buttonStreetNo);
     }
 
-    private EGOCursorLoader createLoader(boolean distinct, String[] projection, String sortOrder, String limit, Button button) {
+    private EGOCursorLoader createLoader(boolean distinct, String[] projection, String sortOrder, String limit, String filter, Button button) {
         ArrayList<String> selectionArgs = new ArrayList<String>(4);
         String selection = fillSelection(selectionArgs, button);
+        if (filter != null) {
+            if (selection.length() > 0) {
+                selection += " AND ";
+            }
+            selection += projection[1] + " LIKE ?";
+            selectionArgs.add(String.format("%s%%", filter));
+        }
         String[] selectionArgArr = selectionArgs.toArray(new String[selectionArgs.size()]);
 
         EGOCursorLoader loader;
@@ -379,18 +418,26 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         @Override
         public void onClick(View v) {
             if (v == buttonCity) {
-                alertDialogCity.show();
+                show(alertDialogCity);
                 findAndScroll(alertDialogCity, selectedCity);
             } else if (v == buttonZip) {
-                alertDialogZip.show();
+                show(alertDialogZip);
                 findAndScroll(alertDialogZip, selectedZip);
             } else if (v == buttonStreet) {
-                alertDialogStreet.show();
+                show(alertDialogStreet);
                 findAndScroll(alertDialogStreet, selectedStreet);
             } else {
-                alertDialogStreetNo.show();
+                show(alertDialogStreetNo);
                 findAndScroll(alertDialogStreetNo, selectedStreetNo);
             }
+        }
+
+        private void show(AlertDialog dialog) {
+            dialog.show();
+
+            // Workaround for keyboard not being show for EditText in dialog even when it is clicked
+            // Explanation: http://stackoverflow.com/questions/9102074/android-edittext-in-dialog-doesnt-pull-up-soft-keyboard/9118027#9118027
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         }
 
         private void findAndScroll(AlertDialog dialog, String selectedItem) {
@@ -438,6 +485,30 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 alertDialogStreetNo.getListView().scrollTo(0, 0);
                 resetLoaders(buttonStreetNo, false);
             }
+        }
+    }
+
+    private class FilterDialogQueryProvider implements FilterQueryProvider {
+        private Button button;
+
+        public FilterDialogQueryProvider(Button button) {
+            this.button = button;
+        }
+
+        @Override
+        public Cursor runQuery(CharSequence constraint) {
+            String filter = constraint != null ? constraint.toString() : null;
+            Loader<Cursor> loader;
+            if (button.equals(buttonCity)) {
+                loader = createCityLoader(filter);
+            } else if (button.equals(buttonZip)) {
+                loader = createZipCodeLoader(filter);
+            } else if (button.equals(buttonStreet)) {
+                loader = createStreetLoader(filter);
+            } else {
+                loader = createStreetNoLoader(filter);
+            }
+            return ((EGOCursorLoader)loader).loadInBackground();
         }
     }
 

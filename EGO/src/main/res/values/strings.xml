@@ -34,6 +34,7 @@
     <string name="address_view_results">Ergebnisse</string>
     <string name="address_view_remove">Filter entfernen</string>
     <string name="address_view_empty">Es wurden noch keine Adressen importiert.\nIm Menü „Datenverwaltung“ auswählen, um Daten zu laden.</string>
+    <string name="address_view_filter">Suchen...</string>
 
     <!-- Map Fragment -->
     <string name="map_view_gps">Meine Position</string>

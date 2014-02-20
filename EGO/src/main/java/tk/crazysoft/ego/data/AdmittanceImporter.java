@@ -42,6 +42,10 @@ public class AdmittanceImporter extends Importer {
             return PROCESS_IGNORED;
         }
 
+        if (isEmpty(line)) {
+            return PROCESS_IGNORED;
+        }
+
         try {
             int day = Integer.parseInt(csvTrim(line[0]));
             Calendar date = GregorianCalendar.getInstance();

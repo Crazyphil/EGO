@@ -2,6 +2,7 @@ package tk.crazysoft.ego.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.util.regex.Pattern;
 
@@ -42,6 +43,14 @@ public abstract class Importer {
             csvTrimPattern = Pattern.compile("^\"\\s*|\\s*\"$|^\\s+|\\s+$");
         }
         return csvTrimPattern.matcher(field).replaceAll("");
+    }
+
+    protected boolean isEmpty(String[] line) {
+        boolean empty = true;
+        for (String field : line) {
+            empty &= TextUtils.isEmpty(field);
+        }
+        return empty;
     }
 
     public void setOnPostProcessProgressListener(OnPostProcessProgressListener listener) {
