@@ -74,7 +74,7 @@ public class DataImportReceiver extends WakefulBroadcastReceiver {
                 String message = context.getString(R.string.service_dataimport_result_db_write_fail);
                 Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
             }
-        } else if (action.equals(DataImportService.BROADCAST_COMPLETED)) {
+        } else if (action.equals(DataImportService.BROADCAST_COMPLETED) && progressBars.size() > 0) {
             progressBars.remove();
         }
     }
