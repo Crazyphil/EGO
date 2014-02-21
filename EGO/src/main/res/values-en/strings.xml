@@ -34,6 +34,7 @@
     <string name="address_view_results">Results</string>
     <string name="address_view_remove">Remove filter</string>
     <string name="address_view_empty">No addresses were imported yet.\nChoose “Data Management” in the menu to load data.</string>
+    <string name="address_view_filter">Search…</string>
 
     <!-- Map Fragment -->
     <string name="map_view_gps">My Position</string>
@@ -131,5 +132,6 @@
     <string name="service_dataimport_error_readfail">Import has failed.</string>
     <string name="service_dataimport_result_import">%1$,d entries were imported, %2$,d were erroneous.</string>
     <string name="service_dataimport_result_merge">%1$,d streets exist in multiple cities, %2$,d cross borders.</string>
+    <string name="service_dataimport_result_db_write_fail">Changes could not be saved. Please check your file.</string>
 
 </resources>

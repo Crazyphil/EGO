@@ -34,7 +34,7 @@
     <string name="address_view_results">Ergebnisse</string>
     <string name="address_view_remove">Filter entfernen</string>
     <string name="address_view_empty">Es wurden noch keine Adressen importiert.\nIm Menü „Datenverwaltung“ auswählen, um Daten zu laden.</string>
-    <string name="address_view_filter">Suchen...</string>
+    <string name="address_view_filter">Suchen…</string>
 
     <!-- Map Fragment -->
     <string name="map_view_gps">Meine Position</string>
@@ -139,5 +139,6 @@
     <string name="service_dataimport_error_readfail">Der Import ist fehlgeschlagen.</string>
     <string name="service_dataimport_result_import">%1$,d Einträge wurden importiert, %2$,d waren fehlerhaft.</string>
     <string name="service_dataimport_result_merge">%1$,d Straßen existieren in mehreren Gemeinden, %2$,d überschreiten Grenzen.</string>
+    <string name="service_dataimport_result_db_write_fail">Die Änderungen konnten nicht gespeichert werden. Prüfen Sie Ihre Datei.</string>
 
 </resources>

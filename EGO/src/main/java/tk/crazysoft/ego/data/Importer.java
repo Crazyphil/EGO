@@ -79,5 +79,6 @@ public abstract class Importer {
     public interface OnPostProcessProgressListener {
         public void onProgress(double progressPercent);
         public void onResult(String action, int processed, int modified);
+        public void onResult(String action, boolean result);
     }
 }

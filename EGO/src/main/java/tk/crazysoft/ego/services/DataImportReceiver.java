@@ -14,9 +14,11 @@ import java.util.Queue;
 
 import tk.crazysoft.ego.R;
 import tk.crazysoft.ego.data.AddressImporter;
+import tk.crazysoft.ego.data.StandbyImporter;
 
 public class DataImportReceiver extends WakefulBroadcastReceiver {
     private Queue<Pair<String, ProgressBar>> progressBars;
+
     public DataImportReceiver(Bundle savedInstanceState) {
         super();
         progressBars = new LinkedList<Pair<String, ProgressBar>>();
@@ -62,13 +64,14 @@ public class DataImportReceiver extends WakefulBroadcastReceiver {
             hideProgressBar(progressBar);
 
             int[] counts = intent.getIntArrayExtra(DataImportService.EXTRA_RESULT_COUNTS);
-            if (counts == null || counts.length != 2) {
-                return;
-            }
+            boolean result = intent.getBooleanExtra(DataImportService.EXTRA_RESULT_RESULT, false);
 
             String actionResult = intent.getStringExtra(DataImportService.EXTRA_RESULT_ACTION);
             if (actionResult != null && actionResult.equals(AddressImporter.ADDRESS_IMPORTER_POSTPOCESS_ACTION)) {
                 String message = String.format((String)context.getResources().getText(R.string.service_dataimport_result_merge), counts[0], counts[1]);
+                Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
+            } else if (actionResult != null && actionResult.equals(StandbyImporter.STANDBY_IMPORTER_POSTPOCESS_ACTION) && !result) {
+                String message = context.getString(R.string.service_dataimport_result_db_write_fail);
                 Toast.makeText(appContext, message, Toast.LENGTH_LONG).show();
             }
         } else if (action.equals(DataImportService.BROADCAST_COMPLETED)) {

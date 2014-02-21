@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StandbyImporter extends Importer {
+    public static final String STANDBY_IMPORTER_POSTPOCESS_ACTION = "tk.crazysoft.ego.data.WRITE_TO_DB";
+
     private Pattern quarterPattern, stringPattern, numberPattern, timeWildCardPattern, hMinSeperator, anyPattern;
     private Matcher quarterMatcher, timeWildCardMatcher;
     private int quarter, year, timeCount;
@@ -65,9 +67,7 @@ public class StandbyImporter extends Importer {
             } catch (ArrayIndexOutOfBoundsException e) {
                 return PROCESS_ERROR;
             }
-        }
-
-        else if (!monthsPassed) {
+        } else if (!monthsPassed) {
             try {
                 if (stringPattern.matcher(line[2]).find() && !(anyPattern.matcher(line[line.length-1]).find())) {
                     monthsPassed = true;
@@ -75,9 +75,7 @@ public class StandbyImporter extends Importer {
             } catch (ArrayIndexOutOfBoundsException e) {
                 return PROCESS_ERROR;
             }
-        }
-
-        else if (timeWildCardList.isEmpty()) {
+        } else if (timeWildCardList.isEmpty()) {
             try {
                 if (stringPattern.matcher(line[2]).find() && stringPattern.matcher(line[line.length-1]).find()) {
                     initializeTimeWildCardList(line);
@@ -85,18 +83,14 @@ public class StandbyImporter extends Importer {
             } catch (ArrayIndexOutOfBoundsException e) {
                 return PROCESS_ERROR;
             }
-        }
-
-        else if (numberPattern.matcher(line[0]).find() && stringPattern.matcher(line[1]).find()) {
+        } else if (numberPattern.matcher(line[0]).find() && stringPattern.matcher(line[1]).find()) {
             try {
                 return processStandbyDataLine(line);
             } catch (ArrayIndexOutOfBoundsException e) {
                 return PROCESS_ERROR;
             }
 
-        }
-
-        else if (!timeWildCardsPassed) {
+        } else if (!timeWildCardsPassed) {
             try {
                 timeWildCardMatcher = timeWildCardPattern.matcher(line[0]);
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -132,12 +126,14 @@ public class StandbyImporter extends Importer {
         int[] timeArray;
 
         getDatabase().beginTransaction();
+        deleteOldValues();
 
         for (ContentValues v : valueList) {
             wildCard = v.get(EGOContract.DoctorStandby.COLUMN_NAME_TIME_FROM).toString();
 
             timeArray = timeList.get(wildCard);
             if (timeArray == null) {
+                sendErrorResult();
                 return;
             }
 
@@ -160,7 +156,6 @@ public class StandbyImporter extends Importer {
 
                 nextValue.put(EGOContract.DoctorStandby.COLUMN_NAME_DATE, date.getTimeInMillis() / 1000);
 
-
                 String name = v.getAsString(EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME);
                 nextValue.put(EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME, name);
 
@@ -169,7 +164,7 @@ public class StandbyImporter extends Importer {
 
                 long nextid = getDatabase().insert(EGOContract.DoctorStandby.TABLE_NAME, null, nextValue);
                 if (nextid == -1) {
-                    getDatabase().endTransaction();
+                    sendErrorResult();
                     return;
                 }
                 v.put(EGOContract.DoctorStandby.COLUMN_NAME_NEXT_ID, nextid);
@@ -180,12 +175,17 @@ public class StandbyImporter extends Importer {
             }
 
             if (getDatabase().insert(EGOContract.DoctorStandby.TABLE_NAME, null, v) == -1) {
-                getDatabase().endTransaction();
+                sendErrorResult();
                 return;
             }
         }
         getDatabase().setTransactionSuccessful();
-        getDatabase().endTransaction();
+    }
+
+    private void sendErrorResult() {
+        if (getOnPostProcessProgressListener() != null) {
+            getOnPostProcessProgressListener().onResult(STANDBY_IMPORTER_POSTPOCESS_ACTION, false);
+        }
     }
 
     private void initializeTimeMap() throws ArrayIndexOutOfBoundsException {
@@ -208,6 +208,23 @@ public class StandbyImporter extends Importer {
 
         int[] timeI = {fromTimeI, toTimeI};
         timeList.put(wildCard, timeI);
+    }
+
+    private boolean deleteOldValues() {
+        Calendar dayBegin = new GregorianCalendar(year, (quarter - 1) * 3, 1, 0, 0, 0);
+        Calendar dayEnd = (Calendar)dayBegin.clone();
+        dayEnd.add(Calendar.MONTH, 3);
+        long timestampBegin = dayBegin.getTimeInMillis() / 1000;
+        long timestampEnd = dayEnd.getTimeInMillis() / 1000;
+
+        String whereClause = EGOContract.DoctorStandby.COLUMN_NAME_DATE + " BETWEEN ? AND ? OR " +
+                EGOContract.DoctorStandby.COLUMN_NAME_DATE + " = ? AND " + EGOContract.DoctorStandby.COLUMN_NAME_TIME_FROM + " = 0";
+        String[] whereArgs = {
+                String.valueOf(timestampBegin), String.valueOf(timestampEnd - 1),
+                String.valueOf(timestampEnd)
+        };
+
+        return getDatabase().delete(EGOContract.DoctorStandby.TABLE_NAME, whereClause, whereArgs) > 0;
     }
 
     private ContentValues createValues(String[] line, int monthIndex, int timeSlot) {
