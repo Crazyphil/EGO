@@ -6,5 +6,7 @@
         <attr name="clearIcon" format="reference" />
         <attr name="primaryTextColor" format="reference|color" />
         <attr name="secondaryTextColor" format="reference|color" />
+        <attr name="tilesLoadingBackgroundColor" format="color" />
+        <attr name="tilesLoadingLineColor" format="color" />
     </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package tk.crazysoft.ego;
 
 import android.app.AlertDialog;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -110,7 +111,7 @@ public class MapFragment extends Fragment {
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int tileSize = (int)(256 * metrics.density);
-        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 17, tileSize, ".jpg", "http://maps.wien.gv.at/basemap/geolandbasemap/");
+        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 1, 17, tileSize, ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
         ITileSource orthophotoSource = new QuadTreeTileSource("geoimage.at", ResourceProxy.string.offline_mode, 5, 17, tileSize, ".png", "http://srv.doris.at/arcgis/rest/services/");
 
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
@@ -121,6 +122,11 @@ public class MapFragment extends Fragment {
 
         ResourceProxy proxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
         mapView = new MapView(view.getContext(), 256, proxy, basemapProviderArray);
+
+        TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { R.attr.tilesLoadingBackgroundColor, R.attr.tilesLoadingLineColor });
+        mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(a.getColor(0, 0));
+        mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(a.getColor(1, 0));
+        a.recycle();
 
         TilesOverlay orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
         orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -211,13 +217,6 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // If the fragment was paused and not newly created, recreate map view and restore configuration
-        if (mapView == null) {
-            createMapView(getView());
-            mapView.getController().setZoom(mapZoom);
-            mapView.getController().setCenter(mapCenter);
-        }
-
         gpsOverlay.enableMyLocation();
         if (followLocation || mapCenter == null) {
             gpsOverlay.enableFollowLocation();
@@ -238,12 +237,14 @@ public class MapFragment extends Fragment {
 
         gpsOverlay.disableFollowLocation();
         gpsOverlay.disableMyLocation();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
         mapView.getTileProvider().clearTileCache();
         mapView.onDetach();
-
-        gpsOverlay = null;
-        destinationOverlay = null;
-        mapView = null;
     }
 
     @Override
