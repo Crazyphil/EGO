@@ -21,8 +21,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FilterQueryProvider;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -111,10 +109,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         buttonStreet.setOnClickListener(new FilterButtonOnClickListener());
         buttonStreetNo.setOnClickListener(new FilterButtonOnClickListener());
 
-        alertDialogCity = buildFilterAlertDialog(buttonCity, R.string.address_view_city, EGOContract.Addresses.COLUMN_NAME_CITY, true);
-        alertDialogZip = buildFilterAlertDialog(buttonZip, R.string.address_view_zipcode, EGOContract.Addresses.COLUMN_NAME_ZIP, true);
-        alertDialogStreet = buildFilterAlertDialog(buttonStreet, R.string.address_view_street, EGOContract.Addresses.COLUMN_NAME_STREET, true);
-        alertDialogStreetNo = buildFilterAlertDialog(buttonStreetNo, R.string.address_view_streetno, EGOContract.Addresses.COLUMN_NAME_STREET_NO, false);
+        alertDialogCity = buildFilterAlertDialog(buttonCity, LOADER_CITY, R.string.address_view_city, EGOContract.Addresses.COLUMN_NAME_CITY, true);
+        alertDialogZip = buildFilterAlertDialog(buttonZip, LOADER_ZIP_CODE, R.string.address_view_zipcode, EGOContract.Addresses.COLUMN_NAME_ZIP, true);
+        alertDialogStreet = buildFilterAlertDialog(buttonStreet, LOADER_STREET, R.string.address_view_street, EGOContract.Addresses.COLUMN_NAME_STREET, true);
+        alertDialogStreetNo = buildFilterAlertDialog(buttonStreetNo, LOADER_STREET_NO, R.string.address_view_streetno, EGOContract.Addresses.COLUMN_NAME_STREET_NO, false);
 
         imageButtonClearCity = (ImageButton)getView().findViewById(R.id.address_imageButtonClearCity);
         imageButtonClearZip = (ImageButton)getView().findViewById(R.id.address_imageButtonClearZip);
@@ -184,11 +182,10 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         outState.putString("streetNo", selectedStreetNo);
     }
 
-    private AlertDialog buildFilterAlertDialog(Button button, int titleRes, String column, boolean index) {
+    private AlertDialog buildFilterAlertDialog(Button button, int loaderId, int titleRes, String column, boolean index) {
         String[] fromColumns = { column };
         int[] toViews = { android.R.id.text1 };
         EGOCursorAdapter adapter = new EGOCursorAdapter(getView().getContext(), android.R.layout.simple_list_item_1, null, fromColumns, toViews, 0, index ? 1 : -1);
-        adapter.setFilterQueryProvider(new FilterDialogQueryProvider(button));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
         builder.setTitle(titleRes).setAdapter(adapter, new FilterAlertDialogOnClickListener(button));
@@ -203,19 +200,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         final ClearableEditText filterText = new ClearableEditText(dialog.getContext());
         filterText.getText().setHint(R.string.address_view_filter);
         filterText.setPadding(0, 0, (int)(20 * getResources().getDisplayMetrics().density), 0);
-        filterText.getText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Filterable adapter = (Filterable) dialog.getListView().getAdapter();
-                adapter.getFilter().filter(s.length() == 0 ? null : s);
-            }
-        });
+        filterText.getText().addTextChangedListener(new SearchBarTextWatcher(loaderId));
         dialog.getListView().addHeaderView(filterText);
         dialog.getListView().setDescendantFocusability(ListView.FOCUS_AFTER_DESCENDANTS);   // Workaround for EditText no longer having focus after list content changes
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -237,21 +222,22 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Loader<Cursor> loader = null;
+        String filter = bundle != null ? bundle.getString("filter") : null;
         switch (i) {
             case LOADER_RESULTS:
                 loader = createResultsLoader();
                 break;
             case LOADER_CITY:
-                loader = createCityLoader(null);
+                loader = createCityLoader(filter);
                 break;
             case LOADER_ZIP_CODE:
-                loader = createZipCodeLoader(null);
+                loader = createZipCodeLoader(filter);
                 break;
             case LOADER_STREET:
-                loader = createStreetLoader(null);
+                loader = createStreetLoader(filter);
                 break;
             case LOADER_STREET_NO:
-                loader = createStreetNoLoader(null);
+                loader = createStreetNoLoader(filter);
                 break;
         }
         return loader;
@@ -488,30 +474,6 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    private class FilterDialogQueryProvider implements FilterQueryProvider {
-        private Button button;
-
-        public FilterDialogQueryProvider(Button button) {
-            this.button = button;
-        }
-
-        @Override
-        public Cursor runQuery(CharSequence constraint) {
-            String filter = constraint != null ? constraint.toString() : null;
-            Loader<Cursor> loader;
-            if (button.equals(buttonCity)) {
-                loader = createCityLoader(filter);
-            } else if (button.equals(buttonZip)) {
-                loader = createZipCodeLoader(filter);
-            } else if (button.equals(buttonStreet)) {
-                loader = createStreetLoader(filter);
-            } else {
-                loader = createStreetNoLoader(filter);
-            }
-            return ((EGOCursorLoader)loader).loadInBackground();
-        }
-    }
-
     private class FilterAlertDialogOnClickListener implements AlertDialog.OnClickListener {
         private Button button;
 
@@ -527,6 +489,27 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             button.setTypeface(normalTypeface, Typeface.NORMAL);
             button.setTextColor(normalColor);
             resetLoaders(button, true);
+        }
+    }
+
+    private class SearchBarTextWatcher implements TextWatcher {
+        int loaderId;
+
+        public SearchBarTextWatcher(int loaderId) {
+            this.loaderId = loaderId;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            Bundle args = new Bundle(1);
+            args.putString("filter", s.toString());
+            getLoaderManager().restartLoader(loaderId, args, AddressFragment.this);
         }
     }
 
