@@ -1,8 +1,14 @@
 package tk.crazysoft.ego.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
+import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
+import android.os.Build;
+import android.util.Log;
 
 public class EGODbHelper extends SQLiteOpenHelper {
     // TODO: Change the Database Version whenever the schema changes
@@ -14,7 +20,7 @@ public class EGODbHelper extends SQLiteOpenHelper {
     }
 
     public EGODbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, new LeaklessCursorFactory(), DATABASE_VERSION);
     }
 
     @Override
@@ -41,5 +47,39 @@ public class EGODbHelper extends SQLiteOpenHelper {
             pos++;
         }
         return sb.toString();
+    }
+
+    // Source: http://stackoverflow.com/questions/4547461/closing-the-database-in-a-contentprovider/9044791#9044791
+    public static class LeaklessCursor extends SQLiteCursor {
+        static final String TAG = "LeaklessCursor";
+
+        public LeaklessCursor(SQLiteDatabase db, SQLiteCursorDriver driver, String editTable, SQLiteQuery query) {
+            super(db, driver, editTable, query);
+        }
+
+        public LeaklessCursor(SQLiteCursorDriver driver, String editTable, SQLiteQuery query) {
+            super(driver, editTable, query);
+        }
+
+        @Override
+        public void close() {
+            final SQLiteDatabase db = getDatabase();
+            super.close();
+            if (db != null) {
+                Log.d(TAG, "Closing LeaklessCursor: " + db.getPath());
+                db.close();
+            }
+        }
+    }
+
+    public static class LeaklessCursorFactory implements SQLiteDatabase.CursorFactory {
+        @Override
+        public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                return new LeaklessCursor(masterQuery, editTable, query);
+            } else {
+                return new LeaklessCursor(db, masterQuery, editTable, query);
+            }
+        }
     }
 }
