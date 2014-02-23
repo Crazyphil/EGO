@@ -7,7 +7,6 @@
     <string name="error_db_object_null">Die Datenbank kann nicht geöffnet werden. Bitte Administrator kontaktieren.</string>
     <string name="error_no_navigation_app">Es ist keine passende Navigations-App installiert. Bitte Administrator kontaktieren.</string>
     <string name="button_ok">Verstanden.</string>
-    <string name="time_format">%1$02d:%2$02d Uhr</string>
 
     <!-- Messages for error reporting -->
     <string name="crash_toast_text">Ein unerwartetes Problem ist aufgetreten. Die App wird geschlossen und Informationen zum Problem gesammelt.</string>
@@ -50,6 +49,7 @@
     <string name="hospitals_doctors_view_hospitals_empty">Für %1$s um %2$s sind keine Aufnahmekrankenhäuser eingetragen.</string>
     <string name="hospitals_doctors_view_doctors">Diensthabende Ärzte</string>
     <string name="hospitals_doctors_view_doctors_empty">Am %1$s um %2$s hat kein Arzt Notdienst.</string>
+    <string name="hospitals_doctors_view_doctors_time">Bis %1$s Uhr: %2$s</string>
     <string name="hospitals_doctors_view_date_dialog_title">Datum auswählen</string>
     <string name="hospitals_doctors_view_time_dialog_title">Zeit auswählen</string>
 
@@ -83,7 +83,7 @@
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
     <string name="preferences_activity_navigation_api_default">geo</string>
     <string name="preferences_activity_hospitals_doctors_takeover_title">Übernahme der Krankenhausaufnahme</string>
-    <string name="preferences_activity_hospitals_doctors_takeover_summary">Das Aufnahmekrankenhaus wechselt täglich um %1$02d:%2$02d Uhr</string>
+    <string name="preferences_activity_hospitals_doctors_takeover_summary">Das Aufnahmekrankenhaus wechselt täglich um %s Uhr</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Krankenhäuser mit Daueraufnahme</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Verwalten der Krankenhäuser, die zu jeder Zeit Patienten aufnehmen</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Ersetzungen zur Kontaktsuche</string>

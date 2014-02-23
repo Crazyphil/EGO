@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import tk.crazysoft.ego.components.DateManager;
 import tk.crazysoft.ego.components.TimeManager;
 import tk.crazysoft.ego.data.EGOContactsCursorLoader;
@@ -73,7 +76,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         });
         buttonToday.setVisibility(dateManager.isToday() ? View.GONE : View.VISIBLE);
 
-        buttonTime.setText(timeManager.getTimeString(getActivity()));
+        buttonTime.setText(timeManager.getTimeString());
         buttonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,8 +122,8 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
     }
 
     private void setEmptyText() {
-        textViewHospitalsEmpty.setText(getString(R.string.hospitals_doctors_view_hospitals_empty, dateManager.getDateString(), timeManager.getTimeString(getActivity())));
-        textViewDoctorsEmpty.setText(getString(R.string.hospitals_doctors_view_doctors_empty, dateManager.getDateString(), timeManager.getTimeString(getActivity())));
+        textViewHospitalsEmpty.setText(getString(R.string.hospitals_doctors_view_hospitals_empty, dateManager.getDateString(), timeManager.getTimeString()));
+        textViewDoctorsEmpty.setText(getString(R.string.hospitals_doctors_view_doctors_empty, dateManager.getDateString(), timeManager.getTimeString()));
     }
 
     private void reloadData() {
@@ -195,15 +198,22 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
     private Loader<Cursor> createDoctorsLoader() {
         long date = dateManager.getDate().getTimeInMillis() / 1000;
 
-        String table = EGOContract.DoctorStandby.TABLE_NAME + " LEFT JOIN " + EGOContract.NameReplacements.TABLE_NAME + " ON " + EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " = " + EGOContract.NameReplacements.COLUMN_NAME_NAME;
+        String table = EGOContract.DoctorStandby.TABLE_NAME +
+                " LEFT OUTER JOIN " + EGOContract.DoctorStandby.TABLE_NAME + " AS t2 ON t2." + EGOContract.DoctorStandby._ID + " = " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_NEXT_ID +
+                " LEFT JOIN " + EGOContract.NameReplacements.TABLE_NAME + " ON " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " = " + EGOContract.NameReplacements.COLUMN_NAME_NAME;
         String[] projection = {
                 EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby._ID,
-                EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME,
+                EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_DOCTOR_NAME + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME,
                 EGOContract.NameReplacements.COLUMN_NAME_REPLACEMENT + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS,
+                "CASE " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO + " WHEN " + (24 * 60) +
+                        " THEN t2." + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO +
+                        " ELSE " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO +
+                " END AS " + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO,
                 "NULL AS " +  EGOContactsCursorLoader.COLUMN_NAME_ADDRESS
         };
         String sortOrder = EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS + ", " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME;
-        String selection = EGOContract.DoctorStandby.COLUMN_NAME_DATE + " = ? AND ? BETWEEN " + EGOContract.DoctorStandby.COLUMN_NAME_TIME_FROM + " AND " + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO;
+        String selection = EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_DATE + " = ?" +
+                " AND ? BETWEEN " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_TIME_FROM + " AND " + EGOContract.DoctorStandby.TABLE_NAME + "." + EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO;
         String[] selectionArgs = { String.valueOf(date), String.valueOf(timeManager.getTime().toInt()) };
 
         return new EGOContactsCursorLoader(getActivity(), table, projection, selection, selectionArgs, sortOrder);
@@ -252,11 +262,19 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
                     navigate.setVisibility(View.VISIBLE);
                 }
             } else if (view.getId() == android.R.id.text1) {
+                String name = cursor.getString(columnIndex);
                 int aliasColumn = cursor.getColumnIndex(EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS);
                 if (aliasColumn > -1 && cursor.getString(aliasColumn) != null) {
-                    ((TextView)view).setText(cursor.getString(aliasColumn));
-                    return true;
+                    name = cursor.getString(aliasColumn);
                 }
+
+                int timeColumn = cursor.getColumnIndex(EGOContract.DoctorStandby.COLUMN_NAME_TIME_TO);
+                if (timeColumn > -1) {
+                    Date time = Preferences.Time.toDate(cursor.getInt(timeColumn));
+                    name = getString(R.string.hospitals_doctors_view_doctors_time, SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(time), name);
+                }
+                ((TextView)view).setText(name);
+                return true;
             }
             return false;
         }
@@ -278,7 +296,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
     private class OnTimeChangedListener implements TimeManager.OnTimeChangedListener {
         @Override
         public void timeChanged() {
-            buttonTime.setText(timeManager.getTimeString(getActivity()));
+            buttonTime.setText(timeManager.getTimeString());
             if (timeManager.isNow()) {
                 buttonNow.setVisibility(View.GONE);
             } else {

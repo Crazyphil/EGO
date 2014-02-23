@@ -11,10 +11,10 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import tk.crazysoft.ego.R;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class TimeManager {
@@ -92,8 +92,8 @@ public class TimeManager {
         fireTimeChanged();
     }
 
-    public String getTimeString(Context context) {
-        return context.getString(R.string.time_format, time.getHour(), time.getMinute());
+    public String getTimeString() {
+        return SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(time.toDate());
     }
 
     private void fireTimeChanged() {

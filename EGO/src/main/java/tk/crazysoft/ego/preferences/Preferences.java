@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class Preferences {
     private static final String PREFERENCE_FILE_KEY = "tk.crazysoft.ego.PREFERENCE_FILE_KEY";
 
@@ -83,10 +87,24 @@ public class Preferences {
             return hour * 60 + minute;
         }
 
+        public Date toDate() {
+            Calendar calendar = GregorianCalendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return new Date(calendar.getTimeInMillis());
+        }
+
         public static Time fromInt(int value) {
             int hour = value / 60;
             int minute = value - hour * 60;
             return new Time(hour, minute);
+        }
+
+        public static Date toDate(int value) {
+            Time time = Time.fromInt(value);
+            return time.toDate();
         }
     }
 }

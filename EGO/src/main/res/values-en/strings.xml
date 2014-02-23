@@ -7,7 +7,6 @@
     <string name="error_db_object_null">The database cannot be opened. Please contact administrator.</string>
     <string name="error_no_navigation_app">No matching navigation app is installed. Please contact administrator.</string>
     <string name="button_ok">Understood.</string>
-    <string name="time_format">%1$02d:%2$02d o\'clock</string>
 
     <!-- Messages for error reporting -->
     <string name="crash_toast_text">An unexpected problem has occured. The app will be closed and information about the problem is being collected.</string>
@@ -50,6 +49,7 @@
     <string name="hospitals_doctors_view_hospitals_empty">For %1$s at %2$s, no admitting hospitals are defined.</string>
     <string name="hospitals_doctors_view_doctors">Doctors on Standby</string>
     <string name="hospitals_doctors_view_doctors_empty">On %1$s at %2$s, no doctor is on standby.</string>
+    <string name="hospitals_doctors_view_doctors_time">Until %1$s: %2$s</string>
     <string name="hospitals_doctors_view_date_dialog_title">Select Date</string>
     <string name="hospitals_doctors_view_time_dialog_title">Select Time</string>
 
@@ -82,7 +82,7 @@
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
     <string name="preferences_activity_hospitals_doctors_takeover_title">Hospital admittance takeover time</string>
-    <string name="preferences_activity_hospitals_doctors_takeover_summary">The admitting hospital changes daily at %1$02d:%2$02d o\'clock</string>
+    <string name="preferences_activity_hospitals_doctors_takeover_summary">The admitting hospital changes daily at %s</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Always admitting hospitals</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Manage the hospitals that admit patients at all times</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Contact search replacements</string>

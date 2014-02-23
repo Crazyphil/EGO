@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
+
 import tk.crazysoft.ego.R;
 
 public class TimePickerPreference extends DialogPreference {
@@ -28,9 +30,7 @@ public class TimePickerPreference extends DialogPreference {
 
     @Override
     public CharSequence getSummary() {
-        int hour = value / 60;
-        int minute = value - hour * 60;
-        return String.format((String)super.getSummary(), hour, minute);
+        return String.format((String)super.getSummary(), SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(Preferences.Time.toDate(value)));
     }
 
     @Override
