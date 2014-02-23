@@ -20,7 +20,11 @@ public class EGODbHelper extends SQLiteOpenHelper {
     }
 
     public EGODbHelper(Context context) {
-        super(context, DATABASE_NAME, new LeaklessCursorFactory(), DATABASE_VERSION);
+        this(context, true);
+    }
+
+    public EGODbHelper(Context context, boolean useLeaklessCursor) {
+        super(context, DATABASE_NAME, useLeaklessCursor ? new LeaklessCursorFactory() : null, DATABASE_VERSION);
     }
 
     @Override

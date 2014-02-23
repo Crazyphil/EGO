@@ -120,7 +120,7 @@ public class DataImportService extends IntentService {
         }
 
         reportProgress(0);
-        EGODbHelper helper = new EGODbHelper(getBaseContext());
+        EGODbHelper helper = new EGODbHelper(getBaseContext(), false);
         db = helper.getWritableDatabase();
         if (db == null) {
             reportError(getResources().getString(R.string.error_db_object_null));
