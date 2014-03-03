@@ -128,8 +128,10 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
 
     private void reloadData() {
         setEmptyText();
-        getLoaderManager().restartLoader(LOADER_HOSPITALS, null, HospitalsDoctorsFragment.this);
-        getLoaderManager().restartLoader(LOADER_DOCTORS, null, HospitalsDoctorsFragment.this);
+        if (isAdded()) {
+            getLoaderManager().restartLoader(LOADER_HOSPITALS, null, HospitalsDoctorsFragment.this);
+            getLoaderManager().restartLoader(LOADER_DOCTORS, null, HospitalsDoctorsFragment.this);
+        }
     }
 
     @Override

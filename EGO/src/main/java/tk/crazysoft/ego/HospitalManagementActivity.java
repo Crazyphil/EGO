@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -517,7 +516,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean success) {
-                if (success) {
+                if (success && isAdded()) {
                     getLoaderManager().restartLoader(0, null, HospitalManagementFragment.this);
                 }
             }
@@ -558,7 +557,7 @@ public class HospitalManagementActivity extends ActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean success) {
-                if (success) {
+                if (success && isAdded()) {
                     getLoaderManager().restartLoader(0, null, HospitalManagementFragment.this);
                 }
             }

@@ -383,6 +383,8 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         selectedStreet = getFilter(buttonStreet, streetHasData);
         selectedStreetNo = getFilter(buttonStreetNo, streetNoHasData);
 
+        if (!isAdded()) return;
+
         getLoaderManager().restartLoader(LOADER_RESULTS, null, AddressFragment.this);
 
         if (button != buttonCity) {
@@ -510,9 +512,11 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
 
         @Override
         public void afterTextChanged(Editable s) {
-            Bundle args = new Bundle(1);
-            args.putString("filter", s.toString());
-            getLoaderManager().restartLoader(loaderId, args, AddressFragment.this);
+            if (isAdded()) {
+                Bundle args = new Bundle(1);
+                args.putString("filter", s.toString());
+                getLoaderManager().restartLoader(loaderId, args, AddressFragment.this);
+            }
         }
     }
 
