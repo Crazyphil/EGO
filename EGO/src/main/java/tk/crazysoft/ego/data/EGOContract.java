@@ -15,6 +15,7 @@ public final class EGOContract {
         public static final String COLUMN_NAME_STREET = "street";
         public static final String COLUMN_NAME_STREET_NO = "streetno";
         public static final String COLUMN_NAME_MAP_SHEET = "mapsheet";
+        public static final String COLUMN_NAME_PARENT_ID = "parentid";
 
         public static final String SQL_SELECT_DUPLICATE_STREETS =
                 "SELECT MAX(last_id) AS last_id, " + COLUMN_NAME_STREET +
@@ -36,7 +37,8 @@ public final class EGOContract {
                         "? AS " + COLUMN_NAME_CITY + ", " +
                         COLUMN_NAME_STREET + ", " +
                         COLUMN_NAME_STREET_NO + ", " +
-                        COLUMN_NAME_MAP_SHEET + " FROM " +
+                        COLUMN_NAME_MAP_SHEET + ", " +
+                        _ID + " AS " + COLUMN_NAME_PARENT_ID + " FROM " +
                         TABLE_NAME + " WHERE " +
                         _ID + " <= ? AND " +
                         COLUMN_NAME_ZIP + " = ? AND " +
@@ -68,14 +70,18 @@ public final class EGOContract {
 
     public static final String SQL_CREATE_ADRESSES =
             "CREATE TABLE " + Addresses.TABLE_NAME + " (" +
-            Addresses._ID + " INTEGER PRIMARY KEY, " +
-            Addresses.COLUMN_NAME_LATITUDE + " REAL, " +
-            Addresses.COLUMN_NAME_LONGITUDE + " REAL, " +
-            Addresses.COLUMN_NAME_ZIP + " TEXT, " +
-            Addresses.COLUMN_NAME_CITY + " TEXT, " +
-            Addresses.COLUMN_NAME_STREET + " TEXT, " +
-            Addresses.COLUMN_NAME_STREET_NO + " TEXT, " +
-            Addresses.COLUMN_NAME_MAP_SHEET + " TEXT)";
+                    Addresses._ID + " INTEGER PRIMARY KEY, " +
+                    Addresses.COLUMN_NAME_LATITUDE + " REAL, " +
+                    Addresses.COLUMN_NAME_LONGITUDE + " REAL, " +
+                    Addresses.COLUMN_NAME_ZIP + " TEXT, " +
+                    Addresses.COLUMN_NAME_CITY + " TEXT, " +
+                    Addresses.COLUMN_NAME_STREET + " TEXT, " +
+                    Addresses.COLUMN_NAME_STREET_NO + " TEXT, " +
+                    Addresses.COLUMN_NAME_MAP_SHEET + " TEXT, " +
+                    Addresses.COLUMN_NAME_PARENT_ID + " INTEGER)";
+    public static final String SQL_UPGRADE_ADDRESSES_V2 =
+            "ALTER TABLE " + Addresses.TABLE_NAME + " ADD COLUMN " +
+                    Addresses.COLUMN_NAME_PARENT_ID + " INTEGER";
     public static final String SQL_DELETE_ADDRESSES =
             "DROP TABLE IF EXISTS " + Addresses.TABLE_NAME;
 

@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class EGODbHelper extends SQLiteOpenHelper {
     // TODO: Change the Database Version whenever the schema changes
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "EGO.db";
 
     public static enum BooleanComposition {
@@ -38,6 +38,16 @@ public class EGODbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO: Add upgrade code from previous versions when schema changes
+        switch (oldVersion + 1) {
+            case 2:
+                db.execSQL(EGOContract.SQL_UPGRADE_ADDRESSES_V2);
+                oldVersion = 2;
+                break;
+        }
+
+        if (oldVersion < newVersion) {
+            onUpgrade(db, oldVersion, newVersion);
+        }
     }
 
     public static String createSimpleSelection(String[] columns, BooleanComposition composition) {

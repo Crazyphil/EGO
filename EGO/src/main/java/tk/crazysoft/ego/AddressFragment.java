@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
@@ -32,6 +33,7 @@ import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGOCursorAdapter;
 import tk.crazysoft.ego.data.EGOCursorLoader;
 import tk.crazysoft.ego.data.EGODbHelper;
+import tk.crazysoft.ego.data.FilterCursorWrapper;
 
 public class AddressFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private Button buttonCity, buttonZip, buttonStreet, buttonStreetNo;
@@ -248,6 +250,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
                 EGOContract.Addresses._ID,
                 EGOContract.Addresses.COLUMN_NAME_STREET + " || ' ' || " + EGOContract.Addresses.COLUMN_NAME_STREET_NO + " AS address",
                 EGOContract.Addresses.COLUMN_NAME_ZIP + " || ' ' || " + EGOContract.Addresses.COLUMN_NAME_CITY + " AS region",
+                EGOContract.Addresses.COLUMN_NAME_PARENT_ID
         };
         String sortOrder = EGOContract.Addresses.COLUMN_NAME_CITY + " , " +
                 EGOContract.Addresses.COLUMN_NAME_STREET + ", " +
@@ -339,7 +342,7 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         CursorAdapter adapter = getAdapterForCursorLoader(cursorLoader);
-        adapter.swapCursor(cursor);
+        adapter.swapCursor(new ResultFilterCursorWrapper(cursor));
     }
 
     private CursorAdapter getAdapterForCursorLoader(Loader<Cursor> cursorLoader) {
@@ -510,6 +513,47 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
             Bundle args = new Bundle(1);
             args.putString("filter", s.toString());
             getLoaderManager().restartLoader(loaderId, args, AddressFragment.this);
+        }
+    }
+
+    private class ResultFilterCursorWrapper extends FilterCursorWrapper {
+        private Cursor cursor;
+        private LongSparseArray<Boolean> selectedRows = null;
+        private int idColumn, parentIdColumn;
+
+        public ResultFilterCursorWrapper(Cursor cursor) {
+            super(cursor);
+
+            this.cursor = cursor;
+            idColumn = getColumnIndex(EGOContract.Addresses._ID);
+            parentIdColumn = getColumnIndex(EGOContract.Addresses.COLUMN_NAME_PARENT_ID);
+            initWrapper();
+        }
+
+        @Override
+        protected boolean isHidden() {
+            if (selectedRows == null) {
+                initSelectedRows();
+            }
+            if (parentIdColumn > -1) {
+                long id = getLong(parentIdColumn);
+                if (id > 0) {
+                    Boolean isThere = selectedRows.get(id);
+                    return isThere != null;
+                }
+            }
+            return false;
+        }
+
+        private void initSelectedRows() {
+            int currentPos = cursor.getPosition();
+
+            selectedRows = new LongSparseArray<Boolean>();
+            cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                selectedRows.put(cursor.getLong(idColumn), true);
+            }
+            cursor.moveToPosition(currentPos);
         }
     }
 
