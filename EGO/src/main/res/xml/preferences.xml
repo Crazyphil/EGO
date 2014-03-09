@@ -90,13 +90,23 @@
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/preferences_activity_bug_fixing_title"
+        android:title="@string/preferences_activity_app_options_title"
         android:key="pref_key_bug_fixing">
 
         <CheckBoxPreference android:key="acra.alwaysaccept"
-            android:title="@string/preferences_activity_bug_fixing_silent_mode_title"
-            android:summaryOff="@string/preferences_activity_bug_fixing_silent_mode_summary_unchecked"
-            android:summaryOn="@string/preferences_activity_bug_fixing_silent_mode_summary_checked"
+            android:title="@string/preferences_activity_app_options_silent_mode_title"
+            android:summaryOff="@string/preferences_activity_app_options_silent_mode_summary_unchecked"
+            android:summaryOn="@string/preferences_activity_app_options_silent_mode_summary_checked"
             android:defaultValue="true"/>
+        <tk.crazysoft.ego.preferences.PreferenceExportPreference
+            android:key="pref_key_export_data"
+            android:title="@string/preferences_activity_app_options_export_title"
+            android:summary="@string/preferences_activity_app_options_export_summary"
+            android:defaultValue="true" /> <!-- true = export -->
+        <tk.crazysoft.ego.preferences.PreferenceExportPreference
+            android:key="pref_key_export_data"
+            android:title="@string/preferences_activity_app_options_import_title"
+            android:summary="@string/preferences_activity_app_options_import_summary"
+            android:defaultValue="false" /> <!-- false = import -->
     </PreferenceCategory>
 </PreferenceScreen>

@@ -87,10 +87,18 @@
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Manage the hospitals that admit patients at all times</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Contact search replacements</string>
     <string name="preferences_activity_hospitals_doctors_replacement_summary">Manage the names by which hospitals and doctors are searched in your contacts</string>
-    <string name="preferences_activity_bug_fixing_title">Bug fixing</string>
-    <string name="preferences_activity_bug_fixing_silent_mode_title">Send error reports automatically</string>
-    <string name="preferences_activity_bug_fixing_silent_mode_summary_unchecked">Error reports are sent after confirmation</string>
-    <string name="preferences_activity_bug_fixing_silent_mode_summary_checked">Error reports are sent automatically</string>
+    <string name="preferences_activity_app_options_title">App options</string>
+    <string name="preferences_activity_app_options_silent_mode_title">Send error reports automatically</string>
+    <string name="preferences_activity_app_options_silent_mode_summary_unchecked">Error reports are sent after confirmation</string>
+    <string name="preferences_activity_app_options_silent_mode_summary_checked">Error reports are sent automatically</string>
+    <string name="preferences_activity_app_options_export_title">Export data</string>
+    <string name="preferences_activity_app_options_export_summary">Exports all data to the SD card</string>
+    <string name="preferences_activity_app_options_export_success">All data was exported successfully.</string>
+    <string name="preferences_activity_app_options_export_failed">Exporting all data failed.</string>
+    <string name="preferences_activity_app_options_import_title">Import Data</string>
+    <string name="preferences_activity_app_options_import_summary">Import all data from the SD card</string>
+    <string name="preferences_activity_app_options_import_success">All data was imported successfully.</string>
+    <string name="preferences_activity_app_options_import_failed">Importing all data failed.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geographical Point</item>
