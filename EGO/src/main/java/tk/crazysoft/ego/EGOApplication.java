@@ -8,7 +8,7 @@ import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
         formKey = "", // This is required for backward compatibility but not used
-        formUri = "http://acra.crazysoft-software.tk/submit.php",
+        formUri = "https://acra.kapfer.it/submit.php",
         formUriBasicAuthLogin = "acra", // optional
         formUriBasicAuthPassword = "4St5qySTJa", // optional
         mode = ReportingInteractionMode.DIALOG,

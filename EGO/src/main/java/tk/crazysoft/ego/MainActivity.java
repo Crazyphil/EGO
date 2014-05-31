@@ -356,6 +356,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         // Start an activity if it's safe
         if (isIntentSafe) {
+            navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  // Don't start activity as part of EGO
             activity.startActivity(navIntent);
         } else {
             Toast.makeText(activity, R.string.error_no_navigation_app, Toast.LENGTH_LONG).show();

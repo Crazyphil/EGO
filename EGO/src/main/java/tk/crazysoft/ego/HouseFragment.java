@@ -26,7 +26,7 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments()!= null && getArguments().containsKey("id")) {
+        if (getArguments() != null && getArguments().containsKey("id")) {
             setHouse(getArguments().getLong("id"));
         } else if (houseId > -1) {
             setHouse(houseId);

@@ -18,6 +18,7 @@
         <item name="contactsMenuIcon">@drawable/social_group_light</item>
         <item name="navigationMenuIcon">@drawable/location_directions_light</item>
         <item name="clearIcon">@drawable/clear_light</item>
+        <item name="clearIconInverse">@drawable/clear_dark</item>
         <item name="primaryTextColor">@android:color/primary_text_light</item>
         <item name="secondaryTextColor">@android:color/secondary_text_light</item>
         <item name="tilesLoadingBackgroundColor">#d8d0d0</item>
@@ -27,6 +28,7 @@
         <item name="contactsMenuIcon">@drawable/social_group_dark</item>
         <item name="navigationMenuIcon">@drawable/location_directions_dark</item>
         <item name="clearIcon">@drawable/clear_dark</item>
+        <item name="clearIconInverse">@drawable/clear_light</item>
         <item name="primaryTextColor">@android:color/primary_text_dark</item>
         <item name="secondaryTextColor">@android:color/secondary_text_dark</item>
         <item name="tilesLoadingBackgroundColor">#272f2f</item>

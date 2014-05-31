@@ -1,9 +1,11 @@
+import groovy.swing.SwingBuilder
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 apply plugin: 'android'
@@ -14,16 +16,37 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.1'
+
     defaultConfig {
+        versionCode 5
+        versionName '1.0.3'
         minSdkVersion 10
         targetSdkVersion 19
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("release.keystore")
+            storePassword ""
+            keyAlias "androidreleasekey"
+            keyPassword ""
+        }
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
+            zipAlign true
+        }
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.+'
-    compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:support-v4:19.1.+'
     compile 'eu.lp0.slf4j:slf4j-android:1.7.5-+@jar'
     compile 'org.slf4j:slf4j-api:1.7.+@jar'
     compile 'net.sf.opencsv:opencsv:2.+@jar'
@@ -31,4 +54,100 @@ dependencies {
     compile files('libs/osmdroid-android-4.1.jar')
     compile files('libs/proj4j-0.1.0.jar')
     compile files('libs/SunriseSunsetCalculator-1.0-SNAPSHOT.jar')
+}
+
+// Ask for password when doing release build
+// Source: https://www.timroes.de/2014/01/19/using-password-prompts-with-gradle-build-files/
+gradle.taskGraph.whenReady { taskGraph ->
+    if(taskGraph.hasTask(':EGO:assembleRelease')) {
+        def pass = ''
+        if(System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true, // Otherwise the build will continue running before you closed the dialog
+                        title: 'Enter password', // Dialog title
+                        alwaysOnTop: true, // pretty much what the name says
+                        resizable: false, // Don't allow the user to resize the dialog
+                        locationRelativeTo: null, // Place dialog in center of the screen
+                        pack: true, // We need to pack the dialog (so it will take the size of it's children)
+                        show: true // Let's show it
+                ) {
+                    vbox { // Put everything below each other
+                        label(text: "Please enter key passphrase:")
+                        input = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            pass = new String(input.password); // Set pass variable to value of input field
+                            dispose(); // Close dialog
+                        })
+                    } // vbox end
+                } // dialog end
+            } // edt end
+        } else {
+            pass = System.console().readPassword("\nPlease enter key passphrase: ")
+            pass = new String(pass)
+        }
+
+        if(pass.size() <= 0) {
+            throw new InvalidUserDataException("You must enter a password to proceed.")
+        }
+
+        android.signingConfigs.release.storePassword = pass
+        android.signingConfigs.release.keyPassword = pass
+    } // end if has task
+} // end whenReady
+
+// Copy release builds including their proguard mapping file to a zip file
+// Source: http://stackoverflow.com/questions/21434554/copying-apk-file-in-android-gradle-project/21610270#21610270
+def releasePath = file("${rootDir}/release")
+
+def releaseTask = tasks.create(name: 'release') {
+    group 'Build'
+    description "Assembles and archives all Relegrase builds"
+}
+
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name == 'release') {
+        def build = variant.name.capitalize()
+
+        def releaseBuildTask = tasks.create(name: "release${build}", type: Zip) {
+            group 'Build'
+            description "Assembles and archives apk and its proguard mapping for the $build build"
+            destinationDir releasePath
+            baseName variant.packageName
+            if (!variant.buildType.packageNameSuffix) {
+                appendix variant.buildType.name
+            }
+            if (variant.versionName) {
+                version "${variant.versionName}_${variant.versionCode}"
+            } else {
+                version "$variant.versionCode"
+            }
+            def archiveBaseName = archiveName.replaceFirst(/\.${extension}$/, '')
+            from(variant.outputFile.path) {
+                rename '.*', "${archiveBaseName}.apk"
+            }
+            if (variant.buildType.runProguard) {
+                from(variant.processResources.proguardOutputFile.parent) {
+                    include 'mapping.txt'
+                    rename '(.*)', "${archiveBaseName}-proguard_\$1"
+                }
+            }
+        }
+        releaseBuildTask.dependsOn variant.assemble
+
+        variant.productFlavors.each { flavor ->
+            def flavorName = flavor.name.capitalize()
+            def releaseFlavorTaskName = "release${flavorName}"
+            def releaseFlavorTask
+            if (tasks.findByName(releaseFlavorTaskName)) {
+                releaseFlavorTask = tasks[releaseFlavorTaskName]
+            } else {
+                releaseFlavorTask = tasks.create(name: releaseFlavorTaskName) {
+                    group 'Build'
+                    description "Assembles and archives all Release builds for flavor $flavorName"
+                }
+                releaseTask.dependsOn releaseFlavorTask
+            }
+            releaseFlavorTask.dependsOn releaseBuildTask
+        }
+    }
 }

@@ -127,7 +127,9 @@ public class PreferenceExportPreference extends Preference implements Preference
 
         private boolean doExport(String dataPath, String sdPath) {
             File sdFile = new File(sdPath, EXPORT_PATH);
-            sdFile.mkdirs();
+            if (!sdFile.mkdirs()) {
+                return false;
+            }
             return copyDb(new File(dataPath, DBS_PATH), sdFile) && copyPrefs(new File(dataPath, PREFS_PATH), sdFile);
         }
 

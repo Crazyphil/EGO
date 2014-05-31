@@ -81,7 +81,7 @@
     <string name="preferences_activity_navigation_title">Externe Navigations-App</string>
     <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
-    <string name="preferences_activity_navigation_api_default">geo</string>
+    <string name="preferences_activity_navigation_api_default" translatable="false">geo</string>
     <string name="preferences_activity_hospitals_doctors_takeover_title">Übernahme der Krankenhausaufnahme</string>
     <string name="preferences_activity_hospitals_doctors_takeover_summary">Das Aufnahmekrankenhaus wechselt täglich um %s Uhr</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Krankenhäuser mit Daueraufnahme</string>
@@ -107,7 +107,7 @@
         <item>Google Maps</item>
         <item>Navigon</item>
     </string-array>
-    <string-array name="preferences_activity_navigation_api_values">
+    <string-array name="preferences_activity_navigation_api_values" translatable="false">
         <item>geo</item>
         <item>google.navigation</item>
         <item>geo_q</item>
