@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
+import android.text.TextUtils;
 
 import org.osgeo.proj4j.CRSFactory;
 import org.osgeo.proj4j.CoordinateReferenceSystem;
@@ -24,13 +25,14 @@ public class AddressImporter extends Importer {
     private static final String CITY_COLUMN = "GEMEINDENAME";
     private static final String STREET_COLUMN = "STRASSENNAME";
     private static final String STREETNO_COLUMN = "HNR_ZUSAMMEN_KURZ";
-    private static final String SUBCODE_COLUMN = "SUBCD";
+    private static final String ADDRESSCODE_COLUMN = "ADRCD";
     private static final String MAPSHEET_COLUMN = "KARTENBLATT";
 
     private static final int MAX_STREET_MERGE_METERS = 1000;
 
     private AddressColumns columns;
     private CoordinateTransform projection;
+    private int lastAddressCode;
 
     public AddressImporter(Context context) {
         super(context);
@@ -55,15 +57,16 @@ public class AddressImporter extends Importer {
             String city = csvTrim(line[columns.city]);
             String street = csvTrim(line[columns.street]);
             String streetno = csvTrim(line[columns.streetno]);
-            int subcode = Integer.parseInt(csvTrim(line[columns.subcode]));
+            int addrcode = Integer.parseInt(csvTrim(line[columns.addresscode]));
             String mapsheet = "";
             if (columns.mapsheet >= 0) {
                 mapsheet = csvTrim(line[columns.mapsheet]);
             }
 
-            if (subcode > 1) {
+            if (TextUtils.isEmpty(streetno) || lastAddressCode == addrcode) {
                 return PROCESS_IGNORED;
             }
+            lastAddressCode = addrcode;
 
             ProjCoordinate geoCoords = convertEPSG31255toWSG84(eastCoord, northCoord);
             if (geoCoords == null || !insertAddress(geoCoords.y, geoCoords.x, zipCode, city, street, streetno, mapsheet)) {
@@ -85,10 +88,10 @@ public class AddressImporter extends Importer {
         columns.city = findStringPosInArray(fields, CITY_COLUMN);
         columns.street = findStringPosInArray(fields, STREET_COLUMN);
         columns.streetno = findStringPosInArray(fields, STREETNO_COLUMN);
-        columns.subcode = findStringPosInArray(fields, SUBCODE_COLUMN);
+        columns.addresscode = findStringPosInArray(fields, ADDRESSCODE_COLUMN);
         columns.mapsheet = findStringPosInArray(fields, MAPSHEET_COLUMN);
 
-        if (columns.eastCoord >= 0 && columns.northCoord >= 0 && columns.zipCode >= 0 && columns.city >= 0 && columns.street >= 0 && columns.streetno >= 0 && columns.subcode >= 0) {
+        if (columns.eastCoord >= 0 && columns.northCoord >= 0 && columns.zipCode >= 0 && columns.city >= 0 && columns.street >= 0 && columns.streetno >= 0 && columns.addresscode >= 0) {
             return columns;
         }
         return null;
@@ -124,6 +127,7 @@ public class AddressImporter extends Importer {
         values.put(EGOContract.Addresses.COLUMN_NAME_STREET, street);
         values.put(EGOContract.Addresses.COLUMN_NAME_STREET_NO, streetno);
         values.put(EGOContract.Addresses.COLUMN_NAME_MAP_SHEET, mapsheet);
+
         return getDatabase().insert(EGOContract.Addresses.TABLE_NAME, null, values) > -1;
     }
 
@@ -237,7 +241,7 @@ public class AddressImporter extends Importer {
         public int city;
         public int street;
         public int streetno;
-        public int subcode;
+        public int addresscode;
         public int mapsheet;
     }
 }

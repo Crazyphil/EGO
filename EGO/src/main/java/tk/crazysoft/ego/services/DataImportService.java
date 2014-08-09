@@ -138,6 +138,7 @@ public class DataImportService extends IntentService {
             int failedEntries = 0;
 
             String[] fields = rdr.readNext();
+            fields[0] = fields[0].replace("\uFEFF", "");    // Replace UTF-8 BOM in first field of the file if it exists
             while (fields != null) {
                 if (fields.length > 0 && !fields[0].startsWith(CSV_COMMENT)) {
                     int result = importer.process(fields);
