@@ -2,6 +2,7 @@ package tk.crazysoft.ego.io;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import tk.crazysoft.ego.preferences.Preferences;
 
 // Source: http://stackoverflow.com/questions/5694933/find-an-external-sd-card-location/5695129#15612964
 public class ExternalStorage {
+    public static final String TAG = "tk.crazysoft.ego.io.ExternalStorage";
+
     public static final String SD_CARD = "sdCard";
     public static final String EXTERNAL_SD_CARD = "externalSdCard";
 
@@ -98,14 +101,18 @@ public class ExternalStorage {
                             mMounts.add(element);
                     }
                 }
+            } else {
+                Log.d(TAG, "/proc/mounts not available");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception reading /proc/mounts", e);
         }
 
+        boolean voldExists = false;
         try {
             File voldFile = new File("/system/etc/vold.fstab");
             if(voldFile.exists()){
+                voldExists = true;
                 Scanner scanner = new Scanner(voldFile);
                 while (scanner.hasNext()) {
                     String line = scanner.nextLine();
@@ -119,17 +126,21 @@ public class ExternalStorage {
                             mVold.add(element);
                     }
                 }
+            } else {
+                Log.d(TAG, "/system/etc/vold.fstab not available");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception reading /system/etc/vold.fstab", e);
         }
 
-        for (int i = 0; i < mMounts.size(); i++) {
-            String mount = mMounts.get(i);
-            if (!mVold.contains(mount))
-                mMounts.remove(i--);
+        if (voldExists) {
+            for (int i = 0; i < mMounts.size(); i++) {
+                String mount = mMounts.get(i);
+                if (!mVold.contains(mount))
+                    mMounts.remove(i--);
+            }
+            mVold.clear();
         }
-        mVold.clear();
 
         List<String> mountHash = new ArrayList<String>(10);
 
