@@ -24,7 +24,7 @@ public class AddressImporter extends Importer {
     private static final String ZIP_COLUMN = "PLZ";
     private static final String CITY_COLUMN = "GEMEINDENAME";
     private static final String STREET_COLUMN = "STRASSENNAME";
-    private static final String STREETNO_COLUMN = "HNR_ZUSAMMEN_KURZ";
+    private static final String STREETNO_COLUMN = "HNR_ZUSAMMEN";
     private static final String ADDRESSCODE_COLUMN = "ADRCD";
     private static final String MAPSHEET_COLUMN = "KARTENBLATT";
 
