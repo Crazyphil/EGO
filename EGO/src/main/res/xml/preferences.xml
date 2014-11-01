@@ -65,6 +65,14 @@
         android:title="@string/main_activity_tab_hospitals_doctors"
         android:key="pref_key_hospitals_doctors">
 
+        <ListPreference
+            android:key="pref_key_hospitals_doctors_view"
+            android:title="@string/preferences_activity_hospitals_doctors_view_title"
+            android:summary="@string/preferences_activity_hospitals_doctors_view_summary"
+            android:dialogTitle="@string/preferences_activity_hospitals_doctors_view_title"
+            android:entries="@array/preferences_activity_hospitals_doctors_view_entries"
+            android:entryValues="@array/preferences_activity_hospitals_doctors_view_values"
+            android:defaultValue="@string/preferences_activity_hospitals_doctors_view_default"/>
         <tk.crazysoft.ego.preferences.TimePickerPreference
             android:key="pref_key_hospitals_doctors_takeover"
             android:title="@string/preferences_activity_hospitals_doctors_takeover_title"

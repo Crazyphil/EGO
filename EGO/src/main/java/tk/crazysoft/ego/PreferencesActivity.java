@@ -49,9 +49,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
         CheckBoxPreference useSdPreference = (CheckBoxPreference)findPreference(Preferences.PREFERENCE_IMPORT_USE_SD);
         ListPreference apiPreference = (ListPreference)findPreference(Preferences.PREFERENCE_NAVIGATION_API);
+        ListPreference viewPreference = (ListPreference)findPreference(Preferences.PREFERENCE_HOSPITALS_DOCTORS_VIEW);
 
         refreshImportFiles();
         refreshNavigationApi(apiPreference);
+        refreshHospitalsDoctorsView(viewPreference);
     }
 
     @Override
@@ -103,6 +105,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             refreshImportFiles();
         } else if (key.equals(Preferences.PREFERENCE_NAVIGATION_API)) {
             refreshNavigationApi(pref);
+        } else if (key.equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_VIEW)) {
+            refreshHospitalsDoctorsView(pref);
         } else if (key.equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER)) {
             refreshHospitalsDoctorsTakeover();
         }
@@ -129,6 +133,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     private void refreshNavigationApi(Preference pref) {
         ListPreference apiPreference = (ListPreference)getPreferenceScreen().findPreference(Preferences.PREFERENCE_NAVIGATION_API);
         pref.setSummary(getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+    }
+
+    private void refreshHospitalsDoctorsView(Preference pref) {
+        ListPreference viewPreference = (ListPreference)getPreferenceScreen().findPreference(Preferences.PREFERENCE_HOSPITALS_DOCTORS_VIEW);
+        pref.setSummary(getString(R.string.preferences_activity_hospitals_doctors_view_summary, viewPreference.getEntry()));
     }
 
     private void refreshHospitalsDoctorsTakeover() {

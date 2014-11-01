@@ -63,7 +63,8 @@
             android:layout_height="fill_parent"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_weight="1"
-            android:layout_marginRight="@dimen/activity_element_margin">
+            android:layout_marginRight="@dimen/activity_element_margin"
+            android:id="@+id/hospitals_doctors_linearLayoutHospitalsContainer">
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"
@@ -96,7 +97,8 @@
             android:layout_height="fill_parent"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_weight="1"
-            android:layout_marginLeft="@dimen/activity_element_margin">
+            android:layout_marginLeft="@dimen/activity_element_margin"
+            android:id="@+id/hospitals_doctors_linearLayoutDoctorsContainer">
 
             <TextView
                 style="?android:attr/listSeparatorTextViewStyle"

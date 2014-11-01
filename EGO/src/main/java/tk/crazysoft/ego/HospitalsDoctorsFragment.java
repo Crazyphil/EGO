@@ -110,12 +110,18 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         listViewHospitals.setAdapter(adapter);
         listViewHospitals.setEmptyView(textViewHospitalsEmpty);
         listViewHospitals.setOnItemClickListener(new ContactListItemOnClickListener());
+        if ((preferences.getHospitalsDoctorsView() & Preferences.HOSPITALS_DOCTORS_VIEW_HOSPITALS) == 0) {
+            getView().findViewById(R.id.hospitals_doctors_linearLayoutHospitalsContainer).setVisibility(View.GONE);
+        }
 
         adapter = new SimpleCursorAdapter(getActivity(), R.layout.contact_item, null, fromColumns, toViews, 0);
         adapter.setViewBinder(new ContactsViewBinder());
         listViewDoctors.setAdapter(adapter);
         listViewDoctors.setEmptyView(textViewDoctorsEmpty);
         listViewDoctors.setOnItemClickListener(new ContactListItemOnClickListener());
+        if ((preferences.getHospitalsDoctorsView() & Preferences.HOSPITALS_DOCTORS_VIEW_DOCTORS) == 0) {
+            getView().findViewById(R.id.hospitals_doctors_linearLayoutDoctorsContainer).setVisibility(View.GONE);
+        }
 
         getLoaderManager().initLoader(LOADER_HOSPITALS, null, this);
         getLoaderManager().initLoader(LOADER_DOCTORS, null, this);

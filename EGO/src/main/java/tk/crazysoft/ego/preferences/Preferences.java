@@ -21,7 +21,11 @@ public class Preferences {
 
     public static final String PREFERENCE_NAVIGATION_API = "pref_key_navigation_api";
 
+    public static final String PREFERENCE_HOSPITALS_DOCTORS_VIEW = "pref_key_hospitals_doctors_view";
     public static final String PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER = "pref_key_hospitals_doctors_takeover";
+
+    public static final int HOSPITALS_DOCTORS_VIEW_HOSPITALS = 1;
+    public static final int HOSPITALS_DOCTORS_VIEW_DOCTORS = 2;
 
     private final Context context;
     private final SharedPreferences preferences;
@@ -49,6 +53,10 @@ public class Preferences {
 
     public String getNavigationApi() {
         return preferences.getString(PREFERENCE_NAVIGATION_API, null);
+    }
+
+    public int getHospitalsDoctorsView() {
+        return Integer.parseInt(preferences.getString(PREFERENCE_HOSPITALS_DOCTORS_VIEW, "3"));
     }
 
     public Time getHospitalsDoctorsTakeover() {

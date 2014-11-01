@@ -18,7 +18,7 @@
     <!-- Main Activity -->
     <string name="main_activity_action_navigation">Navigation</string>
     <string name="main_activity_action_contacts">Contacts</string>
-    <string name="main_activity_action_data_management">Data Management</string>
+    <string name="main_activity_action_data_management">Settings</string>
     <string name="main_activity_action_about">About COOP</string>
     <string name="main_activity_tab_addresses">Addresses</string>
     <string name="main_activity_tab_hospitals_doctors">Doctor &amp; ER</string>
@@ -32,7 +32,7 @@
     <string name="address_view_streetno">Street No.</string>
     <string name="address_view_results">Results</string>
     <string name="address_view_remove">Remove filter</string>
-    <string name="address_view_empty">No addresses were imported yet.\nChoose “Data Management” in the menu to load data.</string>
+    <string name="address_view_empty">No addresses were imported yet.\nChoose “Settings” in the menu to load data.</string>
     <string name="address_view_filter">Search…</string>
 
     <!-- Map Fragment -->
@@ -62,7 +62,7 @@
     <string name="house_view_mapsheet">Map Sheet %s</string>
 
     <!-- Preferences Activity -->
-    <string name="preferences_activity_title">Data Management</string>
+    <string name="preferences_activity_title">Settings</string>
     <string name="preferences_activity_import_title">Import Data</string>
     <string name="preferences_activity_import_addresses_title">Addresses</string>
     <string name="preferences_activity_import_addresses_summary">from %sego/import/adressen.csv</string>
@@ -81,6 +81,8 @@
     <string name="preferences_activity_navigation_title">External Navigation App</string>
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
+    <string name="preferences_activity_hospitals_doctors_view_title">Sections to show</string>
+    <string name="preferences_activity_hospitals_doctors_view_summary">%s are shown</string>
     <string name="preferences_activity_hospitals_doctors_takeover_title">Hospital admittance takeover time</string>
     <string name="preferences_activity_hospitals_doctors_takeover_summary">The admitting hospital changes daily at %s</string>
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_title">Always admitting hospitals</string>
@@ -105,6 +107,12 @@
         <item>Google Navigation (and compatible)</item>
         <item>Google Maps</item>
         <item>Navigon</item>
+    </string-array>
+
+    <string-array name="preferences_activity_hospitals_doctors_view_entries">
+        <item>Hospitals &amp; Doctors</item>
+        <item>Hospitals only</item>
+        <item>Doctors only</item>
     </string-array>
 
     <!-- Hospital Management Activity -->
