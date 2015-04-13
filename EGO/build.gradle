@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.+'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -33,10 +33,10 @@ android {
     }
     buildTypes {
         release {
-            runProguard true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.release
-            zipAlign true
+            zipAlignEnabled true
         }
     }
     productFlavors {
@@ -121,10 +121,10 @@ android.applicationVariants.all { variant ->
                 version "$variant.versionCode"
             }
             def archiveBaseName = archiveName.replaceFirst(/\.${extension}$/, '')
-            from(variant.outputFile.path) {
+            from(variant.outputs[0].outputFile.path) {
                 rename '.*', "${archiveBaseName}.apk"
             }
-            if (variant.buildType.runProguard) {
+            if (variant.buildType.minifyEnabled) {
                 from(variant.mappingFile.parent) {
                     include 'mapping.txt'
                     rename '(.*)', "${archiveBaseName}-proguard_\$1"
