@@ -149,5 +149,7 @@
     <string name="service_dataimport_result_import">%1$,d entries were imported, %2$,d were erroneous.</string>
     <string name="service_dataimport_result_merge">%1$,d streets exist in multiple cities, %2$,d cross borders.</string>
     <string name="service_dataimport_result_db_write_fail">Changes could not be saved. Please check your file.</string>
+    <string name="main_activity_action_light_off">Lights off</string>
+    <string name="main_activity_action_light_on">Lights on</string>
 
 </resources>

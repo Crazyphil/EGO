@@ -178,6 +178,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 getSupportActionBar().setHomeButtonEnabled(false);
                 displayedHouses = null;
                 break;
+            case R.id.action_light:
+                themeWatcher.toggleAppTheme();
+                break;
             case R.id.action_navigation:
                 sendNavigationIntent(this, (String)null);
                 break;

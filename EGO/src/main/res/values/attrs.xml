@@ -3,6 +3,8 @@
     <declare-styleable name="customAttrs">
         <attr name="contactsMenuIcon" format="reference" />
         <attr name="navigationMenuIcon" format="reference" />
+        <attr name="lightMenuIcon" format="reference" />
+        <attr name="lightMenuText" format="reference|string" />
         <attr name="clearIcon" format="reference" />
         <attr name="clearIconInverse" format="reference" />
         <attr name="primaryTextColor" format="reference|color" />

@@ -114,7 +114,7 @@ public class AppThemeWatcher extends BroadcastReceiver {
         }
     }
 
-    interface OnAppThemeChangedListener {
+    public interface OnAppThemeChangedListener {
         void onAppThemeChanged(int newTheme);
     }
 }
