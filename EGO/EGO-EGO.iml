@@ -88,11 +88,11 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="opencsv-2.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
+    <orderEntry type="library" exported="" name="osmdroid-android-4.3" level="project" />
     <orderEntry type="library" exported="" name="proj4j-0.1.0" level="project" />
     <orderEntry type="library" exported="" name="acra-4.5.0" level="project" />
     <orderEntry type="library" exported="" name="SunriseSunsetCalculator-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.12" level="project" />
-    <orderEntry type="library" exported="" name="osmdroid-android-4.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.12" level="project" />
   </component>

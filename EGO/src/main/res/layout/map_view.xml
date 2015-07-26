@@ -45,6 +45,7 @@
         android:layout_alignParentLeft="true"
         android:textOff=""
         android:textOn=""
-        android:textSize="0dp" />
+        android:textSize="0dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

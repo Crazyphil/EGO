@@ -49,7 +49,7 @@ dependencies {
     compile 'org.slf4j:slf4j-android:1.7.+@jar'
     compile 'org.slf4j:slf4j-api:1.7.+@jar'
     compile 'net.sf.opencsv:opencsv:2.+@jar'
-    compile files('libs/osmdroid-android-4.1.jar')
+    compile 'org.osmdroid:osmdroid-android:4.3'
     compile files('libs/proj4j-0.1.0.jar')
     compile files('libs/SunriseSunsetCalculator-1.0-SNAPSHOT.jar')
     compile files('libs/acra-4.5.0.jar')
