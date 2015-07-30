@@ -12,11 +12,12 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    maven { url "http://nexus.antczak.org/content/repositories/thirdparty/" } // For android-support-v4-preferencefragment
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultConfig {
         versionCode 6
         versionName '1.0.4'
@@ -44,12 +45,13 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.+'
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:appcompat-v7:20.+'
+    compile 'com.android.support:support-v4:20.+'
     compile 'org.slf4j:slf4j-android:1.7.+@jar'
     compile 'org.slf4j:slf4j-api:1.7.+@jar'
     compile 'net.sf.opencsv:opencsv:2.+@jar'
     compile 'org.osmdroid:osmdroid-android:4.3'
+    compile 'com.android.support:support-v4-preferencefragment:1.0.0'
     compile files('libs/proj4j-0.1.0.jar')
     compile files('libs/SunriseSunsetCalculator-1.0-SNAPSHOT.jar')
     compile files('libs/acra-4.5.0.jar')
