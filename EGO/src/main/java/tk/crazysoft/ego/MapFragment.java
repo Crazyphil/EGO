@@ -54,7 +54,7 @@ public class MapFragment extends Fragment {
     private boolean mapFileNotFoundDialogShown = false;
     private GeoPoint mapCenter;
     private int mapZoom;
-    private boolean followLocation = false, showOrtophoto = false;
+    private boolean followLocation = true, showOrtophoto = false;
     private double destinationLatitude, destinationLongitude;
     private String destinationTitle;
 
