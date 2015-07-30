@@ -76,10 +76,9 @@
     <string name="preferences_activity_import_use_sd_summary_unchecked">Importdateien und Kartenmaterial werden vom internen Gerätespeicher geladen</string>
     <string name="preferences_activity_import_use_sd_summary_checked">Importdateien und Kartenmaterial werden von der externen SD-Karte geladen</string>
     <string name="preferences_activity_map_title">Kartenansicht</string>
-    <string name="preferences_activity_map_latitude_title">Breitengrad</string>
-    <string name="preferences_activity_map_latitude_summary">Nördliche/Südliche Breite des standardmäßig auf der Karte zentrierten Ortes</string>
-    <string name="preferences_activity_map_longitude_title">Längengrad</string>
-    <string name="preferences_activity_map_longitude_summary">Östliche/Westliche Länge des standardmäßig auf der Karte zentrierten Ortes</string>
+    <string name="preferences_activity_map_address_title">Standardposition</string>
+    <string name="preferences_activity_map_address_summary">Adresse des standardmäßig auf der Karte zentrierten Ortes</string>
+    <string name="preferences_activity_map_address_text">Geben Sie eine Adresse oder Koordinaten im Format „Nord,Ost“ ein.</string>
     <string name="preferences_activity_navigation_title">Externe Navigations-App</string>
     <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>

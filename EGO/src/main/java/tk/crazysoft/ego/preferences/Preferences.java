@@ -16,8 +16,7 @@ public class Preferences {
     public static final String PREFERENCE_IMPORT_DOCTORS = "pref_key_import_doctors";
     public static final String PREFERENCE_IMPORT_USE_SD = "pref_key_import_use_sd";
 
-    public static final String PREFERENCE_MAP_LATITUDE = "pref_key_map_latitude";
-    public static final String PREFERENCE_MAP_LONGITUDE = "pref_key_map_longitude";
+    public static final String PREFERENCE_MAP_ADDRESS = "pref_key_map_address";
 
     public static final String PREFERENCE_NAVIGATION_API = "pref_key_navigation_api";
 
@@ -26,6 +25,10 @@ public class Preferences {
 
     public static final int HOSPITALS_DOCTORS_VIEW_HOSPITALS = 1;
     public static final int HOSPITALS_DOCTORS_VIEW_DOCTORS = 2;
+
+    // Map latitude/longitude were replaced by address preference
+    public static final String PREFERENCE_LEGACY_MAP_LATITUDE = "pref_key_map_latitude";
+    public static final String PREFERENCE_LEGACY_MAP_LONGITUDE = "pref_key_map_longitude";
 
     private final Context context;
     private final SharedPreferences preferences;
@@ -44,11 +47,19 @@ public class Preferences {
     }
 
     public double getMapLatitude() {
-        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_MAP_LATITUDE, 0));
+        String coords = preferences.getString(PREFERENCE_MAP_ADDRESS, null);
+        if (coords != null) {
+            return Double.parseDouble(coords.split(",")[0]);
+        }
+        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_LEGACY_MAP_LATITUDE, 0));
     }
 
     public double getMapLongitude() {
-        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_MAP_LONGITUDE, 0));
+        String coords = preferences.getString(PREFERENCE_MAP_ADDRESS, null);
+        if (coords != null) {
+            return Double.parseDouble(coords.split(",")[1]);
+        }
+        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_LEGACY_MAP_LONGITUDE, 0));
     }
 
     public String getNavigationApi() {

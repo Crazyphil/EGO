@@ -16,6 +16,8 @@
     <string name="crash_dialog_ok_toast">Thank you!</string>
 
     <!-- Main Activity -->
+    <string name="main_activity_action_light_off">Lights off</string>
+    <string name="main_activity_action_light_on">Lights on</string>
     <string name="main_activity_action_navigation">Navigation</string>
     <string name="main_activity_action_contacts">Contacts</string>
     <string name="main_activity_action_data_management">Settings</string>
@@ -74,10 +76,9 @@
     <string name="preferences_activity_import_use_sd_summary_unchecked">Load import files and map sources from internal device memory</string>
     <string name="preferences_activity_import_use_sd_summary_checked">Load import files and map sources from external SD card</string>
     <string name="preferences_activity_map_title">Map View</string>
-    <string name="preferences_activity_map_latitude_title">Latitude</string>
-    <string name="preferences_activity_map_latitude_summary">North/South width of the place centered on the map by default</string>
-    <string name="preferences_activity_map_longitude_title">Longitude</string>
-    <string name="preferences_activity_map_longitude_summary">East/West length of the place centered on the map by default</string>
+    <string name="preferences_activity_map_address_title">Default Position</string>
+    <string name="preferences_activity_map_address_summary">Address of the place centered on the map by default</string>
+    <string name="preferences_activity_map_address_text">Enter an address or coordinates with format “North,East”.</string>
     <string name="preferences_activity_navigation_title">External Navigation App</string>
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
@@ -149,7 +150,5 @@
     <string name="service_dataimport_result_import">%1$,d entries were imported, %2$,d were erroneous.</string>
     <string name="service_dataimport_result_merge">%1$,d streets exist in multiple cities, %2$,d cross borders.</string>
     <string name="service_dataimport_result_db_write_fail">Changes could not be saved. Please check your file.</string>
-    <string name="main_activity_action_light_off">Lights off</string>
-    <string name="main_activity_action_light_on">Lights on</string>
 
 </resources>

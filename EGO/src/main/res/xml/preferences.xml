@@ -37,16 +37,11 @@
         android:title="@string/preferences_activity_map_title"
         android:key="pref_key_map">
 
-        <tk.crazysoft.ego.preferences.CoordinatePreference
-            android:key="pref_key_map_latitude"
-            android:title="@string/preferences_activity_map_latitude_title"
-            android:summary="@string/preferences_activity_map_latitude_summary"
-            android:defaultValue="48.46594215" />
-        <tk.crazysoft.ego.preferences.CoordinatePreference
-            android:key="pref_key_map_longitude"
-            android:title="@string/preferences_activity_map_longitude_title"
-            android:summary="@string/preferences_activity_map_longitude_summary"
-            android:defaultValue="14.16284773"/>
+        <tk.crazysoft.ego.preferences.AddressPreference
+            android:key="pref_key_map_address"
+            android:title="@string/preferences_activity_map_address_title"
+            android:summary="@string/preferences_activity_map_address_summary"
+            android:defaultValue="48.46594215,14.16284773" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_activity_navigation_title"
