@@ -145,9 +145,6 @@ public class PreferencesActivity extends ActionBarActivity {
 
         private void refreshImportFiles() {
             String sdPath = ExternalStorage.getSdCardPath(getActivity());
-            if (sdPath == null) {
-                sdPath = ExternalStorage.getSdCardPath(getActivity(), true);
-            }
 
             DataImportPreference addressPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_ADDRESSES);
             DataImportPreference hospitalsPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_HOSPITALS);

@@ -88,9 +88,6 @@ public class PreferenceExportPreference extends Preference implements Preference
             if (dbFileName == null || prefFileName == null) return false;
 
             String sdPath = ExternalStorage.getSdCardPath(getContext());
-            if (sdPath == null) {
-                sdPath = ExternalStorage.getSdCardPath(getContext(), true);
-            }
             String dataPath = getDataDir();
             if (dataPath == null) return false;
 

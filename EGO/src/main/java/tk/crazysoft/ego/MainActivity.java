@@ -28,6 +28,7 @@ import java.util.Stack;
 
 import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.components.TabListener;
+import tk.crazysoft.ego.io.Environment4;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class MainActivity extends ActionBarActivity implements AddressFragment.OnAddressClickListener {
@@ -46,6 +47,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set media rescan filter for getting current list of devices
+        Environment4.setUseReceiver(getApplicationContext(), true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             themeWatcher = new AppThemeWatcher(this, savedInstanceState);
@@ -151,6 +155,14 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             themeWatcher.onSaveInstanceState(outState);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Remove media rescan filter for getting current list of devices
+        Environment4.setUseReceiver(getApplicationContext(), false);
     }
 
     private long[] toLongArray(Long[] array) {
