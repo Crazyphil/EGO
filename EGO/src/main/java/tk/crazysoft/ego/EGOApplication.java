@@ -7,7 +7,6 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 @ReportsCrashes(
-        formKey = "", // This is required for backward compatibility but not used
         formUri = "https://acra.kapfer.it/submit.php",
         formUriBasicAuthLogin = "acra", // optional
         formUriBasicAuthPassword = "4St5qySTJa", // optional
@@ -23,7 +22,9 @@ public class EGOApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+        if (!BuildConfig.DEBUG) {
+            // The following line triggers the initialization of ACRA
+            ACRA.init(this);
+        }
     }
 }

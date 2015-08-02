@@ -52,9 +52,9 @@ dependencies {
     compile 'net.sf.opencsv:opencsv:2.+@jar'
     compile 'org.osmdroid:osmdroid-android:4.3'
     compile 'com.android.support:support-v4-preferencefragment:1.0.0'
+    compile 'ch.acra:acra:4.6.2'
     compile files('libs/proj4j-0.1.0.jar')
     compile files('libs/SunriseSunsetCalculator-1.0-SNAPSHOT.jar')
-    compile files('libs/acra-4.5.0.jar')
 }
 
 // Ask for password when doing release build
