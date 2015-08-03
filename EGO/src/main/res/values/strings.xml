@@ -98,12 +98,12 @@
     <string name="preferences_activity_app_options_silent_mode_summary_checked">Fehlerberichte werden automatisch gesendet</string>
     <string name="preferences_activity_app_options_export_title">Daten exportieren</string>
     <string name="preferences_activity_app_options_export_summary">Exportiert alle Daten auf die SD-Karte</string>
-    <string name="preferences_activity_app_options_export_success">Alle Daten wurden erfolgreich exportiert.</string>
-    <string name="preferences_activity_app_options_export_failed">Exportieren aller Daten fehlgeschlagen.</string>
+    <string name="preferences_activity_app_options_export_success">Alle Daten wurden erfolgreich nach %s exportiert.</string>
+    <string name="preferences_activity_app_options_export_failed">Exportieren aller Daten nach %s fehlgeschlagen.</string>
     <string name="preferences_activity_app_options_import_title">Daten importieren</string>
     <string name="preferences_activity_app_options_import_summary">Importiert alle Daten von der SD-Karte</string>
-    <string name="preferences_activity_app_options_import_success">Alle Daten wurden erfolgreich importiert.</string>
-    <string name="preferences_activity_app_options_import_failed">Importieren aller Daten fehlgeschlagen.</string>
+    <string name="preferences_activity_app_options_import_success">Alle Daten wurden erfolgreich von %s importiert.</string>
+    <string name="preferences_activity_app_options_import_failed">Importieren aller Daten von %s fehlgeschlagen.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geografischer Punkt</item>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.preference.Preference;
@@ -24,6 +25,8 @@ import tk.crazysoft.ego.R;
 import tk.crazysoft.ego.io.ExternalStorage;
 
 public class PreferenceExportPreference extends Preference implements Preference.OnPreferenceClickListener {
+    private static final String TAG = PreferenceExportPreference.class.getName();
+
     private ProgressBar progressBar;
     private boolean isExportPreference;
     private CopyFilesTask task = null;
@@ -70,6 +73,7 @@ public class PreferenceExportPreference extends Preference implements Preference
         private static final String EXPORT_PATH = "ego/export";
 
         private String dbFileName, prefFileName;
+        private File sdFile;
         private boolean isExport;
 
         @Override
@@ -107,24 +111,26 @@ public class PreferenceExportPreference extends Preference implements Preference
                 progressBar.setVisibility(View.GONE);
             }
 
+            Resources res = getContext().getResources();
             if (success) {
                 if (isExport) {
-                    Toast.makeText(getContext(), R.string.preferences_activity_app_options_export_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.format(res.getString(R.string.preferences_activity_app_options_export_success), sdFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), R.string.preferences_activity_app_options_import_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.format(res.getString(R.string.preferences_activity_app_options_import_success), sdFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (isExport) {
-                    Toast.makeText(getContext(), R.string.preferences_activity_app_options_export_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.format(res.getString(R.string.preferences_activity_app_options_export_failed), sdFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), R.string.preferences_activity_app_options_import_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), String.format(res.getString(R.string.preferences_activity_app_options_import_failed), sdFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
                 }
             }
         }
 
         private boolean doExport(String dataPath, String sdPath) {
-            File sdFile = new File(sdPath, EXPORT_PATH);
-            if (!sdFile.mkdirs()) {
+            sdFile = new File(sdPath, EXPORT_PATH);
+            if (!sdFile.mkdirs() && !sdFile.isDirectory()) {
+                Log.e(TAG, "Cannot make directory path " + sdFile.getAbsolutePath());
                 return false;
             }
             return copyDb(new File(dataPath, DBS_PATH), sdFile) && copyPrefs(new File(dataPath, PREFS_PATH), sdFile);
@@ -163,8 +169,9 @@ public class PreferenceExportPreference extends Preference implements Preference
                     dst.close();
                     return true;
                 }
+                Log.e(TAG, "Cannot export file, " + destPath + " not writable");
             } catch (Exception e) {
-                Log.e("tk.crazysoft.ego.preferences.PreferenceExportPreference", "Error copying DB", e);
+                Log.e(TAG, "Error copying file", e);
             }
             return false;
         }
@@ -180,6 +187,7 @@ public class PreferenceExportPreference extends Preference implements Preference
                 PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
                 return packageInfo.applicationInfo;
             } catch (PackageManager.NameNotFoundException e) {
+                Log.e(TAG, "Could not get application info", e);
                 return null;
             }
         }
