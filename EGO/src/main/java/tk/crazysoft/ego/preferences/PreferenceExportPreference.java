@@ -59,7 +59,7 @@ public class PreferenceExportPreference extends Preference implements Preference
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if (task == null || task.isCancelled()) {
+        if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
             task = new CopyFilesTask();
             task.execute(isExportPreference);
             return true;
