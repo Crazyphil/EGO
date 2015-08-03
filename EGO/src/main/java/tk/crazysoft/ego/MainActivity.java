@@ -191,7 +191,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 displayedHouses = null;
                 break;
             case R.id.action_light:
-                themeWatcher.toggleAppTheme();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    themeWatcher.toggleAppTheme();
+                }
                 break;
             case R.id.action_navigation:
                 sendNavigationIntent(this, (String)null);

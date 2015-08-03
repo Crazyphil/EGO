@@ -69,7 +69,9 @@ public class PreferencesActivity extends ActionBarActivity {
 
     @Override
     public void startActivity(Intent intent) {
-        intent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            intent.putExtra("theme", themeWatcher.getCurrentAppTheme());
+        }
         super.startActivity(intent);
     }
 

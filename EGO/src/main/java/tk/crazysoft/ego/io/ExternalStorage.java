@@ -41,8 +41,7 @@ public class ExternalStorage {
         String path = null;
         if (!preferenceUseSd || alwaysInternal) {
             return Environment.getExternalStorageDirectory().getPath() + "/";
-        }
-        else {
+        } else {
             Environment4.Device[] devices = Environment4.getExternalStorage(context);
             Environment4.Device sdDevice = null, primaryDevice = null;
             for (Environment4.Device device : devices) {
@@ -55,8 +54,7 @@ public class ExternalStorage {
 
             if (sdDevice != null && sdDevice.canRead()) {
                 path = sdDevice.getAbsolutePath() + "/";
-            }
-            else if (primaryDevice != null && primaryDevice.canRead()) {
+            } else if (primaryDevice != null && primaryDevice.canRead()) {
                 path = primaryDevice.getAbsolutePath() + "/";
             }
         }

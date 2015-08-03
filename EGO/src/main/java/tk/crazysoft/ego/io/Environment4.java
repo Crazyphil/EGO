@@ -278,7 +278,13 @@ public class Environment4 {
         } catch (Exception e) {
             // Fallback auf normale Android-Funktionen
             Log.e(TAG, "getVolumeList not found, fallback");
-            // TODO ist noch bei keinem Testgerät vorgekommen
+
+            Device d = new Device();
+            devices = new Device[] { d };
+            if (d.isAvailable()) {
+                storage = devices;
+                externalstorage = devices;
+            }
         }
 
     }
@@ -318,6 +324,15 @@ public class Environment4 {
             mCache = context.getCacheDir();
             mType = TYPE_INTERNAL;
             mWriteState = WRITE_APPONLY;
+        }
+
+        /**
+         * Erzeugen aus Environment.getExternalStorageDirectory(), also interner Speicher
+         */
+        Device() {
+            super(Environment.getExternalStorageDirectory().getAbsolutePath());
+            mType = TYPE_PRIMARY;
+            mPrimary = true;
         }
 
         /**
