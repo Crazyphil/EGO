@@ -1,7 +1,9 @@
 package tk.crazysoft.ego;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
@@ -32,6 +35,8 @@ import tk.crazysoft.ego.io.Environment4;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class MainActivity extends ActionBarActivity implements AddressFragment.OnAddressClickListener {
+    private static final String TAG = MainActivity.class.getName();
+
     public static final String LAYOUT_MODE_PORTRAIT = "portrait";
     public static final String LAYOUT_MODE_LANDSCAPE = "landscape";
     public static final String LAYOUT_MODE_LANDSCAPE_LARGE = "landscape-large";
@@ -157,14 +162,6 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // Remove media rescan filter for getting current list of devices
-        Environment4.setUseReceiver(getApplicationContext(), false);
-    }
-
     private long[] toLongArray(Long[] array) {
         long[] longs = new long[array.length];
         for (int i = 0; i < array.length; i++) {
@@ -174,10 +171,40 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Remove media rescan filter for getting current list of devices
+        Environment4.setUseReceiver(getApplicationContext(), false);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        if (!isDefaultLauncher()) {
+            menu.findItem(R.id.action_launcher).setEnabled(false);
+            Log.d(TAG, "This is not the default launcher, disabling launch menu item");
+        }
         return true;
+    }
+
+    private boolean isDefaultLauncher() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
+        filter.addCategory(Intent.CATEGORY_HOME);
+
+        List<IntentFilter> filters = new ArrayList<IntentFilter>();
+        filters.add(filter);
+
+        List<ComponentName> activities = new ArrayList<ComponentName>();
+
+        getPackageManager().getPreferredActivities(filters, activities, null);
+        for (ComponentName activity : activities) {
+            if (getPackageName().equals(activity.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -208,6 +235,12 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                     dataManagementIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
                 }
                 startActivity(dataManagementIntent);
+                break;
+            case R.id.action_launcher:
+                Intent launcherIntent = new Intent(Intent.ACTION_MAIN);
+                launcherIntent.addCategory(Intent.CATEGORY_HOME);
+                launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(launcherIntent, null));
                 break;
             case R.id.action_about:
                 Intent aboutIntent = new Intent(this, AboutActivity.class);

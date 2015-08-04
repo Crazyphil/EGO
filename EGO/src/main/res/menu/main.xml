@@ -19,6 +19,10 @@
         android:title="@string/main_activity_action_data_management"
         android:orderInCategory="800"
         app:showAsAction="never" />
+    <item android:id="@+id/action_launcher"
+        android:title="@string/main_activity_action_launcher"
+        android:orderInCategory="900"
+        app:showAsAction="never" />
     <item android:id="@+id/action_about"
         android:title="@string/main_activity_action_about"
         android:orderInCategory="900"

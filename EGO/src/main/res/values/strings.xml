@@ -21,6 +21,7 @@
     <string name="main_activity_action_navigation">Navigation</string>
     <string name="main_activity_action_contacts">Kontakte</string>
     <string name="main_activity_action_data_management">Einstellungen</string>
+    <string name="main_activity_action_launcher">Launcher starten</string>
     <string name="main_activity_action_about">Über EGO</string>
     <string name="main_activity_tab_addresses">Adressen</string>
     <string name="main_activity_tab_hospitals_doctors">Arzt &amp; KH</string>
