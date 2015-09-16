@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="customAttrs">
+        <!-- For general use -->
+        <attr name="primaryTextColor" format="reference|color" />
+        <attr name="secondaryTextColor" format="reference|color" />
+        <!-- For ActionBar icons -->
         <attr name="contactsMenuIcon" format="reference" />
         <attr name="navigationMenuIcon" format="reference" />
         <attr name="lightMenuIcon" format="reference" />
         <attr name="lightMenuText" format="reference|string" />
+        <!-- For address view button -->
         <attr name="clearIcon" format="reference" />
         <attr name="clearIconInverse" format="reference" />
-        <attr name="primaryTextColor" format="reference|color" />
-        <attr name="secondaryTextColor" format="reference|color" />
+        <!-- For map view -->
         <attr name="tilesLoadingBackgroundColor" format="color" />
         <attr name="tilesLoadingLineColor" format="color" />
+        <!-- For navigation -->
+        <attr name="routeColor" format="color" />
+        <attr name="turnArrive" format="reference" />
+        <attr name="turnDepart" format="reference" />
+        <attr name="turnFerry" format="reference" />
+        <attr name="turnForkLeft" format="reference" />
+        <attr name="turnForkRight" format="reference" />
+        <attr name="turnGenericMerge" format="reference" />
+        <attr name="turnGenericRoundabout" format="reference" />
+        <attr name="turnRampLeft" format="reference" />
+        <attr name="turnRampRight" format="reference" />
+        <attr name="turnLeft" format="reference" />
+        <attr name="turnRight" format="reference" />
+        <attr name="turnRoundabout1" format="reference" />
+        <attr name="turnRoundabout2" format="reference" />
+        <attr name="turnRoundabout3" format="reference" />
+        <attr name="turnRoundabout4" format="reference" />
+        <attr name="turnRoundabout5" format="reference" />
+        <attr name="turnRoundabout6" format="reference" />
+        <attr name="turnRoundabout7" format="reference" />
+        <attr name="turnRoundaboutExit" format="reference" />
+        <attr name="turnSharpLeft" format="reference" />
+        <attr name="turnSharpRight" format="reference" />
+        <attr name="turnSlightLeft" format="reference" />
+        <attr name="turnSlightRight" format="reference" />
+        <attr name="turnStraight" format="reference" />
+        <attr name="turnUnknown" format="reference" />
+        <attr name="turnUTurnRight" format="reference" />
+        <attr name="turnUTurn" format="reference" />
     </declare-styleable>
 </resources>

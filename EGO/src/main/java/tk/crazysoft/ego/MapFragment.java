@@ -28,7 +28,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.File;
@@ -46,19 +45,20 @@ public class MapFragment extends Fragment {
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
     private static final int TILE_SIZE = 256;
 
-    private MapView mapView;
-    private ImageButton imageButtonGPS, imageButtonDestination;
-    private ToggleButton toggleButtonMapmode;
-    private MyLocationNewOverlay gpsOverlay;
-    private ItemizedIconOverlay<OverlayItem> destinationOverlay;
-    private boolean mapFileNotFoundDialogShown = false;
-    private GeoPoint mapCenter;
-    private int mapZoom;
-    private boolean followLocation = true, showOrtophoto = false;
-    private double destinationLatitude, destinationLongitude;
-    private String destinationTitle;
+    protected MapView mapView;
+    protected ImageButton imageButtonGPS, imageButtonDestination;
+    protected ToggleButton toggleButtonMapmode;
+    protected TilesOverlay orthophotoOverlay;
+    protected MyLocationNewOverlay gpsOverlay;
+    protected ItemizedIconOverlay<OverlayItem> destinationOverlay;
+    protected boolean mapFileNotFoundDialogShown = false;
+    protected GeoPoint mapCenter;
+    protected int mapZoom;
+    protected boolean followLocation = true, showOrtophoto = false;
+    protected GeoPoint destination;
+    protected String destinationTitle;
 
-    private String sdPath;
+    protected String sdPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,13 +123,13 @@ public class MapFragment extends Fragment {
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
 
-            TilesOverlay orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
+            orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
             orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
             orthophotoOverlay.setEnabled(showOrtophoto);
             mapView.getOverlayManager().add(orthophotoOverlay);
         }
 
-        gpsOverlay = new MyLocationNewOverlay(view.getContext(), new GpsMyLocationProvider(view.getContext()), mapView);
+        gpsOverlay = new MyLocationNewOverlay(view.getContext(), mapView);
         destinationOverlay = new ItemizedIconOverlay<OverlayItem>(view.getContext(), new ArrayList<OverlayItem>(1), null);
 
         // Note: Overlays stored in member variables are referenced by their index in onStart()
@@ -161,6 +161,9 @@ public class MapFragment extends Fragment {
     private IArchiveFile[] getArchiveFiles(String mapTemplate) {
         File mapDirectory = new File(sdPath + MAP_PATH);
         File[] files = mapDirectory.listFiles(new MapFilenameFilter(mapTemplate));
+        if (files == null) {
+            return new IArchiveFile[0];
+        }
 
         ArrayList<IArchiveFile> archiveFiles = new ArrayList<IArchiveFile>(files.length);
         for (File file : files) {
@@ -193,7 +196,6 @@ public class MapFragment extends Fragment {
         imageButtonGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyLocationNewOverlay gpsOverlay = (MyLocationNewOverlay)mapView.getOverlayManager().get(mapView.getOverlayManager().size() - 2);
                 if (gpsOverlay.isFollowLocationEnabled()) {
                     gpsOverlay.disableFollowLocation();
                 } else {
@@ -207,8 +209,6 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (destinationOverlay.size() > 0) {
-                    MyLocationNewOverlay gpsOverlay = (MyLocationNewOverlay)mapView.getOverlayManager().get(mapView.getOverlayManager().size() - 2);
-                    ItemizedIconOverlay<OverlayItem> destinationOverlay = (ItemizedIconOverlay<OverlayItem>)mapView.getOverlayManager().get(mapView.getOverlayManager().size() - 1);
                     gpsOverlay.disableFollowLocation();
                     mapView.getController().animateTo(destinationOverlay.getItem(0).getPoint());
                 }
@@ -216,12 +216,11 @@ public class MapFragment extends Fragment {
         });
 
         toggleButtonMapmode = (ToggleButton)getView().findViewById(R.id.map_toggleButtonMapmode);
-        if (mapView.getOverlayManager().size() == 3) {  // The overlay manager only contains exactly 3 overlays if an orthophoto file was found
+        if (orthophotoOverlay != null) {  // The overlay manager only contains exactly 3 overlays if an orthophoto file was found
             toggleButtonMapmode.setVisibility(View.VISIBLE);
             toggleButtonMapmode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TilesOverlay orthophotoOverlay = (TilesOverlay)mapView.getOverlayManager().get(0);
                     showOrtophoto = !showOrtophoto;
                     orthophotoOverlay.setEnabled(showOrtophoto);
                     mapView.invalidate();
@@ -239,8 +238,8 @@ public class MapFragment extends Fragment {
             gpsOverlay.enableFollowLocation();
         }
 
-        if (destinationTitle != null) {
-            setDestination(destinationLatitude, destinationLongitude, destinationTitle);
+        if (destination != null) {
+            setDestination(destination, destinationTitle);
         }
     }
 
@@ -262,6 +261,7 @@ public class MapFragment extends Fragment {
 
         mapView.getTileProvider().clearTileCache();
         mapView.onDetach();
+        mapView = null;
     }
 
     @Override
@@ -281,23 +281,29 @@ public class MapFragment extends Fragment {
     }
 
     public void setDestination(double latitude, double longitude, String title) {
+        setDestination(new GeoPoint(latitude, longitude), title);
+    }
+
+    protected void setDestination(GeoPoint dest, String title) {
         if (mapView != null) {
             if (destinationOverlay.size() > 0) {
                 destinationOverlay.removeAllItems();
             }
 
-            if (gpsOverlay.isFollowLocationEnabled()) {
+            if (title != null && gpsOverlay.isFollowLocationEnabled()) {
                 gpsOverlay.disableFollowLocation();
             }
 
-            OverlayItem destination = new OverlayItem(title, null, new GeoPoint(latitude, longitude));
+            OverlayItem destination = new OverlayItem(title, null, dest);
             destinationOverlay.addItem(destination);
-            mapView.getController().animateTo(destination.getPoint());
+
+            if (title != null) {
+                mapView.getController().animateTo(destination.getPoint());
+            }
             imageButtonDestination.setVisibility(View.VISIBLE);
         } else {
             // Save given data until the map view is created (the fragment is probably currently not yet built)
-            destinationLatitude = latitude;
-            destinationLongitude = longitude;
+            destination = dest;
             destinationTitle = title;
         }
     }
