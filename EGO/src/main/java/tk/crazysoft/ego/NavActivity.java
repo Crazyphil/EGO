@@ -142,6 +142,12 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
     }
 
     @Override
+    public void onRecalculate() {
+        progressDialog.setMessage(getString(R.string.nav_activity_loading_routing));
+        progressDialog.show();
+    }
+
+    @Override
     public void onRouteCalculated(Road road) {
         progressDialog.dismiss();
         if (road.mStatus != Road.STATUS_OK) {
@@ -171,7 +177,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         }
         currentRoadNode = instructionId;
 
-        RoadNode curNode = road.mNodes.get(Math.min(instructionId+1, road.mNodes.size()-1));
+        RoadNode curNode = road.mNodes.get(Math.min(instructionId + 1, road.mNodes.size() - 1));
         textViewDirection.setCompoundDrawablesWithIntrinsicBounds(null, getDrawableForManeuver(curNode.mManeuverType), null, null);
         textViewStreet.setText(navFragment.getRoadManager().getStreetName(instructionId));
 

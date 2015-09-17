@@ -123,8 +123,12 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
 
     @Override
     public Road getRoad(ArrayList<GeoPoint> waypoints) {
+        return getRoad(waypoints, null);
+    }
+
+    public Road getRoad(ArrayList<GeoPoint> waypoints, ArrayList<Double> headings) {
         Road road = new Road();
-        ghResponse = routingService.route(toGHPoints(waypoints), true);
+        ghResponse = routingService.route(toGHPoints(waypoints), headings, true);
         if (ghResponse.hasErrors()) {
             Log.e(BonusPackHelper.LOG_TAG, ghResponse.getErrors().size() + " error(s) occurred when calculating route:");
             for (int i = 0; i < ghResponse.getErrors().size(); i++) {
@@ -183,7 +187,7 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
         if (inst != null) {
             for (int i = 0; i < ghResponse.getInstructions().size(); i++) {
                 if (ghResponse.getInstructions().get(i).equals(inst)) {
-                    return Math.max(0, Math.min(i-1, ghResponse.getInstructions().size()-1));
+                    return Math.max(0, Math.min(i - 1, ghResponse.getInstructions().size() - 1));
                 }
             }
         }
@@ -195,7 +199,7 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
 
         PointList points = instruction.getPoints();
         if (roadNode < ghResponse.getInstructions().size() - 1) {
-            points = new PointListProxy(instruction, ghResponse.getInstructions().get(roadNode+1));
+            points = new PointListProxy(instruction, ghResponse.getInstructions().get(roadNode + 1));
         }
 
         double prevLat = points.getLatitude(0);
@@ -240,20 +244,20 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
 
         double distance = 0;
         for (int i = 1; i < foundPoint; i++) {
-            distance += distCalc.calcDist(points.getLat(i-1), points.getLon(i-1), points.getLat(i), points.getLon(i));
+            distance += distCalc.calcDist(points.getLat(i - 1), points.getLon(i - 1), points.getLat(i), points.getLon(i));
         }
 
-        if (distCalc.validEdgeDistance(lat, lon, points.getLat(foundPoint-1), points.getLon(foundPoint-1), points.getLat(foundPoint), points.getLon(foundPoint))) {
+        if (distCalc.validEdgeDistance(lat, lon, points.getLat(foundPoint - 1), points.getLon(foundPoint - 1), points.getLat(foundPoint), points.getLon(foundPoint))) {
             // Current position is on the edge before the found node
-            GHPoint snapPoint = distCalc.calcCrossingPointToEdge(lat, lon, points.getLat(foundPoint), points.getLon(foundPoint), points.getLat(foundPoint+1), points.getLon(foundPoint+1));
+            GHPoint snapPoint = distCalc.calcCrossingPointToEdge(lat, lon, points.getLat(foundPoint - 1), points.getLon(foundPoint - 1), points.getLat(foundPoint), points.getLon(foundPoint));
             distance += distCalc.calcDist(points.getLat(foundPoint - 1), points.getLon(foundPoint - 1), snapPoint.getLat(), snapPoint.getLon());
-        } else if (distCalc.validEdgeDistance(lat, lon, points.getLat(foundPoint), points.getLon(foundPoint), points.getLat(foundPoint+1), points.getLon(foundPoint+1))) {
+        } else if (distCalc.validEdgeDistance(lat, lon, points.getLat(foundPoint), points.getLon(foundPoint), points.getLat(foundPoint + 1), points.getLon(foundPoint + 1))) {
             // Current position is on the edge after the found node
             GHPoint snapPoint = distCalc.calcCrossingPointToEdge(lat, lon, points.getLat(foundPoint), points.getLon(foundPoint), points.getLat(foundPoint + 1), points.getLon(foundPoint + 1));
             distance += distCalc.calcDist(points.getLat(foundPoint), points.getLon(foundPoint), snapPoint.getLat(), snapPoint.getLon());
         } else {
             // The node itself is the nearest location on the route, add remaining distance from previous node
-            distance += distCalc.calcDist(points.getLat(foundPoint-1), points.getLon(foundPoint-1), points.getLat(foundPoint), points.getLon(foundPoint));
+            distance += distCalc.calcDist(points.getLat(foundPoint - 1), points.getLon(foundPoint - 1), points.getLat(foundPoint), points.getLon(foundPoint));
         }
         return distance / instruction.getDistance();
     }

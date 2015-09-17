@@ -41,6 +41,8 @@ public class NavFragment extends MapFragment {
     protected OnNavEventListener onNavEventListener;
     protected LocalGraphHopperRoadManager roadManager;
     protected GeoPoint origin;
+    protected double originHeading;
+    protected FolderOverlay routeOverlay;
     protected int currentInstruction = 0;
 
     @Override
@@ -63,6 +65,7 @@ public class NavFragment extends MapFragment {
         followLocation = true;
         if (savedInstanceState != null) {
             origin = savedInstanceState.getParcelable("origin");
+            originHeading = savedInstanceState.getDouble("originHeading");
         }
     }
 
@@ -70,6 +73,11 @@ public class NavFragment extends MapFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        view.findViewById(R.id.map_imageButtonGPS).setVisibility(View.GONE);
+        view.findViewById(R.id.map_imageButtonDestination).setVisibility(View.GONE);
+
+        mapView.setBuiltInZoomControls(false);
+        mapView.setMultiTouchControls(false);
         mapView.getOverlayManager().remove(gpsOverlay);
         gpsOverlay = new EGOLocationOverlay(view.getContext(), mapView);
         gpsOverlay.runOnFirstFix(new Runnable() {
@@ -89,6 +97,16 @@ public class NavFragment extends MapFragment {
                 if (node != currentInstruction && onNavEventListener != null) {
                     currentInstruction = node;
                     onNavEventListener.onEnterRoadNode(roadManager.getRoad(), node);
+                }
+                if (node == -1) {
+                    origin = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    mapView.getOverlays().remove(routeOverlay);
+                    mapView.invalidate();
+
+                    if (onNavEventListener != null) {
+                        onNavEventListener.onRecalculate();
+                    }
+                    calculateRoute();
                 }
             }
         });
@@ -115,6 +133,7 @@ public class NavFragment extends MapFragment {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable("origin", origin);
+        outState.putDouble("originHeading", originHeading);
     }
 
     @Override
@@ -122,6 +141,15 @@ public class NavFragment extends MapFragment {
         super.onDestroyView();
 
         roadManager.close();
+    }
+
+    @Override
+    protected void setDestination(GeoPoint dest, String title) {
+        super.setDestination(dest, title);
+
+        if (imageButtonDestination != null) {
+            imageButtonDestination.setVisibility(View.GONE);
+        }
     }
 
     public LocalGraphHopperRoadManager getRoadManager() {
@@ -149,15 +177,14 @@ public class NavFragment extends MapFragment {
                     if (l == null) {
                         Preferences p = new Preferences(getActivity());
                         origin = new GeoPoint(p.getMapLatitude(), p.getMapLongitude());
+                        originHeading = Double.NaN;
                     } else {
                         origin = new GeoPoint(l.getLatitude(), l.getLongitude(), l.getAltitude());
+                        originHeading = l.hasBearing() ? l.getBearing() : Double.NaN;
                     }
                 }
 
-                ArrayList<GeoPoint> waypoints = new ArrayList<>(2);
-                waypoints.add(origin);
-                waypoints.add(destination);
-                new CalculateRouteTask().execute(waypoints);
+                calculateRoute();
             }
 
             if (onNavEventListener != null) {
@@ -166,10 +193,22 @@ public class NavFragment extends MapFragment {
         }
     }
 
+    private void calculateRoute() {
+        ArrayList<GeoPoint> waypoints = new ArrayList<>(2);
+        waypoints.add(origin);
+        waypoints.add(destination);
+        new CalculateRouteTask().execute(waypoints);
+    }
+
     private class CalculateRouteTask extends AsyncTask<ArrayList<GeoPoint>, Void, Road> {
         @Override
         protected Road doInBackground(ArrayList<GeoPoint>... params) {
-            return roadManager.getRoad(params[0]);
+            ArrayList<Double> headings = new ArrayList<>(params[0].size());
+            headings.add(originHeading);
+            for (int i = 1; i < params[0].size(); i++) {
+                headings.add(Double.NaN);
+            }
+            return roadManager.getRoad(params[0], headings);
         }
 
         @Override
@@ -179,8 +218,8 @@ public class NavFragment extends MapFragment {
                 int routeColor = a.getColor(0, 0);
                 a.recycle();
 
-                FolderOverlay folder = new FolderOverlay(mapView.getContext());
-                folder.add(RoadManager.buildRoadOverlay(road, routeColor, ROUTE_LINE_WIDTH, mapView.getContext()));
+                routeOverlay = new FolderOverlay(mapView.getContext());
+                routeOverlay.add(RoadManager.buildRoadOverlay(road, routeColor, ROUTE_LINE_WIDTH, mapView.getContext()));
 
                 List<GeoPoint> lastPoints = new ArrayList<>(2);
                 lastPoints.add(road.mRouteHigh.get(road.mRouteHigh.size() - 1));
@@ -190,7 +229,7 @@ public class NavFragment extends MapFragment {
                 wayToDest.setWidth(ROUTE_LINE_WIDTH);
                 wayToDest.getPaint().setPathEffect(new DashPathEffect(new float[] { ROUTE_LINE_WIDTH * 2, ROUTE_LINE_WIDTH }, 0));
                 wayToDest.setPoints(lastPoints);
-                folder.add(wayToDest);
+                routeOverlay.add(wayToDest);
 
                 List<OverlayItem> items = new ArrayList<>(road.mNodes.size() - 1);
                 for (int i = 1; i < road.mNodes.size(); i++) {
@@ -199,10 +238,9 @@ public class NavFragment extends MapFragment {
                     item.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
                     items.add(item);
                 }
-                folder.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
-                mapView.getOverlays().add(folder);
+                routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
+                mapView.getOverlays().add(routeOverlay);
 
-                //mapView.setScrollableAreaLimit(road.mBoundingBox);
                 mapView.invalidate();
             } else {
                 showRoutingErrorDialog();
@@ -227,6 +265,7 @@ public class NavFragment extends MapFragment {
 
     public interface OnNavEventListener {
         void onInitialized(boolean result);
+        void onRecalculate();
         void onRouteCalculated(Road road);
         void onEnterRoadNode(Road road, int newRoadNode);
     }

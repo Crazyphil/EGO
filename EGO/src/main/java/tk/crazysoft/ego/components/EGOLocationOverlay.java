@@ -26,6 +26,10 @@ public class EGOLocationOverlay extends MyLocationNewOverlay {
         boolean changed = getLastFix() == null || getLastFix().distanceTo(location) > 1;
         super.setLocation(location);
 
+        if (!isFollowLocationEnabled()) {
+            enableFollowLocation();
+        }
+
         if (isFollowLocationEnabled() && location.hasBearing()) {
             //mMapView.setMapOrientation(-location.getBearing());
         }

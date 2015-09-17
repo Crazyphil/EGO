@@ -68,18 +68,21 @@ public class RoutingService extends Service {
     }
 
 
-    public GHResponse route(List<GHPoint> waypoints, boolean withInstructions) {
+    public GHResponse route(List<GHPoint> waypoints, List<Double> headings, boolean withInstructions) {
         if (waypoints.size() < 2) {
             throw new IllegalArgumentException("Number of waypoints must be greater or equal 2");
         }
 
-        GHRequest request = new GHRequest(waypoints.get(0), waypoints.get(waypoints.size() - 1));
-        for (int i = 1; i < waypoints.size() - 1; i++) {
-            request.addPoint(waypoints.get(i));
+        GHRequest request;
+        if (headings != null) {
+            request = new GHRequest(waypoints, headings);
+            request.getHints().put("force_heading_ch", true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
+        } else {
+            request = new GHRequest(waypoints);
         }
         request.setLocale(Locale.getDefault()).setAlgorithm(AlgorithmOptions.DIJKSTRA_BI);
         if (!withInstructions) {
-            request.getHints().put("instructions", "false");
+            request.getHints().put("instructions", false);
         }
         return gh.route(request);
     }
