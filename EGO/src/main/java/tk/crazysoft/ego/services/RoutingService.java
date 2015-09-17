@@ -55,7 +55,7 @@ public class RoutingService extends Service {
         gh = new GraphHopper().forMobile();
         boolean result;
         try {
-            result = gh.setElevation(loadElevationData).load(dataDir);
+            result = gh.setElevation(loadElevationData).setCHEnable(false).load(dataDir);
         } catch (Exception e) {
             Log.e(TAG, "GraphHopper initialization failed", e);
             throw new StartupException(e);
