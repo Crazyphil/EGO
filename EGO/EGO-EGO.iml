@@ -105,8 +105,8 @@
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="protobuf-java-2.6.1" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="graphhopper-0.5.0" level="project" />
     <orderEntry type="library" exported="" name="osmdroid-android-4.3" level="project" />
+    <orderEntry type="library" exported="" name="graphhopper-0.5.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-preferencefragment-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="SunriseSunsetCalculator-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="trove4j-3.0.3" level="project" />
