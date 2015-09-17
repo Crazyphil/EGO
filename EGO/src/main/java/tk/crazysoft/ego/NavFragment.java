@@ -239,7 +239,7 @@ public class NavFragment extends MapFragment {
                     items.add(item);
                 }
                 routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
-                mapView.getOverlays().add(routeOverlay);
+                mapView.getOverlays().add(mapView.getOverlays().indexOf(gpsOverlay), routeOverlay);
 
                 mapView.invalidate();
             } else {
