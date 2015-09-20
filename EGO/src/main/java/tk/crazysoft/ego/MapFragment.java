@@ -314,13 +314,23 @@ public class MapFragment extends Fragment {
 
         public MapFilenameFilter(String template) {
             int lastDot = template.lastIndexOf('.');
-            this.templateName = template.substring(0, lastDot);
-            this.templateExt = template.substring(lastDot);
+
+            if (lastDot == -1) {
+                this.templateName = template;
+                templateExt = null;
+            } else {
+                this.templateName = template.substring(0, lastDot);
+                this.templateExt = template.substring(lastDot);
+            }
         }
 
         @Override
         public boolean accept(File dir, String filename) {
             int firstDot = filename.indexOf('.');
+            if (firstDot == -1) {
+                return templateExt == null && templateName.equals(filename);
+            }
+
             int lastDot = filename.lastIndexOf('.');
             String name = filename.substring(0, firstDot);
             String ext = filename.substring(lastDot);
