@@ -211,7 +211,6 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentByTag("map");
                 getSupportFragmentManager().popBackStack();
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 getSupportActionBar().setHomeButtonEnabled(false);
@@ -330,15 +329,15 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 themeResId = field.getInt(context);
             }
         } catch (NoSuchMethodException e) {
-            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+            Log.e("MainActivity", "Failed to get theme resource ID", e);
         } catch (NoSuchFieldException e) {
-            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+            Log.e("MainActivity", "Failed to get theme resource ID", e);
         } catch (IllegalAccessException e) {
-            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+            Log.e("MainActivity", "Failed to get theme resource ID", e);
         } catch (IllegalArgumentException e) {
-            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+            Log.e("MainActivity", "Failed to get theme resource ID", e);
         } catch (InvocationTargetException e) {
-            Log.e("tk.crazysoft.ego.MainActivity", "Failed to get theme resource ID", e);
+            Log.e("MainActivity", "Failed to get theme resource ID", e);
         }
         return themeResId;
     }
