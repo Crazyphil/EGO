@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.acra.ACRA;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -265,7 +267,14 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 getSupportActionBar().setHomeButtonEnabled(false);
             }
         }
-        super.onBackPressed();
+        try {
+            super.onBackPressed();
+        } catch (IllegalStateException e) {
+            if (!BuildConfig.DEBUG) {
+                ACRA.getErrorReporter().handleSilentException(e);
+            }
+            Log.e(TAG, "Caught known fragment transaction error", e);
+        }
     }
 
     @Override
