@@ -95,11 +95,12 @@ public class PreferenceExportPreference extends Preference implements Preference
             String dataPath = getDataDir();
             if (dataPath == null) return false;
 
+            sdFile = new File(sdPath, EXPORT_PATH);
             boolean result;
             if (isExport) {
-                result = doExport(dataPath, sdPath);
+                result = doExport(dataPath);
             } else {
-                result = doImport(sdPath, dataPath);
+                result = doImport(dataPath);
             }
 
             return result;
@@ -127,8 +128,7 @@ public class PreferenceExportPreference extends Preference implements Preference
             }
         }
 
-        private boolean doExport(String dataPath, String sdPath) {
-            sdFile = new File(sdPath, EXPORT_PATH);
+        private boolean doExport(String dataPath) {
             if (!sdFile.mkdirs() && !sdFile.isDirectory()) {
                 Log.e(TAG, "Cannot make directory path " + sdFile.getAbsolutePath());
                 return false;
@@ -136,8 +136,8 @@ public class PreferenceExportPreference extends Preference implements Preference
             return copyDb(new File(dataPath, DBS_PATH), sdFile) && copyPrefs(new File(dataPath, PREFS_PATH), sdFile);
         }
 
-        private boolean doImport(String sdPath, String dataPath) {
-            boolean result = copyDb(new File(sdPath, EXPORT_PATH), new File(dataPath, DBS_PATH)) && copyPrefs(new File(sdPath, EXPORT_PATH), new File(dataPath, PREFS_PATH));
+        private boolean doImport(String dataPath) {
+            boolean result = copyDb(sdFile, new File(dataPath, DBS_PATH)) && copyPrefs(sdFile, new File(dataPath, PREFS_PATH));
             if (result) {
                 // Restart app to reload everything
                 Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());

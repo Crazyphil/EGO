@@ -9,10 +9,10 @@
     <string name="button_ok">Understood.</string>
 
     <!-- Messages for error reporting -->
-    <string name="crash_toast_text">An unexpected problem has occured. The app will be closed and information about the problem is being collected.</string>
+    <string name="crash_toast_text">An unexpected problem has occurred. The app will be closed and information about the problem is being collected.</string>
     <string name="crash_dialog_title">Information about recent problem</string>
-    <string name="crash_dialog_text">Lately, an unexpected problem has occured and the app had to be closed.\nHelp us fixing it by sending error information. Just press “OK”.</string>
-    <string name="crash_dialog_comment_prompt">Optional: What did you do when the error occured?</string>
+    <string name="crash_dialog_text">Lately, an unexpected problem has occurred and the app had to be closed.\nHelp us fixing it by sending error information. Just press “OK”.</string>
+    <string name="crash_dialog_comment_prompt">Optional: What did you do when the error occurred?</string>
     <string name="crash_dialog_ok_toast">Thank you!</string>
 
     <!-- Main Activity -->

@@ -41,7 +41,6 @@ import tk.crazysoft.ego.preferences.Preferences;
 public class MapFragment extends Fragment {
     private static final String MAP_PATH = "ego/karten/";
     private static final String BASEMAP_FILE = "basemap.sqlite";
-    private static final String BASEMAP_NIGHT_FILE = "basemap-nacht.sqlite";
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
     private static final int TILE_SIZE = 256;
 
@@ -85,15 +84,7 @@ public class MapFragment extends Fragment {
     private void createMapView(View view) {
         Preferences preferences = new Preferences(view.getContext());
 
-        IArchiveFile[] basemapArchives;
-        if (MainActivity.hasDarkTheme(getActivity())) {
-            basemapArchives = getArchiveFiles(BASEMAP_NIGHT_FILE);
-            if (basemapArchives.length == 0) {
-                basemapArchives = getArchiveFiles(BASEMAP_FILE);
-            }
-        } else {
-            basemapArchives = getArchiveFiles(BASEMAP_FILE);
-        }
+        IArchiveFile[] basemapArchives = getArchiveFiles(BASEMAP_FILE);
         if (basemapArchives.length == 0) {
             showMapFilesNotFoundDialog(view, sdPath);
         }
@@ -104,22 +95,25 @@ public class MapFragment extends Fragment {
         }
 
         // The TileSource objects are not used in our custom DatabaseFileArchive implementation, but they are needed by the provider
-        ITileSource basemapSource = new XYTileSource("basemap.at", ResourceProxy.string.offline_mode, 0, 17, TILE_SIZE, ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
+        ITileSource basemapSource = new XYTileSource("basemap.at", 0, 17, TILE_SIZE, ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
         MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchives);
         MapTileProviderArray basemapProviderArray = new MapTileProviderArray(basemapSource, registerReceiver, new MapTileModuleProviderBase[] { basemapProvider });
 
         ResourceProxy proxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
-        mapView = new MapView(view.getContext(), 256, proxy, basemapProviderArray);
+        mapView = new MapView(view.getContext(), proxy, basemapProviderArray);
 
-        // Set background for loading/missing tiles depending on day/night mode
+        // Set background for loading/missing tiles depending on day/night mode and optionally enable night mode (invert colors)
         TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { R.attr.tilesLoadingBackgroundColor, R.attr.tilesLoadingLineColor });
         mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(a.getColor(0, 0));
         mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(a.getColor(1, 0));
+        if (MainActivity.hasDarkTheme(getActivity())) {
+            mapView.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
+        }
         a.recycle();
 
         if (orthophotoArchives.length > 0) {
-            ITileSource orthophotoSource = new XYTileSource("geoimage.at", ResourceProxy.string.offline_mode, 0, 17, TILE_SIZE, ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
+            ITileSource orthophotoSource = new XYTileSource("geoimage.at", 0, 17, TILE_SIZE, ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
 
@@ -135,7 +129,6 @@ public class MapFragment extends Fragment {
         // Note: Overlays stored in member variables are referenced by their index in onStart()
         mapView.getOverlayManager().add(gpsOverlay);
         mapView.getOverlayManager().add(destinationOverlay);
-        mapView.setUseDataConnection(false);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         ((RelativeLayout)view.findViewById(R.id.map_layoutRoot)).addView(mapView, 0, params);
@@ -145,6 +138,7 @@ public class MapFragment extends Fragment {
         mapView.setUseDataConnection(false);
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
+        mapView.setTilesScaledToDpi(true);
 
         if (mapCenter != null) {
             mapView.getController().setZoom(mapZoom);
@@ -154,7 +148,6 @@ public class MapFragment extends Fragment {
             mapView.getController().setCenter(defaultCenter);
         }
 
-        mapView.setTilesScaledToDpi(true);
         mapView.invalidate();
     }
 
