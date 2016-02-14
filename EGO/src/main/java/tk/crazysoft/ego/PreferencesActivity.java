@@ -9,7 +9,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.preference.PreferenceFragment;
+import android.support.v4.preference.PreferenceFragmentCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.BaseAdapter;
 
@@ -75,7 +75,7 @@ public class PreferencesActivity extends ActionBarActivity {
         super.startActivity(intent);
     }
 
-    public static class PreferencesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener
+    public static class PreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
     {
         private DataImportReceiver importReceiver;
 
