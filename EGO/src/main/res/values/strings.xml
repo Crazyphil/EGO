@@ -77,7 +77,7 @@
     <string name="nav_activity_distance_kilometers">%s km</string>
 
     <!-- Nav Fragment -->
-    <string name="nav_view_nomaps_title">Navigationsdaten</string>
+    <string name="nav_view_nomaps_title">Navigationsdaten fehlen</string>
     <string name="nav_view_nomaps_text">Die Navigationsdaten konnten nicht geladen werden.\n\nFolgendes Verzeichnis wurde gesucht:\n%s</string>
     <string name="nav_view_noroute_title">Route</string>
     <string name="nav_view_noroute_text">Die Route konnte nicht berechnet werden.</string>

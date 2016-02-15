@@ -60,6 +60,7 @@ dependencies {
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'org.osmdroid:osmdroid-android:5.1'
     compile 'com.graphhopper:graphhopper:0.6.0'
+    compile 'org.slf4j:slf4j-android:1.7.+@jar'
     compile 'com.github.MKergall.osmbonuspack:OSMBonusPack:v5.7'
     compile 'ch.acra:acra:4.8.1'
     compile files('libs/proj4j-0.1.0.jar')

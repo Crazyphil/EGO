@@ -137,8 +137,8 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
             return new Road(waypoints);
         }
 
-        road.mRouteHigh = toGeoPoints(ghResponse.getPoints());
-        for (Instruction instruction : ghResponse.getInstructions()) {
+        road.mRouteHigh = toGeoPoints(ghResponse.getBest().getPoints());
+        for (Instruction instruction : ghResponse.getBest().getInstructions()) {
             RoadNode node = new RoadNode();
             node.mLocation = new GeoPoint(instruction.getPoints().getLatitude(0), instruction.getPoints().getLongitude(0), instruction.getPoints().getElevation(0));
             node.mLength = instruction.getDistance() / 1000f;
@@ -147,10 +147,10 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
             node.mInstructions = instruction.getTurnDescription(routingService.getTranslation());
             road.mNodes.add(node);
         }
-        road.mLength = ghResponse.getDistance() / 1000f;
-        road.mDuration = ghResponse.getTime() / 1000f;
+        road.mLength = ghResponse.getBest().getDistance() / 1000f;
+        road.mDuration = ghResponse.getBest().getTime() / 1000f;
 
-        BBox routeBBox = ghResponse.calcRouteBBox(BBox.createInverse(mWithElevation));
+        BBox routeBBox = ghResponse.getBest().calcRouteBBox(BBox.createInverse(mWithElevation));
         road.mBoundingBox = new BoundingBoxE6(routeBBox.maxLat, routeBBox.maxLon, routeBBox.minLat, routeBBox.minLon);
         road.mStatus = Road.STATUS_OK;
         road.buildLegs(waypoints);
@@ -177,17 +177,17 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
 
     public String getStreetName(int roadNode) {
         if (ghResponse != null) {
-            return ghResponse.getInstructions().get(roadNode).getName();
+            return ghResponse.getBest().getInstructions().get(roadNode).getName();
         }
         return null;
     }
 
     public int getNearestRoadNode(double lat, double lon, double maxDistance) {
-        Instruction inst = ghResponse.getInstructions().find(lat, lon, maxDistance);
+        Instruction inst = ghResponse.getBest().getInstructions().find(lat, lon, maxDistance);
         if (inst != null) {
-            for (int i = 0; i < ghResponse.getInstructions().size(); i++) {
-                if (ghResponse.getInstructions().get(i).equals(inst)) {
-                    return Math.max(0, Math.min(i - 1, ghResponse.getInstructions().size() - 1));
+            for (int i = 0; i < ghResponse.getBest().getInstructions().size(); i++) {
+                if (ghResponse.getBest().getInstructions().get(i).equals(inst)) {
+                    return Math.max(0, Math.min(i - 1, ghResponse.getBest().getInstructions().size() - 1));
                 }
             }
         }
@@ -195,11 +195,11 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
     }
 
     public double getInstructionProgress(double lat, double lon, int roadNode) {
-        Instruction instruction = ghResponse.getInstructions().get(roadNode);
+        Instruction instruction = ghResponse.getBest().getInstructions().get(roadNode);
 
         PointList points = instruction.getPoints();
-        if (roadNode < ghResponse.getInstructions().size() - 1) {
-            points = new PointListProxy(instruction, ghResponse.getInstructions().get(roadNode + 1));
+        if (roadNode < ghResponse.getBest().getInstructions().size() - 1) {
+            points = new PointListProxy(instruction, ghResponse.getBest().getInstructions().get(roadNode + 1));
         }
 
         double prevLat = points.getLatitude(0);
