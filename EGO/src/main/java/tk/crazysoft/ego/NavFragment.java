@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -17,7 +20,6 @@ import android.view.ViewGroup;
 import org.osmdroid.bonuspack.overlays.FolderOverlay;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tk.crazysoft.ego.components.EGOLocationOverlay;
+import tk.crazysoft.ego.components.EfficientPolyline;
 import tk.crazysoft.ego.preferences.Preferences;
 import tk.crazysoft.ego.services.LocalGraphHopperRoadManager;
 
@@ -219,7 +222,7 @@ public class NavFragment extends MapFragment {
                 a.recycle();
 
                 routeOverlay = new FolderOverlay(mapView.getContext());
-                routeOverlay.add(RoadManager.buildRoadOverlay(road, routeColor, ROUTE_LINE_WIDTH, mapView.getContext()));
+                routeOverlay.add(buildRoadOverlay(road, routeColor, ROUTE_LINE_WIDTH, mapView.getContext()));
 
                 List<GeoPoint> lastPoints = new ArrayList<>(2);
                 lastPoints.add(road.mRouteHigh.get(road.mRouteHigh.size() - 1));
@@ -238,7 +241,21 @@ public class NavFragment extends MapFragment {
                     item.setMarkerHotspot(OverlayItem.HotspotPlace.CENTER);
                     items.add(item);
                 }
-                routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
+
+                if (MainActivity.hasDarkTheme(getActivity())) {
+                    float[] blueToYellow = {
+                            0.5f, 0, 0.5f, 0, 0, //red
+                            0, 0.5f, 0.5f, 0, 0, //green
+                            0, 0, 0, 0, 0, //blue
+                            0, 0, 0, 1.0f, 0 //alpha
+                    };
+                    ColorFilter filter = new ColorMatrixColorFilter(blueToYellow);
+                    Drawable dot = getResources().getDrawable(R.drawable.marker);
+                    dot.setColorFilter(filter);
+                    routeOverlay.add(new ItemizedIconOverlay<>(items, dot, null, mapView.getResourceProxy()));
+                } else {
+                    routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
+                }
                 mapView.getOverlays().add(mapView.getOverlays().indexOf(gpsOverlay), routeOverlay);
 
                 mapView.invalidate();
@@ -249,6 +266,17 @@ public class NavFragment extends MapFragment {
             if (onNavEventListener != null) {
                 onNavEventListener.onRouteCalculated(road);
             }
+        }
+
+        private EfficientPolyline buildRoadOverlay(Road road, int color, float width, Context context){
+            EfficientPolyline roadOverlay = new EfficientPolyline(context);
+            roadOverlay.setColor(color);
+            roadOverlay.setWidth(width);
+            if (road != null) {
+                ArrayList<GeoPoint> polyline = road.mRouteHigh;
+                roadOverlay.setPoints(polyline);
+            }
+            return roadOverlay;
         }
 
         private void showRoutingErrorDialog() {
