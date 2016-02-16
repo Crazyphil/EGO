@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.osmdroid.bonuspack.routing.Road;
@@ -29,6 +30,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
     protected ProgressDialog progressDialog;
 
     private TextView textViewDirection, textViewStreet, textViewNextDirection, textViewTime, textViewDistance;
+    private LinearLayout panelInstructions;
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
 
@@ -90,6 +92,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         textViewNextDirection = (TextView)findViewById(R.id.nav_textViewNextDirection);
         textViewTime = (TextView)findViewById(R.id.nav_textViewTime);
         textViewDistance = (TextView)findViewById(R.id.nav_textViewDistance);
+        panelInstructions = (LinearLayout)findViewById(R.id.nav_panelInstructions);
         progressDialog.show();
     }
 
@@ -160,7 +163,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
         setInstructions(road, 0);
         setRouteMetrics(road.mNodes.get(0).mLength, road.mLength, road.mDuration);
-
+        panelInstructions.setVisibility(View.VISIBLE);
     }
 
     private void setInstructions(Road road, int instructionId) {
