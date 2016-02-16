@@ -257,6 +257,9 @@ public class NavFragment extends MapFragment {
                     routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
                 }
                 mapView.getOverlays().add(mapView.getOverlays().indexOf(gpsOverlay), routeOverlay);
+                if (gpsOverlay.getMyLocation() != null) {
+                    mapView.getController().setCenter(gpsOverlay.getMyLocation());
+                }
 
                 mapView.invalidate();
             } else {
