@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -81,6 +82,13 @@ public class NavFragment extends MapFragment {
 
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(false);
+        mapView.setFlingEnabled(false);
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         mapView.getOverlayManager().remove(gpsOverlay);
         gpsOverlay = new EGOLocationOverlay(view.getContext(), mapView);
         gpsOverlay.runOnFirstFix(new Runnable() {
