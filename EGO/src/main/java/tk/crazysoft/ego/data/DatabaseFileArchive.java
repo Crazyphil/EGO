@@ -24,6 +24,7 @@ import java.util.Set;
  */
 public class DatabaseFileArchive implements IArchiveFile {
     private static final String TAG = "DatabaseFileArchive";
+    private static final int MAX_ZOOM_LEVEL = 20;
 
     public static final String TABLE="tiles";
     private SQLiteDatabase mDatabase;
@@ -96,6 +97,36 @@ public class DatabaseFileArchive implements IArchiveFile {
             Log.w(TAG, "Error getting db stream: " + pTile, e);
         }
         return null;
+    }
+
+    public int getMinZoomLevel() {
+        return getZoomBoundary("MIN");
+    }
+
+    public int getMaxZoomLevel() {
+        return getZoomBoundary("MAX");
+    }
+
+    private int getZoomBoundary(String minMax) {
+        final String[] key = { minMax +"(key)" };
+        final Cursor cur = mDatabase.query(TABLE, key, null, null, null, null, null);
+        long index = 0;
+        if (cur.getCount() != 0) {
+            cur.moveToFirst();
+            index = cur.getLong(0);
+        }
+        cur.close();
+
+        return calcZoomLevel(index);
+    }
+
+    private int calcZoomLevel(long key) {
+        for (int level = 0; level <= MAX_ZOOM_LEVEL; level++) {
+            if (key <= ((level << level) + (long)Math.pow(2, level) << level) + (long)Math.pow(2, level)) {
+                return level;
+            }
+        }
+        return 0;
     }
 
     @Override

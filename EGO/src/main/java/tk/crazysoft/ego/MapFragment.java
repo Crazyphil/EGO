@@ -39,6 +39,7 @@ import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class MapFragment extends Fragment {
+    private static final String TAG = "MapFragment";
     private static final String MAP_PATH = "ego/karten/";
     private static final String BASEMAP_FILE = "basemap.sqlite";
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
@@ -91,11 +92,12 @@ public class MapFragment extends Fragment {
 
         IArchiveFile[] orthophotoArchives = getArchiveFiles(ORTHOPHOTO_FILE);
         if (orthophotoArchives.length == 0) {
-            Log.e(MapFragment.class.getName(), "Ortophoto archive file(s) could not be loaded");
+            Log.e(TAG, "Ortophoto archive file(s) could not be loaded");
         }
 
         // The TileSource objects are not used in our custom DatabaseFileArchive implementation, but they are needed by the provider
-        ITileSource basemapSource = new XYTileSource("basemap.at", 0, 17, TILE_SIZE, ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
+        ITileSource basemapSource = new XYTileSource("basemap.at", getMinZoomLevel(basemapArchives), getMaxZoomLevel(basemapArchives), TILE_SIZE,
+                ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
         MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchives);
         MapTileProviderArray basemapProviderArray = new MapTileProviderArray(basemapSource, registerReceiver, new MapTileModuleProviderBase[] { basemapProvider });
@@ -113,7 +115,8 @@ public class MapFragment extends Fragment {
         a.recycle();
 
         if (orthophotoArchives.length > 0) {
-            ITileSource orthophotoSource = new XYTileSource("geoimage.at", 0, 17, TILE_SIZE, ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
+            ITileSource orthophotoSource = new XYTileSource("geoimage.at", getMinZoomLevel(orthophotoArchives), getMaxZoomLevel(orthophotoArchives), TILE_SIZE,
+                    ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
 
@@ -163,11 +166,28 @@ public class MapFragment extends Fragment {
             try {
                 IArchiveFile archive = DatabaseFileArchive.getDatabaseFileArchive(file);
                 archiveFiles.add(archive);
+                Log.d(TAG, String.format("Adding %s to tile archive array", file.getName()));
             } catch (final SQLiteException e) {
-                Log.e(MapFragment.class.getName(), "Error opening SQL file", e);
+                Log.e(TAG, "Error opening SQL file", e);
             }
         }
         return archiveFiles.toArray(new IArchiveFile[archiveFiles.size()]);
+    }
+
+    private int getMinZoomLevel(IArchiveFile[] archiveFiles) {
+        int minZoom = Integer.MAX_VALUE;
+        for (IArchiveFile archiveFile : archiveFiles) {
+            minZoom = Math.min(minZoom, ((DatabaseFileArchive)archiveFile).getMinZoomLevel());
+        }
+        return minZoom;
+    }
+
+    private int getMaxZoomLevel(IArchiveFile[] archiveFiles) {
+        int maxZoom = 0;
+        for (IArchiveFile archiveFile : archiveFiles) {
+            maxZoom = Math.max(maxZoom, ((DatabaseFileArchive) archiveFile).getMaxZoomLevel());
+        }
+        return maxZoom;
     }
 
     private void showMapFilesNotFoundDialog(View view, String sdPath) {
