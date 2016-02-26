@@ -10,11 +10,16 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.LinkedList;
 import java.util.List;
 
+import tk.crazysoft.ego.preferences.Preferences;
+
 public class EGOLocationOverlay extends MyLocationNewOverlay {
     private final List<IMyLocationConsumer> locationListeners = new LinkedList<>();
+    private boolean followOrientation;
 
     public EGOLocationOverlay(Context context, MapView mapView) {
         super(context, mapView);
+
+        followOrientation = new Preferences(context).getInternalNavigationRotate();
     }
 
     public void addLocationListener(IMyLocationConsumer listener) {
@@ -30,7 +35,7 @@ public class EGOLocationOverlay extends MyLocationNewOverlay {
             enableFollowLocation();
         }
 
-        if (isFollowLocationEnabled() && location.hasBearing()) {
+        if (followOrientation && isFollowLocationEnabled() && location.hasBearing()) {
             mMapView.setMapOrientation(-location.getBearing());
         }
 

@@ -54,7 +54,18 @@
             android:dialogTitle="@string/preferences_activity_navigation_api_title"
             android:entries="@array/preferences_activity_navigation_api_entries"
             android:entryValues="@array/preferences_activity_navigation_api_values"
-            android:defaultValue="@string/preferences_activity_navigation_api_default"/>
+            android:defaultValue="@string/preferences_activity_navigation_api_default" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_activity_internal_navigation_title"
+        android:key="pref_key_internal_navigation">
+
+        <CheckBoxPreference
+            android:key="pref_key_internal_navigation_rotate"
+            android:title="@string/preferences_activity_internal_navigation_rotate_title"
+            android:summaryOff="@string/preferences_activity_internal_navigation_rotate_summary_unckecked"
+            android:summaryOn="@string/preferences_activity_internal_navigation_rotate_summary_ckecked"
+            android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/main_activity_tab_hospitals_doctors"
@@ -67,7 +78,7 @@
             android:dialogTitle="@string/preferences_activity_hospitals_doctors_view_title"
             android:entries="@array/preferences_activity_hospitals_doctors_view_entries"
             android:entryValues="@array/preferences_activity_hospitals_doctors_view_values"
-            android:defaultValue="@string/preferences_activity_hospitals_doctors_view_default"/>
+            android:defaultValue="@string/preferences_activity_hospitals_doctors_view_default" />
         <tk.crazysoft.ego.preferences.TimePickerPreference
             android:key="pref_key_hospitals_doctors_takeover"
             android:title="@string/preferences_activity_hospitals_doctors_takeover_title"

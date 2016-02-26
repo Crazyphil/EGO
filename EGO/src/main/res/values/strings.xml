@@ -98,10 +98,14 @@
     <string name="preferences_activity_map_address_title">Standardposition</string>
     <string name="preferences_activity_map_address_summary">Adresse des standardmäßig auf der Karte zentrierten Ortes</string>
     <string name="preferences_activity_map_address_text">Geben Sie eine Adresse oder Koordinaten im Format „Nord,Ost“ ein.</string>
-    <string name="preferences_activity_navigation_title">Externe Navigations-App</string>
+    <string name="preferences_activity_navigation_title">Navigation</string>
     <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
     <string name="preferences_activity_navigation_api_default" translatable="false">geo</string>
+    <string name="preferences_activity_internal_navigation_title">Interne Navigation</string>
+    <string name="preferences_activity_internal_navigation_rotate_title">Karte rotieren</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_unckecked">Die Karte zeigt immer nach Norden</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_ckecked">Die Karte zeigt in Fahrtrichtung</string>
     <string name="preferences_activity_hospitals_doctors_view_title">Angezeigte Abschnitte</string>
     <string name="preferences_activity_hospitals_doctors_view_summary">%s werden angezeigt</string>
     <string name="preferences_activity_hospitals_doctors_view_default" translatable="false">3</string>
