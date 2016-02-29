@@ -222,9 +222,9 @@ public class Environment4 {
         try {
             // Aufruf der versteckten Methode getVolumeList
             //noinspection NullArgumentToVariableArgMethod
-            Method m = c.getMethod("getVolumeList", null);
+            Method m = c.getMethod("getVolumeList", (Class)null);
             //noinspection NullArgumentToVariableArgMethod
-            vols = (Object[]) m.invoke(sm, null); // android.os.Storage.StorageVolume
+            vols = (Object[]) m.invoke(sm, (Object)null); // android.os.Storage.StorageVolume
             Device[] temp = new Device[vols.length];
             for (int i = 0; i < vols.length; i++) temp[i] = new Device(vols[i]);
 
@@ -344,24 +344,24 @@ public class Environment4 {
          */
         @SuppressWarnings("NullArgumentToVariableArgMethod")
         Device(Object storage) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            super((String)storage.getClass().getMethod("getPath",null).invoke(storage, null));
+            super((String)storage.getClass().getMethod("getPath", (Class<?>) null).invoke(storage, (Object) null));
             for (Method m : storage.getClass().getMethods()) {
                 if (m.getName().equals("getUserLabel") && m.getParameterTypes().length == 0 && m.getReturnType() == String.class)
-                    mUserLabel = (String) m.invoke(storage, null); // ab Android 4.4
+                    mUserLabel = (String) m.invoke(storage, (Object)null); // ab Android 4.4
                 if (m.getName().equals("getUuid") && m.getParameterTypes().length == 0 && m.getReturnType() == String.class)
-                    mUuid = (String) m.invoke(storage, null); // ab Android 4.4
+                    mUuid = (String) m.invoke(storage, (Object)null); // ab Android 4.4
                 if (m.getName().equals("getState") && m.getParameterTypes().length == 0 && m.getReturnType() == String.class)
-                    mState = (String) m.invoke(storage, null); // ab Android 4.4
+                    mState = (String) m.invoke(storage, (Object)null); // ab Android 4.4
                 if (m.getName().equals("isRemovable") && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class)
-                    mRemovable = (Boolean) m.invoke(storage, null); // ab Android 4.0
+                    mRemovable = (Boolean) m.invoke(storage, (Object)null); // ab Android 4.0
                 if (m.getName().equals("isPrimary") && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class)
-                    mPrimary = (Boolean) m.invoke(storage, null); // ab Android 4.2
+                    mPrimary = (Boolean) m.invoke(storage, (Object)null); // ab Android 4.2
                 if (m.getName().equals("isEmulated") && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class)
-                    mEmulated = (Boolean) m.invoke(storage, null); // ab Android 4.0
+                    mEmulated = (Boolean) m.invoke(storage, (Object)null); // ab Android 4.0
                 if (m.getName().equals("allowMassStorage") && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class)
-                    mAllowMassStorage = (Boolean) m.invoke(storage, null); // ab Android 4.0
+                    mAllowMassStorage = (Boolean) m.invoke(storage, (Object)null); // ab Android 4.0
                 if (m.getName().equals("getMaxFileSize") && m.getParameterTypes().length == 0 && m.getReturnType() == long.class)
-                    mMaxFileSize = (Long) m.invoke(storage, null); // ab Android 4.0
+                    mMaxFileSize = (Long) m.invoke(storage, (Object)null); // ab Android 4.0
                 // getDescription (ab 4.1 mit context) liefert keine sinnvollen Werte
                 // getPathFile (ab 4.2) liefert keine sinnvollen Werte
                 // getMtpReserveSpace (ab 4.0) für diese Zwecke unwichtig
