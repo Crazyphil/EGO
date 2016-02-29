@@ -365,7 +365,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             navIntent = new Intent(activity, NavActivity.class);
             navIntent.putExtra(NavActivity.EXTRA_LATITUDE, latitude);
             navIntent.putExtra(NavActivity.EXTRA_LONGITUDE, longitude);
-            navIntent.putExtra("theme", ((MainActivity)activity).themeWatcher.getCurrentAppTheme());
+            navIntent.putExtra("theme", getThemeId(activity));
         } else {
             Uri location;
             if (intentPreference.equals(options[3])) {  // geo_q
