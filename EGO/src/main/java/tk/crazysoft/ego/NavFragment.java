@@ -70,6 +70,7 @@ public class NavFragment extends MapFragment {
         if (savedInstanceState != null) {
             origin = savedInstanceState.getParcelable("origin");
             originHeading = savedInstanceState.getDouble("originHeading");
+            destination = savedInstanceState.getParcelable("destination");
         }
     }
 
@@ -145,6 +146,7 @@ public class NavFragment extends MapFragment {
 
         outState.putParcelable("origin", origin);
         outState.putDouble("originHeading", originHeading);
+        outState.putParcelable("destination", destination);
     }
 
     @Override
