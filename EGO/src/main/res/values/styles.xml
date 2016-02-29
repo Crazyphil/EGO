@@ -26,33 +26,7 @@
         <item name="tilesLoadingBackgroundColor">#d8d0d0</item>
         <item name="tilesLoadingLineColor">#c8c0c0</item>
         <item name="routeColor">#800000ff</item>
-        <item name="turnArrive">@drawable/turn_arrive</item>
-        <item name="turnDepart">@drawable/turn_depart</item>
-        <item name="turnFerry">@drawable/turn_ferry</item>
-        <item name="turnForkLeft">@drawable/turn_fork_left</item>
-        <item name="turnForkRight">@drawable/turn_fork_right</item>
-        <item name="turnGenericMerge">@drawable/turn_generic_merge</item>
-        <item name="turnGenericRoundabout">@drawable/turn_generic_roundabout</item>
-        <item name="turnRampLeft">@drawable/turn_ramp_left</item>
-        <item name="turnRampRight">@drawable/turn_ramp_right</item>
-        <item name="turnLeft">@drawable/turn_left</item>
-        <item name="turnRight">@drawable/turn_right</item>
-        <item name="turnRoundabout1">@drawable/turn_roundabout_1</item>
-        <item name="turnRoundabout2">@drawable/turn_roundabout_2</item>
-        <item name="turnRoundabout3">@drawable/turn_roundabout_3</item>
-        <item name="turnRoundabout4">@drawable/turn_roundabout_4</item>
-        <item name="turnRoundabout5">@drawable/turn_roundabout_5</item>
-        <item name="turnRoundabout6">@drawable/turn_roundabout_6</item>
-        <item name="turnRoundabout7">@drawable/turn_roundabout_7</item>
-        <item name="turnRoundaboutExit">@drawable/turn_roundabout_exit</item>
-        <item name="turnSharpLeft">@drawable/turn_sharp_left</item>
-        <item name="turnSharpRight">@drawable/turn_sharp_right</item>
-        <item name="turnSlightLeft">@drawable/turn_slight_left</item>
-        <item name="turnSlightRight">@drawable/turn_slight_right</item>
-        <item name="turnStraight">@drawable/turn_straight</item>
-        <item name="turnUnknown">@drawable/turn_unknown</item>
-        <item name="turnUTurn">@drawable/turn_uturn</item>
-        <item name="turnUTurnRight">@drawable/turn_uturn_right</item>
+        <item name="turnTint">@android:color/secondary_text_light</item>
     </style>
     <style name="AppTheme.Dark" parent="AppBaseTheme.Dark">
         <item name="contactsMenuIcon">@drawable/social_group_dark</item>
@@ -66,33 +40,7 @@
         <item name="tilesLoadingBackgroundColor">#272f2f</item>
         <item name="tilesLoadingLineColor">#373f3f</item>
         <item name="routeColor">#80ffff00</item>
-        <item name="turnArrive">@drawable/da_turn_arrive</item>
-        <item name="turnDepart">@drawable/da_turn_depart</item>
-        <item name="turnFerry">@drawable/da_turn_ferry</item>
-        <item name="turnForkLeft">@drawable/da_turn_fork_left</item>
-        <item name="turnForkRight">@drawable/da_turn_fork_right</item>
-        <item name="turnGenericMerge">@drawable/da_turn_generic_merge</item>
-        <item name="turnGenericRoundabout">@drawable/da_turn_generic_roundabout</item>
-        <item name="turnRampLeft">@drawable/da_turn_ramp_left</item>
-        <item name="turnRampRight">@drawable/da_turn_ramp_right</item>
-        <item name="turnLeft">@drawable/da_turn_left</item>
-        <item name="turnRight">@drawable/da_turn_right</item>
-        <item name="turnRoundabout1">@drawable/da_turn_roundabout_1</item>
-        <item name="turnRoundabout2">@drawable/da_turn_roundabout_2</item>
-        <item name="turnRoundabout3">@drawable/da_turn_roundabout_3</item>
-        <item name="turnRoundabout4">@drawable/da_turn_roundabout_4</item>
-        <item name="turnRoundabout5">@drawable/da_turn_roundabout_5</item>
-        <item name="turnRoundabout6">@drawable/da_turn_roundabout_6</item>
-        <item name="turnRoundabout7">@drawable/da_turn_roundabout_7</item>
-        <item name="turnRoundaboutExit">@drawable/da_turn_roundabout_exit</item>
-        <item name="turnSharpLeft">@drawable/da_turn_sharp_left</item>
-        <item name="turnSharpRight">@drawable/da_turn_sharp_right</item>
-        <item name="turnSlightLeft">@drawable/da_turn_slight_left</item>
-        <item name="turnSlightRight">@drawable/da_turn_slight_right</item>
-        <item name="turnStraight">@drawable/da_turn_straight</item>
-        <item name="turnUnknown">@drawable/da_turn_unknown</item>
-        <item name="turnUTurn">@drawable/da_turn_uturn</item>
-        <item name="turnUTurnRight">@drawable/da_turn_uturn_right</item>
+        <item name="turnTint">@android:color/secondary_text_dark</item>
     </style>
 
 </resources>

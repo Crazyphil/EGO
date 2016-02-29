@@ -12,6 +12,7 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    jcenter()
     maven { url "https://jitpack.io" } // For android-support-v4-preferencefragment
     flatDir { dirs 'libs' } // For local .aar lib files
 }
@@ -25,6 +26,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 19
         multiDexEnabled true
+        generatedDensities = []
     }
     signingConfigs {
         release {
@@ -56,6 +58,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.1.0'
+    compile 'com.bettervectordrawable:lib:0.8+'
     compile 'net.sf.opencsv:opencsv:2.3@jar'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'org.osmdroid:osmdroid-android:5.1'

@@ -1,7 +1,9 @@
 package tk.crazysoft.ego;
 
 import android.app.ProgressDialog;
-import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +33,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
     protected ProgressDialog progressDialog;
 
     private TextView textViewDirection, textViewStreet, textViewNextDirection, textViewTime, textViewDistance;
+    private ImageView imageViewDirection;
     private LinearLayout panelInstructions;
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
@@ -87,6 +91,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             }
         });
 
+        imageViewDirection = (ImageView)findViewById(R.id.nav_imageViewDirection);
         textViewDirection = (TextView)findViewById(R.id.nav_textViewDirection);
         textViewStreet = (TextView)findViewById(R.id.nav_textViewStreet);
         textViewNextDirection = (TextView)findViewById(R.id.nav_textViewNextDirection);
@@ -181,7 +186,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         currentRoadNode = instructionId;
 
         RoadNode curNode = road.mNodes.get(Math.min(instructionId + 1, road.mNodes.size() - 1));
-        textViewDirection.setCompoundDrawablesWithIntrinsicBounds(null, getDrawableForManeuver(curNode.mManeuverType), null, null);
+        imageViewDirection.setImageDrawable(getDrawableForManeuver(curNode.mManeuverType));
         textViewStreet.setText(navFragment.getRoadManager().getStreetName(instructionId));
 
         if (curNode.mLength * 1000 < NavFragment.MAX_DISTANCE_FOR_NEXT_DIRECTION && road.mNodes.size() > instructionId + 1) {
@@ -201,110 +206,93 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
     }
 
     private Drawable getDrawableForManeuver(int maneuver) {
-        TypedArray a;
+        Drawable drawable;
         switch (maneuver) {
             case LocalGraphHopperRoadManager.TURN_DESTINATION:
             case LocalGraphHopperRoadManager.TURN_DESTINATION_LEFT:
+                return getResources().getDrawable(R.drawable.da_turn_arrive);
             case LocalGraphHopperRoadManager.TURN_DESTINATION_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnArrive });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_arrive_right);
             case LocalGraphHopperRoadManager.TURN_TRANSIT_TAKE:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_ENTER:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_REMAIN_ON:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_TRANSFER:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_EXIT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnFerry });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_ferry);
             case LocalGraphHopperRoadManager.TURN_STAY_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnForkLeft });
+                drawable = getResources().getDrawable(R.drawable.da_turn_fork_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_STAY_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnForkRight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_fork_right);
             case LocalGraphHopperRoadManager.TURN_MERGE_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_MERGE_LEFT:
             case LocalGraphHopperRoadManager.TURN_MERGE_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnGenericMerge });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_generic_merge);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT_ENTER:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnGenericRoundabout });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_generic_roundabout);
             case LocalGraphHopperRoadManager.TURN_EXIT_LEFT:
             case LocalGraphHopperRoadManager.TURN_RAMP_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRampLeft });
+                drawable = getResources().getDrawable(R.drawable.da_turn_ramp_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_EXIT_RIGHT:
             case LocalGraphHopperRoadManager.TURN_RAMP_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRampRight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_fork_right);
             case LocalGraphHopperRoadManager.TURN_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnLeft });
+                drawable = getResources().getDrawable(R.drawable.da_turn_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_right);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT1:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout1 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_1);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT2:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout2 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_2);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT3:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout3 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_3);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT4:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout4 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_4);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT5:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout5 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_5);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT6:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout6 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_6);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT7:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundabout7 });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_7);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT8:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnGenericRoundabout });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_8);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT_LEAVE:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnRoundaboutExit });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_roundabout_exit);
             case LocalGraphHopperRoadManager.TURN_SHARP_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnSharpLeft });
+                drawable = getResources().getDrawable(R.drawable.da_turn_sharp_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_SLIGHT_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnSlightLeft });
+                drawable = getResources().getDrawable(R.drawable.da_turn_slight_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_SHARP_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnSharpRight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_sharp_right);
             case LocalGraphHopperRoadManager.TURN_SLIGHT_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnSlightRight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_slight_right);
             case LocalGraphHopperRoadManager.TURN_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_STAY_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_RAMP_STRAIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnStraight });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_straight);
             case LocalGraphHopperRoadManager.TURN_UTURN:
             case LocalGraphHopperRoadManager.TURN_UTURN_LEFT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnUTurn });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_uturn);
             case LocalGraphHopperRoadManager.TURN_UTURN_RIGHT:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnUTurnRight });
+                drawable = getResources().getDrawable(R.drawable.da_turn_uturn);
                 break;
             default:
-                a = getTheme().obtainStyledAttributes(new int[] { R.attr.turnUnknown });
-                break;
+                return getResources().getDrawable(R.drawable.da_turn_unknown);
         }
 
-        Drawable maneuverIcon = null;
-        if (a != null) {
-            maneuverIcon = a.getDrawable(0);
-            a.recycle();
-        }
-        return maneuverIcon;
+        int size = Math.max(imageViewDirection.getWidth(), imageViewDirection.getHeight());
+        Bitmap canvasBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(canvasBitmap);
+        drawable.setBounds(0, 0, canvasBitmap.getWidth(), canvas.getHeight());
+        canvas.translate(canvas.getWidth(), 0);
+        canvas.scale(-1, 1);
+        drawable.draw(canvas);
+
+        return new BitmapDrawable(getResources(), canvasBitmap);
     }
 
     private String toTimeString(double duration) {

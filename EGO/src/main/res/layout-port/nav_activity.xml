@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/nav_mapContainer"></FrameLayout>
+        android:id="@+id/nav_mapContainer" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:id="@+id/nav_panelInstructions"
-        android:visibility="gone">
+        >
 
-        <FrameLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,21 +29,39 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/nav_imageViewDirection"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:tint="?attr/turnTint"
+                android:layout_gravity="left"
+                android:tintMode="src_in"/>
+
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="In 50m right"
-                    android:drawableLeft="?attr/turnRight"
+                    android:text="50m"
                     android:id="@+id/nav_textViewDirection"
                     android:gravity="center_vertical" />
 
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Sample Street"
+                    android:id="@+id/nav_textViewStreet"
+                    android:layout_marginBottom="@dimen/activity_element_full_margin"
+                    android:ellipsize="marquee"
+                    android:singleLine="true" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,22 +70,30 @@
                     android:text="@string/nav_activity_next_direction"
                     android:id="@+id/nav_textViewNextDirection" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right"
+                >
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/nav_textViewTime" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?attr/secondaryTextColor"
                     android:text="@string/nav_activity_distance"
                     android:id="@+id/nav_textViewDistance" />
-
             </LinearLayout>
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

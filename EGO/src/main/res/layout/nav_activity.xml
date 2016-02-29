@@ -5,12 +5,6 @@
     android:layout_height="match_parent"
     android:baselineAligned="false">
 
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:id="@+id/nav_mapContainer"></FrameLayout>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
@@ -20,24 +14,23 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:id="@+id/nav_panelInstructions"
-        android:visibility="gone">
-
-        <!--<FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
-
-        </FrameLayout>-->
+        android:id="@+id/nav_panelInstructions">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/nav_imageViewDirection"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:tint="?attr/turnTint"
+                android:tintMode="src_in"
+                android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="fill_parent"
@@ -94,5 +87,11 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:id="@+id/nav_mapContainer"></FrameLayout>
 
 </LinearLayout>
