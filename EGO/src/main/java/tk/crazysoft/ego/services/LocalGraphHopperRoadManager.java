@@ -208,23 +208,19 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
         double foundMinDistance = distCalc.calcDist(lat, lon, prevLat, prevLon);
         int foundPoint = 0;
 
-        for (int i = 1; i < points.size(); i++)
-        {
+        for (int i = 1; i < points.size(); i++) {
             double currLat = points.getLatitude(i);
             double currLon = points.getLongitude(i);
 
             // calculate the distance from the point to the edge
             double distance;
-            if (distCalc.validEdgeDistance(lat, lon, currLat, currLon, prevLat, prevLon))
-            {
+            if (distCalc.validEdgeDistance(lat, lon, currLat, currLon, prevLat, prevLon)) {
                 distance = distCalc.calcDenormalizedDist(distCalc.calcNormalizedEdgeDistance(lat, lon, currLat, currLon, prevLat, prevLon));
-            } else
-            {
+            } else {
                 distance = distCalc.calcDist(lat, lon, currLat, currLon);
             }
 
-            if (distance < foundMinDistance)
-            {
+            if (distance < foundMinDistance) {
                 foundMinDistance = distance;
                 foundPoint = i;
             }

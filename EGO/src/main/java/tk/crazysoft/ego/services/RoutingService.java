@@ -9,7 +9,7 @@ import android.util.Log;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
-import com.graphhopper.routing.AlgorithmOptions;
+import com.graphhopper.util.Parameters;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.shapes.GHPoint;
 
@@ -18,6 +18,7 @@ import java.util.Locale;
 
 public class RoutingService extends Service {
     private static final String TAG = RoutingService.class.getName();
+    private static final boolean USE_CONTRACTION_HIERARCHIES = false;
 
     public class NoDataException extends Exception { }
     public class StartupException extends Exception {
@@ -55,7 +56,7 @@ public class RoutingService extends Service {
         gh = new GraphHopper().forMobile();
         boolean result;
         try {
-            result = gh.setElevation(loadElevationData).setCHEnable(false).load(dataDir);
+            result = gh.setElevation(loadElevationData).setCHEnabled(USE_CONTRACTION_HIERARCHIES).load(dataDir);
         } catch (Exception e) {
             Log.e(TAG, "GraphHopper initialization failed", e);
             throw new StartupException(e);
@@ -76,13 +77,13 @@ public class RoutingService extends Service {
         GHRequest request;
         if (headings != null) {
             request = new GHRequest(waypoints, headings);
-            request.getHints().put("force_heading_ch", true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
+            request.getHints().put(Parameters.CH.FORCE_HEADING, true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
         } else {
             request = new GHRequest(waypoints);
         }
-        request.setLocale(Locale.getDefault()).setAlgorithm(AlgorithmOptions.DIJKSTRA_BI);
+        request.setLocale(Locale.getDefault()).setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
         if (!withInstructions) {
-            request.getHints().put("instructions", false);
+            request.getHints().put(Parameters.Routing.INSTRUCTIONS, false);
         }
         return gh.route(request);
     }
