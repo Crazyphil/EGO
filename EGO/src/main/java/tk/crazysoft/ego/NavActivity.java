@@ -210,78 +210,78 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         switch (maneuver) {
             case LocalGraphHopperRoadManager.TURN_DESTINATION:
             case LocalGraphHopperRoadManager.TURN_DESTINATION_LEFT:
-                return getResources().getDrawable(R.drawable.da_turn_arrive);
+                return getDrawableCompat(R.drawable.da_turn_arrive);
             case LocalGraphHopperRoadManager.TURN_DESTINATION_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_arrive_right);
+                return getDrawableCompat(R.drawable.da_turn_arrive_right);
             case LocalGraphHopperRoadManager.TURN_TRANSIT_TAKE:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_ENTER:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_REMAIN_ON:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_TRANSFER:
             case LocalGraphHopperRoadManager.TURN_TRANSIT_EXIT:
-                return getResources().getDrawable(R.drawable.da_turn_ferry);
+                return getDrawableCompat(R.drawable.da_turn_ferry);
             case LocalGraphHopperRoadManager.TURN_STAY_LEFT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_fork_right);
+                drawable = getDrawableCompat(R.drawable.da_turn_fork_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_STAY_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_fork_right);
+                return getDrawableCompat(R.drawable.da_turn_fork_right);
             case LocalGraphHopperRoadManager.TURN_MERGE_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_MERGE_LEFT:
             case LocalGraphHopperRoadManager.TURN_MERGE_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_generic_merge);
+                return getDrawableCompat(R.drawable.da_turn_generic_merge);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT_ENTER:
-                return getResources().getDrawable(R.drawable.da_turn_generic_roundabout);
+                return getDrawableCompat(R.drawable.da_turn_generic_roundabout);
             case LocalGraphHopperRoadManager.TURN_EXIT_LEFT:
             case LocalGraphHopperRoadManager.TURN_RAMP_LEFT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_ramp_right);
+                drawable = getDrawableCompat(R.drawable.da_turn_ramp_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_EXIT_RIGHT:
             case LocalGraphHopperRoadManager.TURN_RAMP_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_fork_right);
+                return getDrawableCompat(R.drawable.da_turn_fork_right);
             case LocalGraphHopperRoadManager.TURN_LEFT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_right);
+                drawable = getDrawableCompat(R.drawable.da_turn_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_right);
+                return getDrawableCompat(R.drawable.da_turn_right);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT1:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_1);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_1);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT2:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_2);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_2);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT3:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_3);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_3);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT4:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_4);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_4);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT5:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_5);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_5);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT6:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_6);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_6);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT7:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_7);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_7);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT8:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_8);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_8);
             case LocalGraphHopperRoadManager.TURN_ROUNDABOUT_LEAVE:
-                return getResources().getDrawable(R.drawable.da_turn_roundabout_exit);
+                return getDrawableCompat(R.drawable.da_turn_roundabout_exit);
             case LocalGraphHopperRoadManager.TURN_SHARP_LEFT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_sharp_right);
+                drawable = getDrawableCompat(R.drawable.da_turn_sharp_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_SLIGHT_LEFT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_slight_right);
+                drawable = getDrawableCompat(R.drawable.da_turn_slight_right);
                 break;
             case LocalGraphHopperRoadManager.TURN_SHARP_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_sharp_right);
+                return getDrawableCompat(R.drawable.da_turn_sharp_right);
             case LocalGraphHopperRoadManager.TURN_SLIGHT_RIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_slight_right);
+                return getDrawableCompat(R.drawable.da_turn_slight_right);
             case LocalGraphHopperRoadManager.TURN_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_STAY_STRAIGHT:
             case LocalGraphHopperRoadManager.TURN_RAMP_STRAIGHT:
-                return getResources().getDrawable(R.drawable.da_turn_straight);
+                return getDrawableCompat(R.drawable.da_turn_straight);
             case LocalGraphHopperRoadManager.TURN_UTURN:
             case LocalGraphHopperRoadManager.TURN_UTURN_LEFT:
-                return getResources().getDrawable(R.drawable.da_turn_uturn);
+                return getDrawableCompat(R.drawable.da_turn_uturn);
             case LocalGraphHopperRoadManager.TURN_UTURN_RIGHT:
-                drawable = getResources().getDrawable(R.drawable.da_turn_uturn);
+                drawable = getDrawableCompat(R.drawable.da_turn_uturn);
                 break;
             default:
-                return getResources().getDrawable(R.drawable.da_turn_unknown);
+                return getDrawableCompat(R.drawable.da_turn_unknown);
         }
 
         int size = Math.max(imageViewDirection.getWidth(), imageViewDirection.getHeight());
@@ -293,6 +293,14 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         drawable.draw(canvas);
 
         return new BitmapDrawable(getResources(), canvasBitmap);
+    }
+
+    private Drawable getDrawableCompat(int id) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return getResources().getDrawable(id);
+        } else {
+            return getResources().getDrawable(id, null);
+        }
     }
 
     private String toTimeString(double duration) {
