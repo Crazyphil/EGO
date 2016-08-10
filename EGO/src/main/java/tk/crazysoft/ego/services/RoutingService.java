@@ -9,6 +9,8 @@ import android.util.Log;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
+import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.routing.util.FlagEncoderFactory;
 import com.graphhopper.util.Parameters;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.shapes.GHPoint;
@@ -56,7 +58,8 @@ public class RoutingService extends Service {
         gh = new GraphHopper().forMobile();
         boolean result;
         try {
-            result = gh.setElevation(loadElevationData).setCHEnabled(USE_CONTRACTION_HIERARCHIES).load(dataDir);
+            gh.setEncodingManager(new EncodingManager(FlagEncoderFactory.CAR));
+            result = gh.setElevation(loadElevationData).setCHEnabled(true).load(dataDir);
         } catch (Exception e) {
             Log.e(TAG, "GraphHopper initialization failed", e);
             throw new StartupException(e);
@@ -68,7 +71,6 @@ public class RoutingService extends Service {
         }
     }
 
-
     public GHResponse route(List<GHPoint> waypoints, List<Double> headings, boolean withInstructions) {
         if (waypoints.size() < 2) {
             throw new IllegalArgumentException("Number of waypoints must be greater or equal 2");
@@ -77,6 +79,12 @@ public class RoutingService extends Service {
         GHRequest request;
         if (headings != null) {
             request = new GHRequest(waypoints, headings);
+            request.setVehicle(FlagEncoderFactory.CAR);
+            request.setWeighting("fastest");
+            if (!USE_CONTRACTION_HIERARCHIES) {
+                request.getHints().put(Parameters.CH.DISABLE, USE_CONTRACTION_HIERARCHIES);
+                request.getHints().put("routing.flexibleMode.force", true);
+            }
             request.getHints().put(Parameters.CH.FORCE_HEADING, true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
         } else {
             request = new GHRequest(waypoints);
