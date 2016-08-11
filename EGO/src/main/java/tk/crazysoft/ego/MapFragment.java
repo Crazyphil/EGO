@@ -116,7 +116,6 @@ public class MapFragment extends Fragment {
                     ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
-
             orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, view.getContext());
             orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
             orthophotoOverlay.setEnabled(showOrtophoto);
@@ -233,6 +232,9 @@ public class MapFragment extends Fragment {
                 public void onClick(View v) {
                     showOrtophoto = !showOrtophoto;
                     orthophotoOverlay.setEnabled(showOrtophoto);
+                    if (showOrtophoto) {
+                        mapView.setMapOrientation(0);
+                    }
                     mapView.invalidate();
                 }
             });

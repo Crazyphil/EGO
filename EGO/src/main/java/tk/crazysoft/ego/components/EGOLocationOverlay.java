@@ -1,6 +1,5 @@
 package tk.crazysoft.ego.components;
 
-import android.content.Context;
 import android.location.Location;
 
 import org.osmdroid.views.MapView;
@@ -31,7 +30,8 @@ public class EGOLocationOverlay extends MyLocationNewOverlay {
         boolean changed = getLastFix() == null || getLastFix().distanceTo(location) > 1;
         super.setLocation(location);
 
-        if (followOrientation && isFollowLocationEnabled() && location.hasBearing()) {
+        // Rotate map if rotation is enabled and the orthophoto overlay isn't shown while the location is being followed
+        if (followOrientation && !mMapView.getOverlayManager().get(0).isEnabled() && isFollowLocationEnabled() && location.hasBearing()) {
             mMapView.setMapOrientation(-location.getBearing());
         }
 
