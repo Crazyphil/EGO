@@ -357,15 +357,20 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         // Build the intent
         Intent navIntent;
-        if (intentPreference.equals(options[3])) {  // navigon
+        if (intentPreference.equals(options[4])) {  // navigon
             navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
             navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE, latitude);
             navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE, longitude);
+        } else if (intentPreference.equals(options[0])) {   // internal
+            navIntent = new Intent(activity, NavActivity.class);
+            navIntent.putExtra(NavActivity.EXTRA_LATITUDE, latitude);
+            navIntent.putExtra(NavActivity.EXTRA_LONGITUDE, longitude);
+            navIntent.putExtra("theme", getThemeId(activity));
         } else {
             Uri location;
-            if (intentPreference.equals(options[2])) {  // geo_q
+            if (intentPreference.equals(options[3])) {  // geo_q
                 location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f?q=%1$f,%2$f", latitude, longitude));
-            } else if (intentPreference.equals(options[1])) {   // google.navigation
+            } else if (intentPreference.equals(options[2])) {   // google.navigation
                 location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%1$f,%2$f", latitude, longitude));
             } else {   // geo or unknown option
                 location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f", latitude, longitude));
@@ -381,14 +386,14 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         // Build the intent
         Intent navIntent;
-        if (intentPreference.equals(options[3])) {  // navigon
+        if (intentPreference.equals(options[4])) {  // navigon
             navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
             if (address != null) {
                 navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS, address);
             }
         } else {
             Uri location;
-            if (intentPreference.equals(options[1])) {   // google.navigation
+            if (intentPreference.equals(options[2])) {   // google.navigation
                 if (address != null) {
                     location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
                 } else {
@@ -414,7 +419,9 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
 
         // Start an activity if it's safe
         if (isIntentSafe) {
-            navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  // Don't start activity as part of EGO
+            if (navIntent.getComponent() == null) {
+                navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  // Don't start activity as part of EGO
+            }
             activity.startActivity(navIntent);
         } else {
             Toast.makeText(activity, R.string.error_no_navigation_app, Toast.LENGTH_LONG).show();

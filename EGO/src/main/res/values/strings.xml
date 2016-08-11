@@ -64,6 +64,24 @@
     <string name="house_view_coordinate_west">W</string>
     <string name="house_view_mapsheet">Kartenblatt %s</string>
 
+    <!-- Nav Activity -->
+    <string name="nav_activity_title">Navigation</string>
+    <string name="nav_activity_loading_startup">Routenplaner wird gestartet…</string>
+    <string name="nav_activity_loading_routing">Route wird geplant…</string>
+    <string name="nav_activity_next_direction">Dann</string>
+    <string name="nav_activity_time">Ankunft in %s</string>
+    <string name="nav_activity_time_minutes">%s Minuten</string>
+    <string name="nav_activity_time_hours">%s Stunden</string>
+    <string name="nav_activity_distance">%s zu fahren</string>
+    <string name="nav_activity_distance_meters">%s m</string>
+    <string name="nav_activity_distance_kilometers">%s km</string>
+
+    <!-- Nav Fragment -->
+    <string name="nav_view_nomaps_title">Navigationsdaten fehlen</string>
+    <string name="nav_view_nomaps_text">Die Navigationsdaten konnten nicht geladen werden.\n\nFolgendes Verzeichnis wurde gesucht:\n%s</string>
+    <string name="nav_view_noroute_title">Route</string>
+    <string name="nav_view_noroute_text">Die Route konnte nicht berechnet werden.</string>
+
     <!-- Preferences Activity -->
     <string name="preferences_activity_title">Einstellungen</string>
     <string name="preferences_activity_import_title">Daten importieren</string>
@@ -80,10 +98,14 @@
     <string name="preferences_activity_map_address_title">Standardposition</string>
     <string name="preferences_activity_map_address_summary">Adresse des standardmäßig auf der Karte zentrierten Ortes</string>
     <string name="preferences_activity_map_address_text">Geben Sie eine Adresse oder Koordinaten im Format „Nord,Ost“ ein.</string>
-    <string name="preferences_activity_navigation_title">Externe Navigations-App</string>
+    <string name="preferences_activity_navigation_title">Navigation</string>
     <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
     <string name="preferences_activity_navigation_api_default" translatable="false">geo</string>
+    <string name="preferences_activity_internal_navigation_title">Interne Navigation</string>
+    <string name="preferences_activity_internal_navigation_rotate_title">Karte rotieren</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_unckecked">Die Karte zeigt immer nach Norden</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_ckecked">Die Karte zeigt in Fahrtrichtung</string>
     <string name="preferences_activity_hospitals_doctors_view_title">Angezeigte Abschnitte</string>
     <string name="preferences_activity_hospitals_doctors_view_summary">%s werden angezeigt</string>
     <string name="preferences_activity_hospitals_doctors_view_default" translatable="false">3</string>
@@ -107,12 +129,14 @@
     <string name="preferences_activity_app_options_import_failed">Importieren aller Daten von %s fehlgeschlagen.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
+        <item>Interne Navigation</item>
         <item>Geografischer Punkt</item>
         <item>Google-Navigation (und kompatibel)</item>
         <item>Google Maps</item>
         <item>Navigon</item>
     </string-array>
     <string-array name="preferences_activity_navigation_api_values" translatable="false">
+        <item>internal</item>
         <item>geo</item>
         <item>google.navigation</item>
         <item>geo_q</item>

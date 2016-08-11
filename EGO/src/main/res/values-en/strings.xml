@@ -80,9 +80,13 @@
     <string name="preferences_activity_map_address_title">Default Position</string>
     <string name="preferences_activity_map_address_summary">Address of the place centered on the map by default</string>
     <string name="preferences_activity_map_address_text">Enter an address or coordinates with format “North,East”.</string>
-    <string name="preferences_activity_navigation_title">External Navigation App</string>
+    <string name="preferences_activity_navigation_title">Navigation</string>
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
+    <string name="preferences_activity_internal_navigation_title">Internal Navigation</string>
+    <string name="preferences_activity_internal_navigation_rotate_title">Rotate map</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_unckecked">The map always points north</string>
+    <string name="preferences_activity_internal_navigation_rotate_summary_ckecked">The map points in driving direction</string>
     <string name="preferences_activity_hospitals_doctors_view_title">Sections to show</string>
     <string name="preferences_activity_hospitals_doctors_view_summary">%s are shown</string>
     <string name="preferences_activity_hospitals_doctors_takeover_title">Hospital admittance takeover time</string>

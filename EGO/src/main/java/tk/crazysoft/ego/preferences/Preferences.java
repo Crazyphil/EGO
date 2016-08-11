@@ -20,6 +20,8 @@ public class Preferences {
 
     public static final String PREFERENCE_NAVIGATION_API = "pref_key_navigation_api";
 
+    public static final String PREFERENCE_INTERNAL_NAVIGATION_ROTATE = "pref_key_internal_navigation_rotate";
+
     public static final String PREFERENCE_HOSPITALS_DOCTORS_VIEW = "pref_key_hospitals_doctors_view";
     public static final String PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER = "pref_key_hospitals_doctors_takeover";
 
@@ -64,6 +66,10 @@ public class Preferences {
 
     public String getNavigationApi() {
         return preferences.getString(PREFERENCE_NAVIGATION_API, null);
+    }
+
+    public boolean getInternalNavigationRotate() {
+        return preferences.getBoolean(PREFERENCE_INTERNAL_NAVIGATION_ROTATE, true);
     }
 
     public int getHospitalsDoctorsView() {

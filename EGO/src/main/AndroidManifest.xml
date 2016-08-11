@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tk.crazysoft.ego" >
+          xmlns:tools="http://schemas.android.com/tools"
+          package="tk.crazysoft.ego">
+
+    <uses-sdk tools:overrideLibrary="com.bettervectordrawable.lib" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,6 +17,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
+        android:largeHeap="true"
         android:name="tk.crazysoft.ego.EGOApplication">
         <activity
             android:name="tk.crazysoft.ego.MainActivity"
@@ -30,6 +34,14 @@
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="tk.crazysoft.ego.NavActivity"
+            android:label="@string/nav_activity_title"
+            android:parentActivityName="tk.crazysoft.ego.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.crazysoft.ego.MainActivity" />
         </activity>
         <activity
             android:name="tk.crazysoft.ego.PreferencesActivity"
@@ -75,6 +87,9 @@
 
         <service
             android:name="tk.crazysoft.ego.services.DataImportService"
+            android:exported="false" />
+        <service
+            android:name="tk.crazysoft.ego.services.RoutingService"
             android:exported="false" />
     </application>
 

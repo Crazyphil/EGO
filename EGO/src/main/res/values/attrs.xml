@@ -15,5 +15,8 @@
         <!-- For map view -->
         <attr name="tilesLoadingBackgroundColor" format="color" />
         <attr name="tilesLoadingLineColor" format="color" />
+        <!-- For navigation -->
+        <attr name="routeColor" format="color" />
+        <attr name="turnTint" format="reference|color" />
     </declare-styleable>
 </resources>
