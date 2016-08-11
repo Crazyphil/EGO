@@ -16,10 +16,10 @@ public class EGOLocationOverlay extends MyLocationNewOverlay {
     private final List<IMyLocationConsumer> locationListeners = new LinkedList<>();
     private boolean followOrientation;
 
-    public EGOLocationOverlay(Context context, MapView mapView) {
-        super(context, mapView);
+    public EGOLocationOverlay(MapView mapView) {
+        super(mapView);
 
-        followOrientation = new Preferences(context).getInternalNavigationRotate();
+        followOrientation = new Preferences(mapView.getContext()).getInternalNavigationRotate();
     }
 
     public void addLocationListener(IMyLocationConsumer listener) {

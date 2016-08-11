@@ -11,9 +11,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.bonuspack.overlays.OverlayWithIW;
+import org.osmdroid.views.overlay.OverlayWithIW;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.GeometryMath;
@@ -61,11 +59,7 @@ public class EfficientPolyline extends OverlayWithIW {
     private static Bitmap mBmp = null;
 
     public EfficientPolyline(Context ctx){
-        this(new DefaultResourceProxyImpl(ctx));
-    }
-
-    public EfficientPolyline(final ResourceProxy resourceProxy){
-        super(resourceProxy);
+        super(ctx);
         //default as defined in Google API:
         this.mPaint.setColor(Color.BLACK);
         this.mPaint.setStrokeWidth(10.0f);

@@ -18,8 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.osmdroid.bonuspack.overlays.FolderOverlay;
-import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.util.GeoPoint;
@@ -91,7 +91,7 @@ public class NavFragment extends MapFragment {
             }
         });
         mapView.getOverlayManager().remove(gpsOverlay);
-        gpsOverlay = new EGOLocationOverlay(view.getContext(), mapView);
+        gpsOverlay = new EGOLocationOverlay(mapView);
         gpsOverlay.runOnFirstFix(new Runnable() {
             @Override
             public void run() {
@@ -262,9 +262,9 @@ public class NavFragment extends MapFragment {
                     ColorFilter filter = new ColorMatrixColorFilter(blueToYellow);
                     Drawable dot = getResources().getDrawable(R.drawable.marker);
                     dot.setColorFilter(filter);
-                    routeOverlay.add(new ItemizedIconOverlay<>(items, dot, null, mapView.getResourceProxy()));
+                    routeOverlay.add(new ItemizedIconOverlay<>(items, dot, null, getContext()));
                 } else {
-                    routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, mapView.getResourceProxy()));
+                    routeOverlay.add(new ItemizedIconOverlay<>(items, getResources().getDrawable(R.drawable.marker), null, getContext()));
                 }
                 mapView.getOverlays().add(mapView.getOverlays().indexOf(gpsOverlay), routeOverlay);
                 if (gpsOverlay.getMyLocation() != null) {

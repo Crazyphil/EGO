@@ -13,8 +13,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.MapTileProviderArray;
 import org.osmdroid.tileprovider.modules.IArchiveFile;
@@ -102,8 +100,7 @@ public class MapFragment extends Fragment {
         MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchives);
         MapTileProviderArray basemapProviderArray = new MapTileProviderArray(basemapSource, registerReceiver, new MapTileModuleProviderBase[] { basemapProvider });
 
-        ResourceProxy proxy = new DefaultResourceProxyImpl(getActivity().getApplicationContext());
-        mapView = new MapView(view.getContext(), proxy, basemapProviderArray);
+        mapView = new MapView(view.getContext(), basemapProviderArray);
 
         // Set background for loading/missing tiles depending on day/night mode and optionally enable night mode (invert colors)
         TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { R.attr.tilesLoadingBackgroundColor, R.attr.tilesLoadingLineColor });
@@ -120,13 +117,13 @@ public class MapFragment extends Fragment {
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
 
-            orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, proxy);
+            orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, view.getContext());
             orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
             orthophotoOverlay.setEnabled(showOrtophoto);
             mapView.getOverlayManager().add(orthophotoOverlay);
         }
 
-        gpsOverlay = new MyLocationNewOverlay(view.getContext(), mapView);
+        gpsOverlay = new MyLocationNewOverlay(mapView);
         destinationOverlay = new ItemizedIconOverlay<OverlayItem>(view.getContext(), new ArrayList<OverlayItem>(1), null);
 
         // Note: Overlays stored in member variables are referenced by their index in onStart()
