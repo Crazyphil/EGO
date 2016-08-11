@@ -40,7 +40,7 @@ public class NavFragment extends MapFragment {
     public static final int MAX_DISTANCE_FOR_NEXT_DIRECTION = 50;
 
     private static final String NAV_PATH = "ego/navigation";
-    private static final float ROUTE_LINE_WIDTH = 8f;
+    private static final float ROUTE_LINE_WIDTH = 10f;
 
     protected OnNavEventListener onNavEventListener;
     protected LocalGraphHopperRoadManager roadManager;
