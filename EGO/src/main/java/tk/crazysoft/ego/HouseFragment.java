@@ -60,6 +60,14 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         textViewMapSheet = (TextView)getView().findViewById(R.id.house_textViewMapSheet);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Ensure that the address is loaded after the fragment is shown
+        setHouse(houseId);
+    }
+
     public void setHouse(long id) {
         if (isAdded()) {
             Bundle loaderArgs = new Bundle(1);
