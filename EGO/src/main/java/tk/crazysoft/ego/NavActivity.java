@@ -10,10 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.osmdroid.bonuspack.routing.Road;
@@ -35,7 +35,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
     private TextView textViewDirection, textViewStreet, textViewNextDirection, textViewTime, textViewDistance;
     private ImageView imageViewDirection;
-    private LinearLayout panelInstructions;
+    private CardView panelInstructions;
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
 
@@ -98,7 +98,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         textViewNextDirection = (TextView)findViewById(R.id.nav_textViewNextDirection);
         textViewTime = (TextView)findViewById(R.id.nav_textViewTime);
         textViewDistance = (TextView)findViewById(R.id.nav_textViewDistance);
-        panelInstructions = (LinearLayout)findViewById(R.id.nav_panelInstructions);
+        panelInstructions = (CardView)findViewById(R.id.nav_panelInstructions);
         progressDialog.show();
     }
 
