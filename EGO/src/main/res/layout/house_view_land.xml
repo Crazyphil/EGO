@@ -16,7 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_gravity="right"
-        android:minWidth="170dp">
+        android:minWidth="170dp"
+        android:elevation="5dp">
 
         <FrameLayout
             android:layout_width="fill_parent"

@@ -8,7 +8,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:id="@+id/contentLeft"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:elevation="5dp" />
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
