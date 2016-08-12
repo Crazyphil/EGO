@@ -3,8 +3,8 @@
     tools:ignore="NewApi"
     android:viewportWidth="44"
     android:viewportHeight="44"
-    android:width="44dp"
-    android:height="44dp">
+    android:width="256dp"
+    android:height="256dp">
     <path
         android:pathData="M18.929 25.787l0 -7.006c1.635 -0.002 3.083 -0.652 4.158 -1.723l0 0 4.954 4.957c-2.32 2.322 -5.561 3.771 -9.107 3.771l0 0 -0.005 0 0 10e-4z"
         android:fillColor="#000000" />
