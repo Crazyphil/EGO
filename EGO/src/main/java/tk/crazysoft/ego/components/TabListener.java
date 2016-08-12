@@ -3,12 +3,12 @@ package tk.crazysoft.ego.components;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 
     private Fragment mFragment;
-    private final ActionBarActivity mActivity;
+    private final AppCompatActivity mActivity;
     private final int mLayoutId;
     private final String mTag;
     private final Class<T> mClass;
@@ -18,7 +18,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
      * @param tag  The identifier tag for the fragment
      * @param clz  The fragment's Class, used to instantiate the fragment
      */
-    public TabListener(ActionBarActivity activity, String tag, Class<T> clz) {
+    public TabListener(AppCompatActivity activity, String tag, Class<T> clz) {
         this(activity, android.R.id.content, tag, clz);
     }
 
@@ -28,7 +28,7 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
      * @param tag  The identifier tag for the fragment
      * @param clz  The fragment's Class, used to instantiate the fragment
      */
-    public TabListener(ActionBarActivity activity, int layoutId, String tag, Class<T> clz) {
+    public TabListener(AppCompatActivity activity, int layoutId, String tag, Class<T> clz) {
         mActivity = activity;
         mLayoutId = layoutId;
         mTag = tag;
