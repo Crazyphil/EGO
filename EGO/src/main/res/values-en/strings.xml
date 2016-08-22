@@ -64,6 +64,26 @@
     <string name="house_view_coordinate_west">W</string>
     <string name="house_view_mapsheet">Map Sheet %s</string>
 
+    <!-- Nav Activity -->
+    <string name="nav_activity_title">Navigation</string>
+    <string name="nav_activity_loading_startup">Starting route planner...</string>
+    <string name="nav_activity_loading_routing">Planning route...</string>
+    <string name="nav_activity_next_direction">Then</string>
+    <string name="nav_activity_time">In %s</string>
+    <string name="nav_activity_time_minutes">%s Minutes</string>
+    <string name="nav_activity_time_hours">%s Hours</string>
+    <string name="nav_activity_arrival">Arrival</string>
+    <string name="nav_activity_distance">%s remaining</string>
+    <string name="nav_activity_distance_meters">%s m</string>
+    <string name="nav_activity_distance_kilometers">%s km</string>
+    <string name="nav_activity_roundabout_instruction">Exit %1$s: %2$s</string>
+
+    <!-- Nav Fragment -->
+    <string name="nav_view_nomaps_title">Navigation data is missing</string>
+    <string name="nav_view_nomaps_text">Navigation data couldn\'t be loaded.\n\nFollowing directory was searched:\n%s</string>
+    <string name="nav_view_noroute_title">Route</string>
+    <string name="nav_view_noroute_text">The route couldn\'t be calculated.</string>
+
     <!-- Preferences Activity -->
     <string name="preferences_activity_title">Settings</string>
     <string name="preferences_activity_import_title">Import Data</string>

@@ -188,7 +188,12 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
         RoadNode curNode = road.mNodes.get(Math.min(instructionId + 1, road.mNodes.size() - 1));
         imageViewDirection.setImageDrawable(getDrawableForManeuver(curNode.mManeuverType));
-        textViewStreet.setText(navFragment.getRoadManager().getStreetName(instructionId));
+        if (curNode.mManeuverType >= LocalGraphHopperRoadManager.TURN_ROUNDABOUT1 && curNode.mManeuverType <= LocalGraphHopperRoadManager.TURN_ROUNDABOUT8
+                || curNode.mManeuverType == LocalGraphHopperRoadManager.TURN_ROUNDABOUT_ENTER) {
+            textViewStreet.setText(curNode.mInstructions);
+        } else {
+            textViewStreet.setText(navFragment.getRoadManager().getStreetName(instructionId));
+        }
 
         if (curNode.mLength * 1000 < NavFragment.MAX_DISTANCE_FOR_NEXT_DIRECTION && road.mNodes.size() > instructionId + 1) {
             RoadNode nextNode = road.mNodes.get(instructionId + 1);

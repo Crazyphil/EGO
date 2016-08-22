@@ -12,6 +12,7 @@ import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.Helper;
 import com.graphhopper.util.Instruction;
 import com.graphhopper.util.PointList;
+import com.graphhopper.util.RoundaboutInstruction;
 import com.graphhopper.util.shapes.BBox;
 import com.graphhopper.util.shapes.GHPoint;
 import com.graphhopper.util.shapes.GHPoint3D;
@@ -25,6 +26,8 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+
+import tk.crazysoft.ego.R;
 
 public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implements Closeable {
     // MapQuest maneuver codes
@@ -143,8 +146,13 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
             node.mLocation = new GeoPoint(instruction.getPoints().getLatitude(0), instruction.getPoints().getLongitude(0), instruction.getPoints().getElevation(0));
             node.mLength = instruction.getDistance() / 1000f;
             node.mDuration = instruction.getTime() / 1000f; // Segment duration in seconds.
-            node.mManeuverType = getManeuverCode(instruction.getSign());
-            node.mInstructions = instruction.getTurnDescription(routingService.getTranslation());
+            node.mManeuverType = getManeuverCode(instruction);
+            if (instruction.getSign() == Instruction.USE_ROUNDABOUT) {
+                RoundaboutInstruction rinst = (RoundaboutInstruction)instruction;
+                node.mInstructions = context.getResources().getString(R.string.nav_activity_roundabout_instruction, rinst.getExitNumber(), rinst.getName());
+            } else {
+                node.mInstructions = instruction.getTurnDescription(routingService.getTranslation());
+            }
             road.mNodes.add(node);
         }
         road.mLength = ghResponse.getBest().getDistance() / 1000f;
@@ -168,6 +176,22 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
                 return TURN_ROUNDABOUT_LEAVE;
             default:
                 return super.getManeuverCode(direction);
+        }
+    }
+
+    protected int getManeuverCode(Instruction instruction) {
+        switch (instruction.getSign()) {
+            case Instruction.USE_ROUNDABOUT:
+                RoundaboutInstruction ri = (RoundaboutInstruction)instruction;
+                if (!ri.isExited()) {
+                    return TURN_ROUNDABOUT_ENTER;
+                } else if (ri.getExitNumber() >= 1 && ri.getExitNumber() <= 8) {
+                    return TURN_ROUNDABOUT1 - 1 + ri.getExitNumber();
+                } else {
+                    return TURN_ROUNDABOUT_LEAVE;
+                }
+            default:
+                return getManeuverCode(instruction.getSign());
         }
     }
 
