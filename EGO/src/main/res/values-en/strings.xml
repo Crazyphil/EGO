@@ -68,7 +68,7 @@
     <string name="nav_activity_title">Navigation</string>
     <string name="nav_activity_loading_startup">Starting route planner...</string>
     <string name="nav_activity_loading_routing">Planning route...</string>
-    <string name="nav_activity_next_direction">Then</string>
+    <string name="nav_activity_next_direction">Then %s</string>
     <string name="nav_activity_time">In %s</string>
     <string name="nav_activity_time_minutes">%s Minutes</string>
     <string name="nav_activity_time_hours">%s Hours</string>
@@ -76,7 +76,7 @@
     <string name="nav_activity_distance">%s remaining</string>
     <string name="nav_activity_distance_meters">%s m</string>
     <string name="nav_activity_distance_kilometers">%s km</string>
-    <string name="nav_activity_roundabout_instruction">Exit %1$s: %2$s</string>
+    <string name="nav_activity_roundabout_instruction">%1$s. Exit: %2$s</string>
 
     <!-- Nav Fragment -->
     <string name="nav_view_nomaps_title">Navigation data is missing</string>

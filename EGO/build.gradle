@@ -28,6 +28,9 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
+    dataBinding {
+        enabled = true
+    }
     signingConfigs {
         release {
             storeFile file('release.keystore')

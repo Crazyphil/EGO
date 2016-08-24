@@ -1,13 +1,18 @@
 package tk.crazysoft.ego;
 
 import android.app.ProgressDialog;
+import android.databinding.DataBindingUtil;
+import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
@@ -23,7 +28,9 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 import tk.crazysoft.ego.components.AppThemeWatcher;
+import tk.crazysoft.ego.databinding.NavActivityBinding;
 import tk.crazysoft.ego.services.LocalGraphHopperRoadManager;
+import tk.crazysoft.ego.viewmodels.NavActivityViewModel;
 
 public class NavActivity extends ActionBarActivity implements NavFragment.OnNavEventListener {
     public static final String EXTRA_LATITUDE = "tk.crazysoft.ego.EXTRA_LATITUDE";
@@ -31,10 +38,10 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
     protected GeoPoint destination;
     protected NavFragment navFragment;
-    protected ProgressDialog progressDialog;
 
-    private TextView textViewDirection, textViewStreet, textViewNextDirection, textViewTime, textViewDistance;
-    private ImageView imageViewDirection;
+    private NavActivityBinding binding;
+    private NavActivityViewModel viewModel;
+    private TextView textViewTime, textViewDistance;
     private CardView panelInstructions;
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
@@ -51,13 +58,9 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
         }
 
-        setContentView(R.layout.nav_activity);
+        binding = DataBindingUtil.setContentView(this, R.layout.nav_activity);
+        viewModel = new NavActivityViewModel();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.nav_activity_loading_startup));
 
         if (savedInstanceState == null) {
             if (getIntent().getExtras() != null) {
@@ -70,6 +73,8 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             destination = savedInstanceState.getParcelable("destination");
             navFragment = (NavFragment)getSupportFragmentManager().findFragmentByTag("map");
         }
+
+        binding.setViewModel(viewModel);
     }
 
     @Override
@@ -92,14 +97,9 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             }
         });
 
-        imageViewDirection = (ImageView)findViewById(R.id.nav_imageViewDirection);
-        textViewDirection = (TextView)findViewById(R.id.nav_textViewDirection);
-        textViewStreet = (TextView)findViewById(R.id.nav_textViewStreet);
-        textViewNextDirection = (TextView)findViewById(R.id.nav_textViewNextDirection);
         textViewTime = (TextView)findViewById(R.id.nav_textViewTime);
         textViewDistance = (TextView)findViewById(R.id.nav_textViewDistance);
         panelInstructions = (CardView)findViewById(R.id.nav_panelInstructions);
-        progressDialog.show();
     }
 
     @Override
@@ -144,21 +144,21 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
     @Override
     public void onInitialized(boolean result) {
         if (result) {
-            progressDialog.setMessage(getString(R.string.nav_activity_loading_routing));
+            viewModel.setCalculatingRoute(true);
+            viewModel.setDirection(getString(R.string.nav_activity_loading_routing));
         } else {
-            progressDialog.dismiss();
+            viewModel.setCalculatingRoute(false);
         }
     }
 
     @Override
     public void onRecalculate() {
-        progressDialog.setMessage(getString(R.string.nav_activity_loading_routing));
-        progressDialog.show();
+        onInitialized(true);
     }
 
     @Override
     public void onRouteCalculated(Road road) {
-        progressDialog.dismiss();
+        viewModel.setCalculatingRoute(false);
         if (road.mStatus != Road.STATUS_OK) {
             return;
         }
@@ -187,26 +187,26 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         currentRoadNode = instructionId;
 
         RoadNode curNode = road.mNodes.get(Math.min(instructionId + 1, road.mNodes.size() - 1));
-        imageViewDirection.setImageDrawable(getDrawableForManeuver(curNode.mManeuverType));
+        viewModel.setDirectionSymbol(getDrawableForManeuver(curNode.mManeuverType));
         if (curNode.mManeuverType >= LocalGraphHopperRoadManager.TURN_ROUNDABOUT1 && curNode.mManeuverType <= LocalGraphHopperRoadManager.TURN_ROUNDABOUT8
                 || curNode.mManeuverType == LocalGraphHopperRoadManager.TURN_ROUNDABOUT_ENTER) {
-            textViewStreet.setText(curNode.mInstructions);
+            viewModel.setStreet(curNode.mInstructions);
         } else {
-            textViewStreet.setText(navFragment.getRoadManager().getStreetName(instructionId));
+            viewModel.setStreet(navFragment.getRoadManager().getStreetName(instructionId));
         }
 
         if (curNode.mLength * 1000 < NavFragment.MAX_DISTANCE_FOR_NEXT_DIRECTION && road.mNodes.size() > instructionId + 1) {
             RoadNode nextNode = road.mNodes.get(instructionId + 1);
             Drawable nextIcon = getDrawableForManeuver(nextNode.mManeuverType);
-            nextIcon.setBounds(0, 0, textViewNextDirection.getHeight(), textViewDirection.getHeight());
-            textViewNextDirection.setCompoundDrawables(null, null, nextIcon, null);
+            nextIcon.setBounds(0, 0, binding.navTextViewNextDirection.getHeight(), binding.navTextViewDirection.getHeight());
+            binding.navTextViewNextDirection.setCompoundDrawables(null, null, nextIcon, null);
         } else {
-            textViewNextDirection.setVisibility(View.GONE);
+            binding.navTextViewNextDirection.setVisibility(View.GONE);
         }
     }
 
     private void setRouteMetrics(double nodeDistance, double totalDistance, double duration) {
-        textViewDirection.setText(toDistanceString(nodeDistance));
+        viewModel.setDirection(toDistanceString(nodeDistance));
         textViewDistance.setText(getString(R.string.nav_activity_distance, toDistanceString(totalDistance)));
         textViewTime.setText(getString(R.string.nav_activity_time, toTimeString(duration)));
     }
@@ -290,7 +290,7 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
                 return ContextCompat.getDrawable(this, R.drawable.da_turn_unknown);
         }
 
-        int size = Math.max(imageViewDirection.getWidth(), imageViewDirection.getHeight());
+        int size = Math.max(binding.navImageViewDirection.getWidth(), binding.navImageViewDirection.getHeight());
         Bitmap canvasBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(canvasBitmap);
         drawable.setBounds(0, 0, canvasBitmap.getWidth(), canvas.getHeight());
