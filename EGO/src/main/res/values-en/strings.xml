@@ -58,6 +58,7 @@
 
     <!-- House Fragment -->
     <string name="house_view_navigate">Navigate</string>
+    <string name="house_view_navigate_external">Navigate\nExternal</string>
     <string name="house_view_coordinate_north">N</string>
     <string name="house_view_coordinate_east">E</string>
     <string name="house_view_coordinate_south">S</string>
@@ -104,6 +105,8 @@
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
     <string name="preferences_activity_internal_navigation_title">Internal Navigation</string>
+    <string name="preferences_activity_internal_navigation_coexistence_title">Used Navigation Type</string>
+    <string name="preferences_activity_internal_navigation_coexistence_summary">Use %s</string>
     <string name="preferences_activity_internal_navigation_rotate_title">Rotate map</string>
     <string name="preferences_activity_internal_navigation_rotate_summary_unckecked">The map always points north</string>
     <string name="preferences_activity_internal_navigation_rotate_summary_ckecked">The map points in driving direction</string>
@@ -133,6 +136,12 @@
         <item>Google Navigation (and compatible)</item>
         <item>Google Maps</item>
         <item>Navigon</item>
+    </string-array>
+
+    <string-array name="preferences_activity_internal_navigation_coexistence_entries">
+        <item>Internal Navigation only</item>
+        <item>External Navigation only</item>
+        <item>Internal &amp; External Navigation</item>
     </string-array>
 
     <string-array name="preferences_activity_hospitals_doctors_view_entries">

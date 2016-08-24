@@ -58,6 +58,7 @@
 
     <!-- House Fragment -->
     <string name="house_view_navigate">Navigieren</string>
+    <string name="house_view_navigate_external">Extern\nnavigieren</string>
     <string name="house_view_coordinate_north">N</string>
     <string name="house_view_coordinate_east">O</string>
     <string name="house_view_coordinate_south">S</string>
@@ -105,6 +106,9 @@
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
     <string name="preferences_activity_navigation_api_default" translatable="false">geo</string>
     <string name="preferences_activity_internal_navigation_title">Interne Navigation</string>
+    <string name="preferences_activity_internal_navigation_coexistence_title">Verwendete Navigationsart</string>
+    <string name="preferences_activity_internal_navigation_coexistence_summary">%s nutzen</string>
+    <string name="preferences_activity_internal_navigation_coexistence_default" translatable="false">3</string>
     <string name="preferences_activity_internal_navigation_rotate_title">Karte rotieren</string>
     <string name="preferences_activity_internal_navigation_rotate_summary_unckecked">Die Karte zeigt immer nach Norden</string>
     <string name="preferences_activity_internal_navigation_rotate_summary_ckecked">Die Karte zeigt in Fahrtrichtung</string>
@@ -131,18 +135,27 @@
     <string name="preferences_activity_app_options_import_failed">Importieren aller Daten von %s fehlgeschlagen.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
-        <item>Interne Navigation</item>
         <item>Geografischer Punkt</item>
         <item>Google-Navigation (und kompatibel)</item>
         <item>Google Maps</item>
         <item>Navigon</item>
     </string-array>
     <string-array name="preferences_activity_navigation_api_values" translatable="false">
-        <item>internal</item>
         <item>geo</item>
         <item>google.navigation</item>
         <item>geo_q</item>
         <item>navigon</item>
+    </string-array>
+
+    <string-array name="preferences_activity_internal_navigation_coexistence_entries">
+        <item>Nur interne Navigation</item>
+        <item>Nur externe Navigation</item>
+        <item>Interne &amp; externe Navigation</item>
+    </string-array>
+    <string-array name="preferences_activity_internal_navigation_coexistence_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string-array name="preferences_activity_hospitals_doctors_view_entries">

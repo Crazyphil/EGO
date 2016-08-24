@@ -69,9 +69,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/house_buttonNavigate"
+            android:id="@+id/house_buttonNavigateExternal"
+            android:text="@string/house_view_navigate_external"
+            android:drawableStart="@android:drawable/ic_menu_directions"
+            android:elegantTextHeight="false"
+            android:gravity="center_vertical"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/house_buttonNavigateInternal"
             android:text="@string/house_view_navigate"
-            android:drawableStart="@android:drawable/ic_menu_directions" />
+            android:drawableStart="@android:drawable/ic_menu_directions"
+            android:gravity="center_vertical"/>
 
     </LinearLayout>
 

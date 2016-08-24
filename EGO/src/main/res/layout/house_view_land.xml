@@ -69,7 +69,15 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/house_buttonNavigate"
+            android:id="@+id/house_buttonNavigateExternal"
+            android:text="@string/house_view_navigate_external"
+            android:drawableTop="@android:drawable/ic_menu_directions"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/house_buttonNavigateInternal"
             android:text="@string/house_view_navigate"
             android:drawableTop="@android:drawable/ic_menu_directions"
             android:layout_gravity="center_horizontal" />

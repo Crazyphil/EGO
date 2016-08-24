@@ -60,6 +60,14 @@
         android:title="@string/preferences_activity_internal_navigation_title"
         android:key="pref_key_internal_navigation">
 
+        <ListPreference
+            android:key="pref_key_internal_navigation_coexistence"
+            android:title="@string/preferences_activity_internal_navigation_coexistence_title"
+            android:summary="@string/preferences_activity_internal_navigation_coexistence_summary"
+            android:dialogTitle="@string/preferences_activity_internal_navigation_coexistence_title"
+            android:entries="@array/preferences_activity_internal_navigation_coexistence_entries"
+            android:entryValues="@array/preferences_activity_internal_navigation_coexistence_values"
+            android:defaultValue="@string/preferences_activity_internal_navigation_coexistence_default" />
         <CheckBoxPreference
             android:key="pref_key_internal_navigation_rotate"
             android:title="@string/preferences_activity_internal_navigation_rotate_title"

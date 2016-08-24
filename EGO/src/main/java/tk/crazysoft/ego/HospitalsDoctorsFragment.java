@@ -323,7 +323,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
                 return;
             }
 
-            MainActivity.sendNavigationIntent(getActivity(), address);
+            MainActivity.sendNavigationIntent(getActivity(), address, preferences.allowInternalNavigation());
         }
     }
 }

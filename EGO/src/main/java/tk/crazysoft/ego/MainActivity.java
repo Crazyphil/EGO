@@ -2,6 +2,7 @@ package tk.crazysoft.ego;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -224,7 +225,7 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
                 }
                 break;
             case R.id.action_navigation:
-                sendNavigationIntent(this, (String)null);
+                sendNavigationIntent(this, (String)null, false);
                 break;
             case R.id.action_contacts:
                 Intent contactsIntent = new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI);
@@ -351,64 +352,74 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         return themeResId;
     }
 
-    public static void sendNavigationIntent(Activity activity, double latitude, double longitude) {
+    public static void sendNavigationIntent(Activity activity, double latitude, double longitude, boolean internal) {
         String intentPreference = new Preferences(activity).getNavigationApi();
         String[] options = activity.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
 
         // Build the intent
         Intent navIntent;
-        if (intentPreference.equals(options[4])) {  // navigon
-            navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
-            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE, latitude);
-            navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE, longitude);
-        } else if (intentPreference.equals(options[0])) {   // internal
+        if (internal) {
             navIntent = new Intent(activity, NavActivity.class);
             navIntent.putExtra(NavActivity.EXTRA_LATITUDE, latitude);
             navIntent.putExtra(NavActivity.EXTRA_LONGITUDE, longitude);
             navIntent.putExtra("theme", getThemeId(activity));
         } else {
-            Uri location;
-            if (intentPreference.equals(options[3])) {  // geo_q
-                location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f?q=%1$f,%2$f", latitude, longitude));
-            } else if (intentPreference.equals(options[2])) {   // google.navigation
-                location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%1$f,%2$f", latitude, longitude));
-            } else {   // geo or unknown option
-                location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f", latitude, longitude));
+            if (intentPreference.equals(options[3])) {  // navigon
+                navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
+                navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LATITUDE, latitude);
+                navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_LONGITUDE, longitude);
+            } else {
+                Uri location;
+                if (intentPreference.equals(options[2])) {  // geo_q
+                    location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f?q=%1$f,%2$f", latitude, longitude));
+                } else if (intentPreference.equals(options[1])) {   // google.navigation
+                    location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%1$f,%2$f", latitude, longitude));
+                } else {   // geo or unknown option
+                    location = Uri.parse(String.format(Locale.ENGLISH, "geo:%1$f,%2$f", latitude, longitude));
+                }
+                navIntent = new Intent(Intent.ACTION_VIEW, location);
             }
-            navIntent = new Intent(Intent.ACTION_VIEW, location);
         }
         sendNavigationIntent(activity, navIntent);
     }
 
-    public static void sendNavigationIntent(Activity activity, String address) {
+    public static void sendNavigationIntent(Activity activity, String address, boolean internal) {
         String intentPreference = new Preferences(activity).getNavigationApi();
         String[] options = activity.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
 
         // Build the intent
         Intent navIntent;
-        if (intentPreference.equals(options[4])) {  // navigon
+        // TODO: Lookup address and start internal navigation
+        if (intentPreference.equals(options[3])) {  // navigon
             navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
             if (address != null) {
                 navIntent.putExtra(NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS, address);
             }
         } else {
-            Uri location;
-            if (intentPreference.equals(options[2])) {   // google.navigation
-                if (address != null) {
-                    location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
-                } else {
-                    location = Uri.parse("google.navigation:");
-                }
-            } else {   // geo_q, geo (not applicable for address search) or unknown option
-                if (address != null) {
-                    location = Uri.parse(String.format(Locale.ENGLISH, "geo:0,0?q=%s", address));
-                } else {
-                    location = Uri.parse("geo:0,0");
-                }
-            }
-            navIntent = new Intent(Intent.ACTION_VIEW, location);
+            navIntent = getNavigationIntent(activity, address);
         }
         sendNavigationIntent(activity, navIntent);
+    }
+
+    public static Intent getNavigationIntent(Context context, String address) {
+        String intentPreference = new Preferences(context).getNavigationApi();
+        String[] options = context.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
+
+        Uri location;
+        if (intentPreference.equals(options[1])) {   // google.navigation
+            if (address != null) {
+                location = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%s", address));
+            } else {
+                location = Uri.parse("google.navigation:");
+            }
+        } else {   // geo_q, geo (not applicable for address search) or unknown option
+            if (address != null) {
+                location = Uri.parse(String.format(Locale.ENGLISH, "geo:0,0?q=%s", address));
+            } else {
+                location = Uri.parse("geo:0,0");
+            }
+        }
+        return new Intent(Intent.ACTION_VIEW, location);
     }
 
     private static void sendNavigationIntent(Activity activity, Intent navIntent) {

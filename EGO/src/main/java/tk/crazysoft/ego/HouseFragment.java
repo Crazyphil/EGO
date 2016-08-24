@@ -1,6 +1,11 @@
 package tk.crazysoft.ego;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,7 +21,7 @@ import tk.crazysoft.ego.data.EGOCursorLoader;
 
 public class HouseFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private TextView textViewAddress, textViewCity, textViewCoordinates, textViewMapSheet;
-    private Button buttonNavigate;
+    private Button buttonNavigateInternal, buttonNavigateExternal;
     private MapFragment mapFragment;
 
     private long houseId = -1;
@@ -43,8 +48,29 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
             mapFragment = (MapFragment)getChildFragmentManager().findFragmentByTag("map");
         }
 
-        buttonNavigate = (Button)view.findViewById(R.id.house_buttonNavigate);
-        buttonNavigate.setOnClickListener(new NavigateButtonOnClickListener());
+        buttonNavigateInternal = (Button)view.findViewById(R.id.house_buttonNavigateInternal);
+        buttonNavigateInternal.setOnClickListener(new NavigateButtonOnClickListener());
+        buttonNavigateExternal = (Button)view.findViewById(R.id.house_buttonNavigateExternal);
+        buttonNavigateExternal.setOnClickListener(new NavigateButtonOnClickListener());
+
+        Context context = view.getContext();
+        Intent navIntent = MainActivity.getNavigationIntent(context, null);
+        PackageManager packageManager = context.getPackageManager();
+        ResolveInfo activity = packageManager.resolveActivity(navIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (activity != null) {
+            if (activity != null) {
+                buttonNavigateExternal.setText(String.format("%s\n%s", context.getString(R.string.house_view_navigate), activity.loadLabel(packageManager)));
+                Drawable icon = activity.loadIcon(packageManager);
+                icon.setBounds(0, 0, 60, 60);
+                String layoutMode = view.getContext().getString(R.string.layout_mode);
+                if (layoutMode.equals(MainActivity.LAYOUT_MODE_LANDSCAPE)) {
+                    buttonNavigateExternal.setCompoundDrawables(null, icon, null, null);
+                } else {
+                    buttonNavigateExternal.setCompoundDrawables(icon, null, null, null);
+                }
+                buttonNavigateExternal.setCompoundDrawablePadding((int) context.getResources().getDimension(R.dimen.activity_element_margin));
+            }
+        }
 
         // Inflate the layout for this fragment
         return view;
@@ -136,7 +162,7 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     private class NavigateButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            MainActivity.sendNavigationIntent(getActivity(), latitude, longitude);
+            MainActivity.sendNavigationIntent(getActivity(), latitude, longitude, v.equals(buttonNavigateInternal));
         }
     }
 }
