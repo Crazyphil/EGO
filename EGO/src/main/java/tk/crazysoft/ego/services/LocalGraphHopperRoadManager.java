@@ -185,8 +185,13 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
                 RoundaboutInstruction ri = (RoundaboutInstruction)instruction;
                 if (!ri.isExited()) {
                     return TURN_ROUNDABOUT_ENTER;
-                } else if (ri.getExitNumber() >= 1 && ri.getExitNumber() <= 8) {
-                    return TURN_ROUNDABOUT1 - 1 + ri.getExitNumber();
+                } else if (!Double.isNaN(ri.getTurnAngle())) {
+                    double slice = Math.toDegrees(Math.abs(ri.getTurnAngle())) / 45d;
+                    if (slice < 0.5) {
+                        return TURN_ROUNDABOUT1;
+                    } else {
+                        return TURN_ROUNDABOUT1 - 1 + (int) Math.round(slice);
+                    }
                 } else {
                     return TURN_ROUNDABOUT_LEAVE;
                 }
