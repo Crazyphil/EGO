@@ -9,8 +9,10 @@ import android.util.Log;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
+import com.graphhopper.routing.util.CarFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoderFactory;
+import com.graphhopper.util.PMap;
 import com.graphhopper.util.Parameters;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.shapes.GHPoint;
@@ -58,7 +60,7 @@ public class RoutingService extends Service {
         gh = new GraphHopper().forMobile();
         boolean result;
         try {
-            gh.setEncodingManager(new EncodingManager(FlagEncoderFactory.CAR));
+            gh.setEncodingManager(EncodingManager.create(FlagEncoderFactory.DEFAULT, dataDir));
             result = gh.setElevation(loadElevationData).setCHEnabled(true).load(dataDir);
         } catch (Exception e) {
             Log.e(TAG, "GraphHopper initialization failed", e);
