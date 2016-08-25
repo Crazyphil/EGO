@@ -88,11 +88,12 @@
             android:layout_width="256dp"
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="@dimen/card_corner_radius"
-            android:id="@+id/nav_panelInstructions"
+            android:id="@+id/nav_panelArrival"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:visibility="@{viewModel.calculatingRoute ? View.GONE : View.VISIBLE}">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -113,7 +114,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/nav_textViewTime"
-                    android:text="@string/nav_activity_time"
+                    android:text="@{String.format(@string/nav_activity_time, viewModel.arrivalTime)}"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?attr/secondaryTextColor"
                     android:gravity="center_horizontal" />
@@ -123,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?attr/secondaryTextColor"
-                    android:text="@string/nav_activity_distance"
+                    android:text="@{String.format(@string/nav_activity_distance, viewModel.arrivalDistance)}"
                     android:id="@+id/nav_textViewDistance"
                     android:gravity="center_horizontal" />
             </LinearLayout>

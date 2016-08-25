@@ -9,7 +9,7 @@ import tk.crazysoft.ego.BR;
 public class NavActivityViewModel extends BaseObservable {
     private boolean isCalculatingRoute;
     private Drawable directionSymbol;
-    private String direction, street, nextDirection;
+    private String direction, street, nextDirection, arrivalTime, arrivalDistance;
 
     @Bindable
     public boolean isCalculatingRoute() {
@@ -21,7 +21,6 @@ public class NavActivityViewModel extends BaseObservable {
         isCalculatingRoute = calculatingRoute;
         notifyPropertyChanged(BR.calculatingRoute);
     }
-
 
     @Bindable
     public Drawable getDirectionSymbol() {
@@ -41,6 +40,7 @@ public class NavActivityViewModel extends BaseObservable {
     public void setDirection(String direction) {
         this.direction = direction;
         notifyPropertyChanged(BR.direction);
+        notifyChange();
     }
 
     @Bindable
@@ -51,6 +51,7 @@ public class NavActivityViewModel extends BaseObservable {
     public void setStreet(String street) {
         this.street = street;
         notifyPropertyChanged(BR.street);
+        notifyChange();
     }
 
     @Bindable
@@ -65,7 +66,27 @@ public class NavActivityViewModel extends BaseObservable {
     }
 
     @Bindable
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
+        notifyPropertyChanged(BR.arrivalTime);
+    }
+
+    @Bindable
+    public String getArrivalDistance() {
+        return arrivalDistance;
+    }
+
+    public void setArrivalDistance(String arrivalDistance) {
+        this.arrivalDistance = arrivalDistance;
+        notifyPropertyChanged(BR.arrivalDistance);
+    }
+
+    @Bindable
     public boolean isHasNextDirection() {
-        return nextDirection != null;
+        return !isCalculatingRoute && nextDirection != null;
     }
 }

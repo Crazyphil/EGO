@@ -41,8 +41,6 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
     private NavActivityBinding binding;
     private NavActivityViewModel viewModel;
-    private TextView textViewTime, textViewDistance;
-    private CardView panelInstructions;
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
 
@@ -98,10 +96,6 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
                 }
             }
         });
-
-        textViewTime = (TextView)findViewById(R.id.nav_textViewTime);
-        textViewDistance = (TextView)findViewById(R.id.nav_textViewDistance);
-        panelInstructions = (CardView)findViewById(R.id.nav_panelInstructions);
     }
 
     @Override
@@ -171,7 +165,6 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
         setInstructions(road, 0);
         setRouteMetrics(road.mNodes.get(0).mLength, road.mLength, road.mDuration);
-        panelInstructions.setVisibility(View.VISIBLE);
     }
 
     private void setInstructions(Road road, int instructionId) {
@@ -209,8 +202,8 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
 
     private void setRouteMetrics(double nodeDistance, double totalDistance, double duration) {
         viewModel.setDirection(toDistanceString(nodeDistance));
-        textViewDistance.setText(getString(R.string.nav_activity_distance, toDistanceString(totalDistance)));
-        textViewTime.setText(getString(R.string.nav_activity_time, toTimeString(duration)));
+        viewModel.setArrivalTime(toTimeString(duration));
+        viewModel.setArrivalDistance(toDistanceString(totalDistance));
     }
 
     private Drawable getDrawableForManeuver(int maneuver) {
