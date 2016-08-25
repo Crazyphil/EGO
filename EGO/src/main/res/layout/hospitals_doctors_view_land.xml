@@ -60,35 +60,64 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/activity_element_margin"
-            android:id="@+id/hospitals_doctors_linearLayoutHospitalsContainer">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="false"
-                android:text="@string/hospitals_doctors_view_hospitals" />
-
-            <TextView
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/hospitals_doctors_view_hospitals_empty"
-                android:id="@+id/hospitals_doctors_textViewHospitalsEmpty"
-                android:paddingTop="@dimen/activity_element_full_margin"
-                android:paddingBottom="@dimen/activity_element_full_margin"
-                android:layout_gravity="center" />
+                android:layout_height="fill_parent"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_weight="2"
+                android:layout_marginRight="@dimen/activity_element_margin"
+                android:id="@+id/hospitals_doctors_linearLayoutHospitalsContainer">
 
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/hospitals_doctors_listViewHospitals"
-                android:layout_weight="1" />
+                <TextView
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:text="@string/hospitals_doctors_view_hospitals" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/hospitals_doctors_view_hospitals_empty"
+                    android:id="@+id/hospitals_doctors_textViewHospitalsEmpty"
+                    android:paddingTop="@dimen/activity_element_full_margin"
+                    android:paddingBottom="@dimen/activity_element_full_margin"
+                    android:layout_gravity="center" />
+
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/hospitals_doctors_listViewHospitals"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/hospitals_doctors_linearLayoutDestinationHospitalsContainer">
+
+                <TextView
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="false"
+                    android:text="@string/hospitals_doctors_view_destination_hospitals"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/hospitals_doctors_listViewDestinationHospitals"
+                    android:layout_weight="1"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

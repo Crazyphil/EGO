@@ -50,6 +50,7 @@
     <string name="hospitals_doctors_view_now">Now</string>
     <string name="hospitals_doctors_view_hospitals">Admitting Hospitals</string>
     <string name="hospitals_doctors_view_hospitals_empty">For %1$s at %2$s, no admitting hospitals are defined.</string>
+    <string name="hospitals_doctors_view_destination_hospitals">Destination Hospitals</string>
     <string name="hospitals_doctors_view_doctors">Doctors on Standby</string>
     <string name="hospitals_doctors_view_doctors_empty">On %1$s at %2$s, no doctor is on standby.</string>
     <string name="hospitals_doctors_view_doctors_time">Until %1$s: %2$s</string>

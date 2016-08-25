@@ -27,14 +27,14 @@ import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int LOADER_HOSPITALS = 0, LOADER_DOCTORS = 1;
+    private static final int LOADER_HOSPITALS = 0, LOADER_DESTINATION_HOSPITALS = 1, LOADER_DOCTORS = 2;
 
     private Preferences preferences;
     private DateManager dateManager;
     private TimeManager timeManager;
     private Button buttonDate, buttonToday, buttonTime, buttonNow;
     private TextView textViewHospitalsEmpty, textViewDoctorsEmpty;
-    private ListView listViewHospitals, listViewDoctors;
+    private ListView listViewHospitals, listViewDestinationHospitals, listViewDoctors;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +96,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         timeManager.setTimeChangedListener(new OnTimeChangedListener());
 
         listViewHospitals = (ListView)getView().findViewById(R.id.hospitals_doctors_listViewHospitals);
+        listViewDestinationHospitals = (ListView)getView().findViewById(R.id.hospitals_doctors_listViewDestinationHospitals);
         listViewDoctors = (ListView)getView().findViewById(R.id.hospitals_doctors_listViewDoctors);
         textViewHospitalsEmpty = (TextView)getView().findViewById(R.id.hospitals_doctors_textViewHospitalsEmpty);
         textViewDoctorsEmpty = (TextView)getView().findViewById(R.id.hospitals_doctors_textViewDoctorsEmpty);
@@ -116,6 +117,14 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
 
         adapter = new SimpleCursorAdapter(getActivity(), R.layout.contact_item, null, fromColumns, toViews, 0);
         adapter.setViewBinder(new ContactsViewBinder());
+        listViewDestinationHospitals.setAdapter(adapter);
+        listViewDestinationHospitals.setOnItemClickListener(new ContactListItemOnClickListener());
+        if ((preferences.getHospitalsDoctorsView() & Preferences.HOSPITALS_DOCTORS_VIEW_HOSPITALS) == 0) {
+            getView().findViewById(R.id.hospitals_doctors_linearLayoutDestinationHospitalsContainer).setVisibility(View.GONE);
+        }
+
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.contact_item, null, fromColumns, toViews, 0);
+        adapter.setViewBinder(new ContactsViewBinder());
         listViewDoctors.setAdapter(adapter);
         listViewDoctors.setEmptyView(textViewDoctorsEmpty);
         listViewDoctors.setOnItemClickListener(new ContactListItemOnClickListener());
@@ -124,6 +133,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         }
 
         getLoaderManager().initLoader(LOADER_HOSPITALS, null, this);
+        getLoaderManager().initLoader(LOADER_DESTINATION_HOSPITALS, null, this);
         getLoaderManager().initLoader(LOADER_DOCTORS, null, this);
     }
 
@@ -136,6 +146,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         setEmptyText();
         if (isAdded()) {
             getLoaderManager().restartLoader(LOADER_HOSPITALS, null, HospitalsDoctorsFragment.this);
+            getLoaderManager().restartLoader(LOADER_DESTINATION_HOSPITALS, null, HospitalsDoctorsFragment.this);
             getLoaderManager().restartLoader(LOADER_DOCTORS, null, HospitalsDoctorsFragment.this);
         }
     }
@@ -169,6 +180,8 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         switch (id) {
             case LOADER_HOSPITALS:
                 return createHospitalsLoader();
+            case LOADER_DESTINATION_HOSPITALS:
+                return createDestinationHospitalsLoader();
             case LOADER_DOCTORS:
                 return createDoctorsLoader();
         }
@@ -192,13 +205,27 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         if (takeoverTime.getHour() > time.getHour() || takeoverTime.getHour() == time.getHour() && takeoverTime.getMinute() > time.getMinute()) {
             // Admittances after midnight but before the takeover time are stored with yesterday's date
             date -= 24 * 60 * 60;
-            selection = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = 0 OR " +
-                    EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = ? AND " + EGOContract.HospitalAdmission.COLUMN_NAME_TAKEOVER_TIME + " > ?";
+            selection = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = ? AND " + EGOContract.HospitalAdmission.COLUMN_NAME_TAKEOVER_TIME + " > ?";
         } else {
-            selection = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = 0 OR " +
-                    EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = ? AND " + EGOContract.HospitalAdmission.COLUMN_NAME_TAKEOVER_TIME + " <= ?";
+            selection = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = ? AND " + EGOContract.HospitalAdmission.COLUMN_NAME_TAKEOVER_TIME + " <= ?";
         }
         String[] selectionArgs = { String.valueOf(date), String.valueOf(timeManager.getTime().toInt()) };
+
+        return new EGOContactsCursorLoader(getActivity(), table, projection, selection, selectionArgs, sortOrder);
+    }
+
+    private Loader<Cursor> createDestinationHospitalsLoader() {
+        String table = EGOContract.HospitalAdmission.TABLE_NAME + " LEFT JOIN " + EGOContract.NameReplacements.TABLE_NAME + " ON " + EGOContract.HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " = " + EGOContract.NameReplacements.COLUMN_NAME_NAME;
+        String[] projection = {
+                EGOContract.HospitalAdmission.TABLE_NAME + "." + EGOContract.HospitalAdmission._ID,
+                EGOContract.HospitalAdmission.COLUMN_NAME_HOSPITAL_NAME + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME,
+                EGOContract.NameReplacements.COLUMN_NAME_REPLACEMENT + " AS " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS,
+                "NULL AS " +  EGOContactsCursorLoader.COLUMN_NAME_ADDRESS
+        };
+        String sortOrder = EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME_ALIAS + ", " + EGOContactsCursorLoader.COLUMN_NAME_CONTACT_NAME;
+        String selection;
+        selection = EGOContract.HospitalAdmission.COLUMN_NAME_DATE + " = 0";
+        String[] selectionArgs = new String[0];
 
         return new EGOContactsCursorLoader(getActivity(), table, projection, selection, selectionArgs, sortOrder);
     }
@@ -247,6 +274,8 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         switch (loaderId) {
             case LOADER_HOSPITALS:
                 return (CursorAdapter)listViewHospitals.getAdapter();
+            case LOADER_DESTINATION_HOSPITALS:
+                return (CursorAdapter)listViewDestinationHospitals.getAdapter();
             case LOADER_DOCTORS:
                 return (CursorAdapter)listViewDoctors.getAdapter();
         }
@@ -323,6 +352,15 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
                 return;
             }
 
+            String[] coords = address.split(",");
+            if (coords.length == 2) {
+                try {
+                    MainActivity.sendNavigationIntent(getActivity(), Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), preferences.allowInternalNavigation());
+                    return;
+                } catch (NumberFormatException e) {
+                    // Ignore, address has no coordinate format
+                }
+            }
             MainActivity.sendNavigationIntent(getActivity(), address, preferences.allowInternalNavigation());
         }
     }

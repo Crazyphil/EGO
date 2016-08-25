@@ -50,6 +50,7 @@
     <string name="hospitals_doctors_view_now">Jetzt</string>
     <string name="hospitals_doctors_view_hospitals">Aufnahmekrankenhäuser</string>
     <string name="hospitals_doctors_view_hospitals_empty">Für %1$s um %2$s sind keine Aufnahmekrankenhäuser eingetragen.</string>
+    <string name="hospitals_doctors_view_destination_hospitals">Zielkrankenhäuser</string>
     <string name="hospitals_doctors_view_doctors">Diensthabende Ärzte</string>
     <string name="hospitals_doctors_view_doctors_empty">Am %1$s um %2$s hat kein Arzt Notdienst.</string>
     <string name="hospitals_doctors_view_doctors_time">Bis %1$s Uhr: %2$s</string>
