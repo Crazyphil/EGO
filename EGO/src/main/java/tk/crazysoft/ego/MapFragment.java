@@ -41,7 +41,7 @@ public class MapFragment extends Fragment {
     private static final String MAP_PATH = "ego/karten/";
     private static final String BASEMAP_FILE = "basemap.sqlite";
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
-    private static final int TILE_SIZE = 256;
+    private static final int TILE_SIZE = 512;
 
     protected MapView mapView;
     protected ImageButton imageButtonGPS, imageButtonDestination;
@@ -137,7 +137,7 @@ public class MapFragment extends Fragment {
         mapView.setUseDataConnection(false);
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
-        mapView.setTilesScaledToDpi(true);
+        //mapView.setTilesScaledToDpi(true);
 
         if (mapCenter != null) {
             mapView.getController().setZoom(mapZoom);
