@@ -75,6 +75,8 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
         }
 
         binding.setViewModel(viewModel);
+
+        findViewById(android.R.id.content).setKeepScreenOn(true);
     }
 
     @Override

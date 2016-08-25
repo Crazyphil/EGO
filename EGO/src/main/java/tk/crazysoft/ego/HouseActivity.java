@@ -30,6 +30,7 @@ public class HouseActivity extends ActionBarActivity {
 
         setContentView(R.layout.house_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        findViewById(android.R.id.content).setKeepScreenOn(true);
 
         if (savedInstanceState == null) {
             HouseFragment fragment = new HouseFragment();

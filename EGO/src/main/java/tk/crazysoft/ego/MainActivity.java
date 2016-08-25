@@ -96,6 +96,8 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             getSupportFragmentManager().beginTransaction().replace(R.id.contentRight, mapFragment, "map").commit();
         }
 
+        findViewById(android.R.id.content).setKeepScreenOn(true);
+
         if (savedInstanceState != null) {
             String tabTitle = savedInstanceState.getString("tab");
             long[] savedHouses = savedInstanceState.getLongArray("displayedHouses");
