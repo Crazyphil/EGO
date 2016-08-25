@@ -30,14 +30,8 @@ public class EGOCursorLoader extends SimpleCursorLoader {
 
     public EGOCursorLoader(Context context, String table, String[] projection, String selection, String[] selectionArgs, String sortOrder, String limit) {
         super(context, projection, selection, selectionArgs, sortOrder);
-        EGODbHelper helper = new EGODbHelper(context);
 
-        try {
-            db = helper.getReadableDatabase();
-        } catch (SQLiteException e) {
-            db = null;
-        }
-
+        openDb();
         this.table = table;
         this.limit = limit;
     }
@@ -49,6 +43,9 @@ public class EGOCursorLoader extends SimpleCursorLoader {
     @Override
     public Cursor loadInBackground() {
         if (isDbReady()) {
+            if (!db.isOpen()) {
+                openDb();
+            }
             return db.query(distinct, table, getProjection(), getSelection(), getSelectionArgs(), null, null, getSortOrder(), limit);
         }
         return null;
@@ -64,5 +61,15 @@ public class EGOCursorLoader extends SimpleCursorLoader {
             db.close();
         }
         super.finalize();
+    }
+
+    private void openDb() {
+        EGODbHelper helper = new EGODbHelper(getContext());
+
+        try {
+            db = helper.getReadableDatabase();
+        } catch (SQLiteException e) {
+            db = null;
+        }
     }
 }
