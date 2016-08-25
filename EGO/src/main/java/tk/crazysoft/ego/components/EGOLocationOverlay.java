@@ -12,6 +12,8 @@ import java.util.List;
 import tk.crazysoft.ego.preferences.Preferences;
 
 public class EGOLocationOverlay extends MyLocationNewOverlay {
+    private static final float MIN_SPEED_FOR_ROTATION_KMH = 10;
+
     private final List<IMyLocationConsumer> locationListeners = new LinkedList<>();
     private boolean followOrientation;
 
@@ -32,7 +34,9 @@ public class EGOLocationOverlay extends MyLocationNewOverlay {
 
         // Rotate map if rotation is enabled and the orthophoto overlay isn't shown while the location is being followed
         if (followOrientation && !mMapView.getOverlayManager().get(0).isEnabled() && isFollowLocationEnabled() && location.hasBearing()) {
-            mMapView.setMapOrientation(-location.getBearing());
+            if (location.getSpeed() >= MIN_SPEED_FOR_ROTATION_KMH * 1000 / 3600f) {
+                mMapView.setMapOrientation(-location.getBearing());
+            }
         }
 
         if (changed) {
