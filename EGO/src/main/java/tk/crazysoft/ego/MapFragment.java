@@ -41,7 +41,8 @@ public class MapFragment extends Fragment {
     private static final String MAP_PATH = "ego/karten/";
     private static final String BASEMAP_FILE = "basemap.sqlite";
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
-    private static final int TILE_SIZE = 512;
+    private static final int BASEMAP_TILE_SIZE = 512;
+    private static final int ORTHOPHOTO_TILE_SIZE = 256;
 
     protected MapView mapView;
     protected ImageButton imageButtonGPS, imageButtonDestination;
@@ -94,7 +95,7 @@ public class MapFragment extends Fragment {
         }
 
         // The TileSource objects are not used in our custom DatabaseFileArchive implementation, but they are needed by the provider
-        ITileSource basemapSource = new XYTileSource("basemap.at", getMinZoomLevel(basemapArchives), getMaxZoomLevel(basemapArchives), TILE_SIZE,
+        ITileSource basemapSource = new XYTileSource("basemap.at", getMinZoomLevel(basemapArchives), getMaxZoomLevel(basemapArchives), BASEMAP_TILE_SIZE,
                 ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
         IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
         MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchives);
@@ -112,7 +113,7 @@ public class MapFragment extends Fragment {
         a.recycle();
 
         if (orthophotoArchives.length > 0) {
-            ITileSource orthophotoSource = new XYTileSource("geoimage.at", getMinZoomLevel(orthophotoArchives), getMaxZoomLevel(orthophotoArchives), TILE_SIZE,
+            ITileSource orthophotoSource = new XYTileSource("geoimage.at", getMinZoomLevel(orthophotoArchives), getMaxZoomLevel(orthophotoArchives), ORTHOPHOTO_TILE_SIZE,
                     ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
             MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
             MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
