@@ -32,9 +32,9 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey("id")) {
-            setHouse(getArguments().getLong("id"));
-        } else if (houseId > -1) {
-            setHouse(houseId);
+            houseId = getArguments().getLong("id");
+        } else if (savedInstanceState != null) {
+            houseId = savedInstanceState.getLong("houseId");
         }
     }
 
@@ -58,18 +58,16 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         PackageManager packageManager = context.getPackageManager();
         ResolveInfo activity = packageManager.resolveActivity(navIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if (activity != null) {
-            if (activity != null) {
-                buttonNavigateExternal.setText(String.format("%s\n%s", context.getString(R.string.house_view_navigate), activity.loadLabel(packageManager)));
-                Drawable icon = activity.loadIcon(packageManager);
-                icon.setBounds(0, 0, 60, 60);
-                String layoutMode = view.getContext().getString(R.string.layout_mode);
-                if (layoutMode.equals(MainActivity.LAYOUT_MODE_LANDSCAPE)) {
-                    buttonNavigateExternal.setCompoundDrawables(null, icon, null, null);
-                } else {
-                    buttonNavigateExternal.setCompoundDrawables(icon, null, null, null);
-                }
-                buttonNavigateExternal.setCompoundDrawablePadding((int) context.getResources().getDimension(R.dimen.activity_element_margin));
+            buttonNavigateExternal.setText(String.format("%s\n%s", context.getString(R.string.house_view_navigate), activity.loadLabel(packageManager)));
+            Drawable icon = activity.loadIcon(packageManager);
+            icon.setBounds(0, 0, 60, 60);
+            String layoutMode = view.getContext().getString(R.string.layout_mode);
+            if (layoutMode.equals(MainActivity.LAYOUT_MODE_LANDSCAPE)) {
+                buttonNavigateExternal.setCompoundDrawables(null, icon, null, null);
+            } else {
+                buttonNavigateExternal.setCompoundDrawables(icon, null, null, null);
             }
+            buttonNavigateExternal.setCompoundDrawablePadding((int) context.getResources().getDimension(R.dimen.activity_element_margin));
         }
 
         // Inflate the layout for this fragment
@@ -91,7 +89,16 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onResume();
 
         // Ensure that the address is loaded after the fragment is shown
-        setHouse(houseId);
+        Loader<Cursor> loader = getLoaderManager().getLoader(0);
+        if (loader == null || !loader.isStarted()) {
+            setHouse(houseId);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong("houseId", houseId);
+        super.onSaveInstanceState(outState);
     }
 
     public void setHouse(long id) {
