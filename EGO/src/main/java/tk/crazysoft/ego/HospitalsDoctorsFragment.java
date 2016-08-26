@@ -35,6 +35,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
     private Button buttonDate, buttonToday, buttonTime, buttonNow;
     private TextView textViewHospitalsEmpty, textViewDoctorsEmpty;
     private ListView listViewHospitals, listViewDestinationHospitals, listViewDoctors;
+    private LinearLayout linearLayoutDestinationHospitals;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         listViewDoctors = (ListView)getView().findViewById(R.id.hospitals_doctors_listViewDoctors);
         textViewHospitalsEmpty = (TextView)getView().findViewById(R.id.hospitals_doctors_textViewHospitalsEmpty);
         textViewDoctorsEmpty = (TextView)getView().findViewById(R.id.hospitals_doctors_textViewDoctorsEmpty);
+        linearLayoutDestinationHospitals = (LinearLayout) getView().findViewById(R.id.hospitals_doctors_linearLayoutDestinationHospitalsContainer);
 
         setEmptyText();
 
@@ -259,6 +261,13 @@ public class HospitalsDoctorsFragment extends Fragment implements LoaderManager.
         CursorAdapter adapter = getAdapterForLoaderId(loader.getId());
         if (adapter != null) {
             adapter.swapCursor(data);
+        }
+        if (loader.getId() == LOADER_DESTINATION_HOSPITALS) {
+            if (adapter == null || adapter.getCount() == 0) {
+                linearLayoutDestinationHospitals.setVisibility(View.GONE);
+            } else {
+                linearLayoutDestinationHospitals.setVisibility(View.VISIBLE);
+            }
         }
     }
 
