@@ -35,6 +35,7 @@ import tk.crazysoft.ego.viewmodels.NavActivityViewModel;
 public class NavActivity extends ActionBarActivity implements NavFragment.OnNavEventListener {
     public static final String EXTRA_LATITUDE = "tk.crazysoft.ego.EXTRA_LATITUDE";
     public static final String EXTRA_LONGITUDE = "tk.crazysoft.ego.EXTRA_LONGITUDE";
+    public static final String EXTRA_CENTER = "tk.crazysoft.ego.EXTRA_CENTER";
 
     protected GeoPoint destination;
     protected NavFragment navFragment;
@@ -66,6 +67,12 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             }
             navFragment = new NavFragment();
             navFragment.setDestination(destination, null);
+            GeoPoint center = getIntent().getParcelableExtra(EXTRA_CENTER);
+            if (center != null) {
+                Bundle arguments = new Bundle(1);
+                arguments.putParcelable("center", center);
+                navFragment.setArguments(arguments);
+            }
             getSupportFragmentManager().beginTransaction().add(R.id.nav_mapContainer, navFragment, "map").commit();
         } else {
             destination = savedInstanceState.getParcelable("destination");

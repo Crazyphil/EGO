@@ -44,6 +44,7 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
         if (savedInstanceState == null) {
             mapFragment = new MapFragment();
             getChildFragmentManager().beginTransaction().add(R.id.house_mapContainer, mapFragment, "map").commit();
+            mapFragment.setArguments(getArguments());
         } else {
             mapFragment = (MapFragment)getChildFragmentManager().findFragmentByTag("map");
         }
@@ -169,7 +170,11 @@ public class HouseFragment extends Fragment implements LoaderManager.LoaderCallb
     private class NavigateButtonOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            MainActivity.sendNavigationIntent(getActivity(), latitude, longitude, v.equals(buttonNavigateInternal));
+            if (v.equals(buttonNavigateInternal)) {
+                MainActivity.sendNavigationIntent(getActivity(), latitude, longitude, mapFragment.getLocation());
+            } else {
+                MainActivity.sendNavigationIntent(getActivity(), latitude, longitude, v.equals(buttonNavigateInternal));
+            }
         }
     }
 }

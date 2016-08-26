@@ -43,6 +43,7 @@ public class MapFragment extends Fragment {
     private static final String ORTHOPHOTO_FILE = "orthofoto.sqlite";
     private static final int BASEMAP_TILE_SIZE = 512;
     private static final int ORTHOPHOTO_TILE_SIZE = 256;
+    private static final int DEFAULT_ZOOM = 17;
 
     protected MapView mapView;
     protected ImageButton imageButtonGPS, imageButtonDestination;
@@ -68,6 +69,15 @@ public class MapFragment extends Fragment {
             mapZoom = savedInstanceState.getInt("zoom");
             followLocation = savedInstanceState.getBoolean("follow");
             showOrtophoto = savedInstanceState.getBoolean("showOrtophoto");
+        } else if (getArguments() != null) {
+            if (getArguments().containsKey("center")) {
+                mapCenter = getArguments().getParcelable("center");
+            }
+            if (getArguments().containsKey("zoom")) {
+                mapZoom = getArguments().getInt("zoom");
+            } else {
+                mapZoom = DEFAULT_ZOOM;
+            }
         }
     }
 
@@ -144,7 +154,7 @@ public class MapFragment extends Fragment {
             mapView.getController().setZoom(mapZoom);
             mapView.getController().setCenter(mapCenter);
         } else {
-            mapView.getController().setZoom(17);
+            mapView.getController().setZoom(DEFAULT_ZOOM);
             mapView.getController().setCenter(defaultCenter);
         }
 
@@ -319,6 +329,18 @@ public class MapFragment extends Fragment {
             destination = dest;
             destinationTitle = title;
         }
+    }
+
+    public GeoPoint getMapCenter() {
+        return (GeoPoint)mapView.getMapCenter();
+    }
+
+    public GeoPoint getLocation() {
+        return gpsOverlay.getMyLocation();
+    }
+
+    public int getZoomLevel() {
+        return mapView.getZoomLevel();
     }
 
     private class MapFilenameFilter implements FilenameFilter {

@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.acra.ACRA;
+import org.osmdroid.util.GeoPoint;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -300,6 +302,13 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             HouseFragment fragment = (HouseFragment)getSupportFragmentManager().findFragmentByTag("house");
             if (fragment == null) {
                 fragment = new HouseFragment();
+                MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentByTag("map");
+                if (mapFragment != null) {
+                    Bundle arguments = new Bundle(2);
+                    arguments.putParcelable("center", mapFragment.getMapCenter());
+                    arguments.putInt("zoom", mapFragment.getZoomLevel());
+                    fragment.setArguments(arguments);
+                }
             }
             if (!fragment.isVisible()) {
                 getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.contentRight, fragment, "house").addToBackStack(null).commit();
@@ -354,6 +363,16 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         return themeResId;
     }
 
+    protected static void sendNavigationIntent(Activity activity, double latitude, double longitude, GeoPoint mapCenter) {
+        Intent navIntent;
+        navIntent = new Intent(activity, NavActivity.class);
+        navIntent.putExtra(NavActivity.EXTRA_LATITUDE, latitude);
+        navIntent.putExtra(NavActivity.EXTRA_LONGITUDE, longitude);
+        navIntent.putExtra(NavActivity.EXTRA_CENTER, (Parcelable)mapCenter);
+        navIntent.putExtra("theme", getThemeId(activity));
+        sendNavigationIntent(activity, navIntent);
+    }
+
     public static void sendNavigationIntent(Activity activity, double latitude, double longitude, boolean internal) {
         String intentPreference = new Preferences(activity).getNavigationApi();
         String[] options = activity.getResources().getStringArray(R.array.preferences_activity_navigation_api_values);
@@ -361,10 +380,8 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
         // Build the intent
         Intent navIntent;
         if (internal) {
-            navIntent = new Intent(activity, NavActivity.class);
-            navIntent.putExtra(NavActivity.EXTRA_LATITUDE, latitude);
-            navIntent.putExtra(NavActivity.EXTRA_LONGITUDE, longitude);
-            navIntent.putExtra("theme", getThemeId(activity));
+            sendNavigationIntent(activity, latitude, longitude, null);
+            return;
         } else {
             if (intentPreference.equals(options[3])) {  // navigon
                 navIntent = new Intent(NAVIGON_PUBLIC_INTENT);
