@@ -17,7 +17,9 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:src="@android:drawable/ic_menu_mylocation"
-        android:contentDescription="@string/map_view_gps" />
+        android:contentDescription="@string/map_view_gps"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:alpha="0.7"/>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -30,7 +32,9 @@
         android:layout_alignParentRight="false"
         android:layout_toLeftOf="@+id/map_imageButtonGPS"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:alpha="0.7"/>
 
     <ToggleButton
         android:layout_width="wrap_content"
@@ -46,6 +50,8 @@
         android:textOff=""
         android:textOn=""
         android:textSize="0dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:alpha="0.7"/>
 
 </RelativeLayout>
