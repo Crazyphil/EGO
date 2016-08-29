@@ -61,6 +61,7 @@ public class RoutingService extends Service {
         boolean result;
         try {
             gh.setEncodingManager(EncodingManager.create(FlagEncoderFactory.DEFAULT, dataDir));
+            gh.getCHFactoryDecorator().setDisablingAllowed(true);
             result = gh.setElevation(loadElevationData).setCHEnabled(true).load(dataDir);
         } catch (Exception e) {
             Log.e(TAG, "GraphHopper initialization failed", e);
@@ -84,10 +85,12 @@ public class RoutingService extends Service {
             request.setVehicle(FlagEncoderFactory.CAR);
             request.setWeighting("fastest");
             if (!USE_CONTRACTION_HIERARCHIES) {
-                request.getHints().put(Parameters.CH.DISABLE, USE_CONTRACTION_HIERARCHIES);
-                request.getHints().put("routing.flexibleMode.force", true);
+                request.getHints().put(Parameters.CH.DISABLE, true);
+                request.getHints().put("routing.flexible_mode.force", true);
+                request.getHints().put(Parameters.Routing.EDGE_BASED, true);
+            } else {
+                request.getHints().put(Parameters.CH.FORCE_HEADING, true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
             }
-            request.getHints().put(Parameters.CH.FORCE_HEADING, true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
         } else {
             request = new GHRequest(waypoints);
         }
