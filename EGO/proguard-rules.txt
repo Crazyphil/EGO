@@ -2,6 +2,14 @@
 -dontwarn java.awt.**
 -dontwarn java.beans.**
 -dontwarn org.apache.http.entity.mime.**
+-dontwarn org.apache.xmlgraphics.**
+-dontwarn com.graphhopper.reader.**
+-dontwarn com.graphhopper.storage.UnsafeDataAccess
+-dontwarn com.graphhopper.util.Helper7
+-dontwarn okio.**
+
+# Needed for loading translation maps in GraphHopper (resource files)
+-keeppackagenames com.graphhopper.util
 
 #ACRA specifics
 # Restore some Source file names and restore approximate line numbers in the stack traces,
