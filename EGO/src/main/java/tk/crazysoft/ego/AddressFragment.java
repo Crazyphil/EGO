@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -101,9 +102,9 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         italicTypeface = Typeface.create(buttonCity.getTypeface(), Typeface.ITALIC);
         normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
 
-        TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[]{R.attr.primaryTextColor, R.attr.secondaryTextColor});
-        normalColor = a.getColor(0, 0);
-        italicColor = a.getColor(1, 0);
+        TypedArray a = getActivity().getTheme().obtainStyledAttributes(R.styleable.CustomAttrs);
+        normalColor = a.getColor(R.styleable.CustomAttrs_primaryTextColor, Color.BLACK);
+        italicColor = a.getColor(R.styleable.CustomAttrs_secondaryTextColor, Color.GRAY);
         a.recycle();
 
         buttonCity.setOnClickListener(new FilterButtonOnClickListener());

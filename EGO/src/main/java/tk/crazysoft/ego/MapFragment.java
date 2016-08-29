@@ -3,6 +3,7 @@ package tk.crazysoft.ego;
 import android.app.AlertDialog;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -114,9 +115,9 @@ public class MapFragment extends Fragment {
         mapView = new MapView(view.getContext(), basemapProviderArray);
 
         // Set background for loading/missing tiles depending on day/night mode and optionally enable night mode (invert colors)
-        TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { R.attr.tilesLoadingBackgroundColor, R.attr.tilesLoadingLineColor });
-        mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(a.getColor(0, 0));
-        mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(a.getColor(1, 0));
+        TypedArray a = getActivity().getTheme().obtainStyledAttributes(R.styleable.CustomAttrs);
+        mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(a.getColor(R.styleable.CustomAttrs_tilesLoadingBackgroundColor, Color.BLACK));
+        mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(a.getColor(R.styleable.CustomAttrs_tilesLoadingLineColor, Color.WHITE));
         if (MainActivity.hasDarkTheme(getActivity())) {
             mapView.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
         }
