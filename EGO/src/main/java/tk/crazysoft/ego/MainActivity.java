@@ -189,29 +189,11 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        if (!isDefaultLauncher()) {
+        if (!isDefaultLauncher(this)) {
             menu.findItem(R.id.action_launcher).setEnabled(false);
             Log.d(TAG, "This is not the default launcher, disabling launch menu item");
         }
         return true;
-    }
-
-    private boolean isDefaultLauncher() {
-        IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
-        filter.addCategory(Intent.CATEGORY_HOME);
-
-        List<IntentFilter> filters = new ArrayList<IntentFilter>();
-        filters.add(filter);
-
-        List<ComponentName> activities = new ArrayList<ComponentName>();
-
-        getPackageManager().getPreferredActivities(filters, activities, null);
-        for (ComponentName activity : activities) {
-            if (getPackageName().equals(activity.getPackageName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -439,6 +421,24 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
             }
         }
         return new Intent(Intent.ACTION_VIEW, location);
+    }
+
+    public static boolean isDefaultLauncher(Context context) {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
+        filter.addCategory(Intent.CATEGORY_HOME);
+
+        List<IntentFilter> filters = new ArrayList<IntentFilter>();
+        filters.add(filter);
+
+        List<ComponentName> activities = new ArrayList<ComponentName>();
+
+        context.getPackageManager().getPreferredActivities(filters, activities, null);
+        for (ComponentName activity : activities) {
+            if (context.getPackageName().equals(activity.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void sendNavigationIntent(Activity activity, Intent navIntent) {
