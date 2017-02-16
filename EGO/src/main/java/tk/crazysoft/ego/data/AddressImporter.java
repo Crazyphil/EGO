@@ -80,6 +80,12 @@ public class AddressImporter extends Importer {
         return PROCESS_SUCCESS;
     }
 
+    @Override
+    public boolean onContinueNextFile() {
+        columns = null;
+        return true;
+    }
+
     private AddressColumns findAddressColumnPositions(String[] fields) {
         AddressColumns columns = new AddressColumns();
         columns.eastCoord = findStringPosInArray(fields, EAST_COORD_COLUMN);

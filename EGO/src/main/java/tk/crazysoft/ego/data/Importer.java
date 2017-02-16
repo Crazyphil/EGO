@@ -27,6 +27,10 @@ public abstract class Importer {
 
     public abstract int process(String[] line);
 
+    public boolean onContinueNextFile() {
+        return false;
+    }
+
     public void postProcess() { }
 
     protected int findStringPosInArray(String[] array, String string) {

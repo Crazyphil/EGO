@@ -30,9 +30,9 @@ import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 
+import tk.crazysoft.ego.components.MultiPartFilenameFilter;
 import tk.crazysoft.ego.data.DatabaseFileArchive;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.Preferences;
@@ -164,7 +164,7 @@ public class MapFragment extends Fragment {
 
     private IArchiveFile[] getArchiveFiles(String mapTemplate) {
         File mapDirectory = new File(sdPath + MAP_PATH);
-        File[] files = mapDirectory.listFiles(new MapFilenameFilter(mapTemplate));
+        File[] files = mapDirectory.listFiles(new MultiPartFilenameFilter(mapTemplate));
         if (files == null) {
             return new IArchiveFile[0];
         }
@@ -342,36 +342,5 @@ public class MapFragment extends Fragment {
 
     public int getZoomLevel() {
         return mapView.getZoomLevel();
-    }
-
-    private class MapFilenameFilter implements FilenameFilter {
-        private final String templateName;
-        private final String templateExt;
-
-        public MapFilenameFilter(String template) {
-            int lastDot = template.lastIndexOf('.');
-
-            if (lastDot == -1) {
-                this.templateName = template;
-                templateExt = null;
-            } else {
-                this.templateName = template.substring(0, lastDot);
-                this.templateExt = template.substring(lastDot);
-            }
-        }
-
-        @Override
-        public boolean accept(File dir, String filename) {
-            int firstDot = filename.indexOf('.');
-            if (firstDot == -1) {
-                return templateExt == null && templateName.equals(filename);
-            }
-
-            int lastDot = filename.lastIndexOf('.');
-            String name = filename.substring(0, firstDot);
-            String ext = filename.substring(lastDot);
-
-            return templateName.equals(name) && templateExt.equals(ext);
-        }
     }
 }
