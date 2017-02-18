@@ -21,7 +21,7 @@ import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.bonuspack.utils.BonusPackHelper;
-import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.Closeable;
@@ -83,7 +83,7 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
     private Road calculatedRoad;
 
     public LocalGraphHopperRoadManager(Context context, String dataDir, boolean withElevation, OnRoadManagerListener listener) {
-        super(null);
+        super(null, false);
 
         this.context = context;
         this.dataDir = dataDir;
@@ -159,7 +159,7 @@ public class LocalGraphHopperRoadManager extends GraphHopperRoadManager implemen
         road.mDuration = ghResponse.getBest().getTime() / 1000f;
 
         BBox routeBBox = ghResponse.getBest().calcRouteBBox(BBox.createInverse(mWithElevation));
-        road.mBoundingBox = new BoundingBoxE6(routeBBox.maxLat, routeBBox.maxLon, routeBBox.minLat, routeBBox.minLon);
+        road.mBoundingBox = new BoundingBox(routeBBox.maxLat, routeBBox.maxLon, routeBBox.minLat, routeBBox.minLon);
         road.mStatus = Road.STATUS_OK;
         road.buildLegs(waypoints);
 

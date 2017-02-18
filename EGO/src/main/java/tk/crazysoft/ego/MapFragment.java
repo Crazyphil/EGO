@@ -108,9 +108,8 @@ public class MapFragment extends Fragment {
         // The TileSource objects are not used in our custom DatabaseFileArchive implementation, but they are needed by the provider
         ITileSource basemapSource = new XYTileSource("basemap.at", getMinZoomLevel(basemapArchives), getMaxZoomLevel(basemapArchives), BASEMAP_TILE_SIZE,
                 ".jpg", new String[] { "http://maps.wien.gv.at/basemap/geolandbasemap/" });
-        IRegisterReceiver registerReceiver = new SimpleRegisterReceiver(view.getContext());
-        MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(registerReceiver, basemapSource, basemapArchives);
-        MapTileProviderArray basemapProviderArray = new MapTileProviderArray(basemapSource, registerReceiver, new MapTileModuleProviderBase[] { basemapProvider });
+        MapTileFileArchiveProvider basemapProvider = new MapTileFileArchiveProvider(new SimpleRegisterReceiver(view.getContext()), basemapSource, basemapArchives);
+        MapTileProviderArray basemapProviderArray = new MapTileProviderArray(basemapSource, new SimpleRegisterReceiver(view.getContext()), new MapTileModuleProviderBase[] { basemapProvider });
 
         mapView = new MapView(view.getContext(), basemapProviderArray);
 
@@ -126,8 +125,8 @@ public class MapFragment extends Fragment {
         if (orthophotoArchives.length > 0) {
             ITileSource orthophotoSource = new XYTileSource("geoimage.at", getMinZoomLevel(orthophotoArchives), getMaxZoomLevel(orthophotoArchives), ORTHOPHOTO_TILE_SIZE,
                     ".jpg", new String[]{"http://maps.wien.gv.at/basemap/bmaporthofoto30cm/"});
-            MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(registerReceiver, orthophotoSource, orthophotoArchives);
-            MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, registerReceiver, new MapTileModuleProviderBase[]{ortophotoProvider});
+            MapTileFileArchiveProvider ortophotoProvider = new MapTileFileArchiveProvider(new SimpleRegisterReceiver(view.getContext()), orthophotoSource, orthophotoArchives);
+            MapTileProviderArray orthophotoProviderArray = new MapTileProviderArray(orthophotoSource, new SimpleRegisterReceiver(view.getContext()), new MapTileModuleProviderBase[]{ortophotoProvider});
             orthophotoOverlay = new TilesOverlay(orthophotoProviderArray, view.getContext());
             orthophotoOverlay.setLoadingBackgroundColor(getResources().getColor(android.R.color.transparent));
             orthophotoOverlay.setEnabled(showOrtophoto);

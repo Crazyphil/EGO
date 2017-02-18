@@ -9,10 +9,8 @@ import android.util.Log;
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
-import com.graphhopper.routing.util.CarFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoderFactory;
-import com.graphhopper.util.PMap;
 import com.graphhopper.util.Parameters;
 import com.graphhopper.util.Translation;
 import com.graphhopper.util.shapes.GHPoint;
@@ -86,7 +84,8 @@ public class RoutingService extends Service {
             request.setWeighting("fastest");
             if (!USE_CONTRACTION_HIERARCHIES) {
                 request.getHints().put(Parameters.CH.DISABLE, true);
-                request.getHints().put("routing.flexible_mode.force", true);
+                //request.getHints().put("routing.flexible_mode.force", true);
+                request.getHints().put("ch.flexible_mode", true);
                 request.getHints().put(Parameters.Routing.EDGE_BASED, true);
             } else {
                 request.getHints().put(Parameters.CH.FORCE_HEADING, true);  // Allow headings for routes using CH, but may produce artifacts (see https://github.com/graphhopper/graphhopper/pull/434#issuecomment-110275256)
