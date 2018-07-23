@@ -1,25 +1,16 @@
 package tk.crazysoft.ego;
 
-import android.app.ProgressDialog;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadNode;
@@ -32,10 +23,12 @@ import tk.crazysoft.ego.databinding.NavActivityBinding;
 import tk.crazysoft.ego.services.LocalGraphHopperRoadManager;
 import tk.crazysoft.ego.viewmodels.NavActivityViewModel;
 
-public class NavActivity extends ActionBarActivity implements NavFragment.OnNavEventListener {
+public class NavActivity extends AppCompatActivity implements NavFragment.OnNavEventListener {
     public static final String EXTRA_LATITUDE = "tk.crazysoft.ego.EXTRA_LATITUDE";
     public static final String EXTRA_LONGITUDE = "tk.crazysoft.ego.EXTRA_LONGITUDE";
     public static final String EXTRA_CENTER = "tk.crazysoft.ego.EXTRA_CENTER";
+
+    private static final int MAX_SECONDS_FOR_NEXT_DIRECTION = 7;
 
     protected GeoPoint destination;
     protected NavFragment navFragment;
@@ -197,13 +190,12 @@ public class NavActivity extends ActionBarActivity implements NavFragment.OnNavE
             viewModel.setStreet(navFragment.getRoadManager().getStreetName(instructionId));
         }
 
-        if (curNode.mLength * 1000 < NavFragment.MAX_DISTANCE_FOR_NEXT_DIRECTION && road.mNodes.size() > instructionId + 1) {
-            RoadNode nextNode = road.mNodes.get(instructionId + 1);
+        if (curNode.mDuration < MAX_SECONDS_FOR_NEXT_DIRECTION && road.mNodes.size() > instructionId + 2) {
+            RoadNode nextNode = road.mNodes.get(instructionId + 2);
             Drawable nextIcon = getDrawableForManeuver(nextNode.mManeuverType);
-            nextIcon.setBounds(0, 0, binding.navTextViewNextDirection.getHeight(), binding.navTextViewDirection.getHeight());
-            binding.navTextViewNextDirection.setCompoundDrawables(null, null, nextIcon, null);
+            viewModel.setNextDirectionSymbol(nextIcon);
         } else {
-            binding.navTextViewNextDirection.setVisibility(View.GONE);
+            viewModel.setNextDirectionSymbol(null);
         }
     }
 

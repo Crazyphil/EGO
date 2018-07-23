@@ -14,7 +14,6 @@
             android:layout_gravity="center"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="@dimen/card_corner_radius"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -63,21 +62,38 @@
                     android:text="@{viewModel.street}"
                     android:id="@+id/nav_textViewStreet"
                     android:gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/activity_element_full_margin"
                     android:ellipsize="marquee"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
 
-                <TextView
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?attr/secondaryTextColor"
-                    android:text="@{String.format(@string/nav_activity_next_direction, viewModel.nextDirection)}"
-                    android:drawablePadding="@dimen/activity_element_full_margin"
-                    android:id="@+id/nav_textViewNextDirection"
-                    android:gravity="center_vertical"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_gravity="center_horizontal"
-                    android:visibility="@{viewModel.hasNextDirection ? View.VISIBLE : View.GONE}" />
+                    android:layout_marginTop="@dimen/activity_element_full_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/nav_activity_next_direction"
+                        android:id="@+id/nav_textViewNextDirection"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="@{viewModel.hasNextDirection ? View.VISIBLE : View.GONE}" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="18sp"
+                        android:id="@+id/nav_imageViewNextDirection"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:tint="?attr/turnTint"
+                        android:tintMode="src_in"
+                        android:visibility="@{viewModel.calculatingRoute ? View.GONE : View.VISIBLE}"
+                        android:src="@{viewModel.nextDirectionSymbol}"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -87,7 +103,6 @@
             android:layout_gravity="center"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="@dimen/card_corner_radius"
             android:id="@+id/nav_panelArrival"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
@@ -116,14 +131,14 @@
                     android:id="@+id/nav_textViewTime"
                     android:text="@{String.format(@string/nav_activity_time, viewModel.arrivalTime)}"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?attr/secondaryTextColor"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?attr/secondaryTextColor"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:text="@{String.format(@string/nav_activity_distance, viewModel.arrivalDistance)}"
                     android:id="@+id/nav_textViewDistance"
                     android:gravity="center_horizontal" />

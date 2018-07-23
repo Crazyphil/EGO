@@ -8,8 +8,8 @@ import tk.crazysoft.ego.BR;
 
 public class NavActivityViewModel extends BaseObservable {
     private boolean isCalculatingRoute;
-    private Drawable directionSymbol;
-    private String direction, street, nextDirection, arrivalTime, arrivalDistance;
+    private Drawable directionSymbol, nextDirectionSymbol;
+    private String direction, street, arrivalTime, arrivalDistance;
 
     @Bindable
     public boolean isCalculatingRoute() {
@@ -55,14 +55,17 @@ public class NavActivityViewModel extends BaseObservable {
     }
 
     @Bindable
-    public String getNextDirection() {
-        return nextDirection;
+    public Drawable getNextDirectionSymbol() {
+        return nextDirectionSymbol;
     }
 
-    public void setNextDirection(String nextDirection) {
-        this.nextDirection = nextDirection;
-        notifyPropertyChanged(BR.nextDirection);
-        notifyPropertyChanged(BR.hasNextDirection);
+    public void setNextDirectionSymbol(Drawable nextDirectionSymbol) {
+        boolean nullSwitch = nextDirectionSymbol == null && this.nextDirectionSymbol != null || nextDirectionSymbol != null && this.nextDirectionSymbol == null;
+        this.nextDirectionSymbol = nextDirectionSymbol;
+        notifyPropertyChanged(BR.nextDirectionSymbol);
+        if (nullSwitch) {
+            notifyPropertyChanged(BR.hasNextDirection);
+        }
     }
 
     @Bindable
@@ -87,6 +90,6 @@ public class NavActivityViewModel extends BaseObservable {
 
     @Bindable
     public boolean isHasNextDirection() {
-        return !isCalculatingRoute && nextDirection != null;
+        return !isCalculatingRoute && nextDirectionSymbol != null;
     }
 }
