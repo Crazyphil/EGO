@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
-
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.dto.Location;
+import tk.crazysoft.ego.R;
+import tk.crazysoft.ego.preferences.Preferences;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import tk.crazysoft.ego.R;
-import tk.crazysoft.ego.preferences.Preferences;
 
 public class AppThemeWatcher extends BroadcastReceiver {
     public static final int THEME_DAY = 0, THEME_NIGHT = 1;
@@ -74,7 +72,8 @@ public class AppThemeWatcher extends BroadcastReceiver {
         if (curTheme == THEME_DAY) {
             return R.style.AppTheme;
         }
-        return R.style.AppTheme_Dark;
+        // FIXME: remove AppThemeWatcher and implement AppCompat DayNight theme (https://android-developers.googleblog.com/2016/02/android-support-library-232.html)
+        return R.style.AppTheme;
     }
 
     public void toggleAppTheme() {

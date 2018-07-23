@@ -11,20 +11,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import org.acra.ACRA;
 import org.osmdroid.util.GeoPoint;
+import tk.crazysoft.ego.components.AppThemeWatcher;
+import tk.crazysoft.ego.components.TabListener;
+import tk.crazysoft.ego.io.Environment4;
+import tk.crazysoft.ego.preferences.Preferences;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -34,12 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-import tk.crazysoft.ego.components.AppThemeWatcher;
-import tk.crazysoft.ego.components.TabListener;
-import tk.crazysoft.ego.io.Environment4;
-import tk.crazysoft.ego.preferences.Preferences;
-
-public class MainActivity extends ActionBarActivity implements AddressFragment.OnAddressClickListener {
+public class MainActivity extends AppCompatActivity implements AddressFragment.OnAddressClickListener {
     private static final String TAG = MainActivity.class.getName();
 
     public static final String LAYOUT_MODE_PORTRAIT = "portrait";
@@ -315,7 +313,8 @@ public class MainActivity extends ActionBarActivity implements AddressFragment.O
     }
 
     public static boolean hasDarkTheme(ContextThemeWrapper context) {
-        return getThemeId(context) == R.style.AppTheme_Dark;
+        // FIXME: implement AppCompat DayNight theme (https://android-developers.googleblog.com/2016/02/android-support-library-232.html)
+        return false;
     }
 
     private static int getThemeId(ContextThemeWrapper context) {

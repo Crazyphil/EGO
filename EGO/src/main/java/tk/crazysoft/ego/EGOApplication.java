@@ -1,7 +1,6 @@
 package tk.crazysoft.ego;
 
-import android.app.Application;
-
+import android.support.multidex.MultiDexApplication;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -17,7 +16,7 @@ import org.acra.annotation.ReportsCrashes;
         resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
         resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
 )
-public class EGOApplication extends Application {
+public class EGOApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();

@@ -15,7 +15,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -38,7 +38,7 @@ import tk.crazysoft.ego.data.EGOContract;
 import tk.crazysoft.ego.data.EGOCursorLoader;
 import tk.crazysoft.ego.data.EGODbHelper;
 
-public class HospitalManagementActivity extends ActionBarActivity {
+public class HospitalManagementActivity extends AppCompatActivity {
     private static final String ACTION_PERMANENT_ADMITTANCES = "tk.crazysoft.ego.preferences.PERMANENT_ADMITTANCES";
     private static final String ACTION_REPLACEMENT = "tk.crazysoft.ego.preferences.REPLACEMENT";
 

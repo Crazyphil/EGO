@@ -8,16 +8,15 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import tk.crazysoft.ego.components.AppThemeWatcher;
 
 import java.lang.ref.WeakReference;
 
-import tk.crazysoft.ego.components.AppThemeWatcher;
-
-public class AboutActivity extends ActionBarActivity {
+public class AboutActivity extends AppCompatActivity {
     private AppThemeWatcher themeWatcher;
 
     @Override

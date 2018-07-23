@@ -2,12 +2,12 @@ package tk.crazysoft.ego;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import tk.crazysoft.ego.components.AppThemeWatcher;
 
-public class HouseActivity extends ActionBarActivity {
+public class HouseActivity extends AppCompatActivity {
     public static final int RESULT_LAYOUT_MODE_CHANGE = 1;
 
     private AppThemeWatcher themeWatcher;

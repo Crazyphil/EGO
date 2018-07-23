@@ -25,16 +25,11 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import tk.crazysoft.ego.components.ClearableEditText;
+import tk.crazysoft.ego.data.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import tk.crazysoft.ego.components.ClearableEditText;
-import tk.crazysoft.ego.data.EGOContract;
-import tk.crazysoft.ego.data.EGOCursorAdapter;
-import tk.crazysoft.ego.data.EGOCursorLoader;
-import tk.crazysoft.ego.data.EGODbHelper;
-import tk.crazysoft.ego.data.FilterCursorWrapper;
 
 public class AddressFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private Button buttonCity, buttonZip, buttonStreet, buttonStreetNo;
@@ -102,9 +97,9 @@ public class AddressFragment extends Fragment implements LoaderManager.LoaderCal
         italicTypeface = Typeface.create(buttonCity.getTypeface(), Typeface.ITALIC);
         normalTypeface = Typeface.create(italicTypeface, Typeface.NORMAL);
 
-        TypedArray a = getActivity().getTheme().obtainStyledAttributes(R.styleable.CustomAttrs);
-        normalColor = a.getColor(R.styleable.CustomAttrs_primaryTextColor, Color.BLACK);
-        italicColor = a.getColor(R.styleable.CustomAttrs_secondaryTextColor, Color.GRAY);
+        TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { android.R.attr.textColorPrimary, android.R.attr.textColorSecondary });
+        normalColor = a.getColor(0, Color.MAGENTA);
+        italicColor = a.getColor(1, Color.MAGENTA);
         a.recycle();
 
         buttonCity.setOnClickListener(new FilterButtonOnClickListener());
