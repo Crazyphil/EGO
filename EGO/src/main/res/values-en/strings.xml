@@ -78,7 +78,7 @@
     <string name="nav_activity_distance">%s remaining</string>
     <string name="nav_activity_distance_meters">%s m</string>
     <string name="nav_activity_distance_kilometers">%s km</string>
-    <string name="nav_activity_roundabout_instruction">%1$s. Exit: %2$s</string>
+    <string name="nav_activity_roundabout_instruction">%1$d. Exit: %2$s</string>
 
     <!-- Nav Fragment -->
     <string name="nav_view_nomaps_title">Navigation data is missing</string>

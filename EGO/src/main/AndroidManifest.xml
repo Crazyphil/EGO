@@ -80,7 +80,7 @@
         </activity>
         <!-- Dialog for Crash Reports -->
         <activity android:name="org.acra.CrashReportDialog"
-            android:theme="@style/AppTheme"
+            android:theme="@style/Theme.AppCompat.Light"
             android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true" />

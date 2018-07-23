@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomAttrs">
-        <!-- For general use -->
-        <attr name="primaryTextColor" format="reference|color" />
-        <attr name="secondaryTextColor" format="reference|color" />
         <!-- For ActionBar icons -->
         <attr name="contactsMenuIcon" format="reference" />
         <attr name="navigationMenuIcon" format="reference" />
