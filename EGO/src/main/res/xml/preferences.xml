@@ -26,7 +26,7 @@
 
             <intent android:action="tk.crazysoft.ego.services.IMPORT_STANDBY" />
         </tk.crazysoft.ego.preferences.DataImportPreference>
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:key="pref_key_import_use_sd"
             android:title="@string/preferences_activity_import_use_sd_title"
             android:summaryOff="@string/preferences_activity_import_use_sd_summary_unchecked"
@@ -41,13 +41,16 @@
             android:key="pref_key_map_address"
             android:title="@string/preferences_activity_map_address_title"
             android:summary="@string/preferences_activity_map_address_summary"
+            android:dialogMessage="@string/preferences_activity_map_address_text"
             android:defaultValue="48.46594215,14.16284773" />
+        <!--android:positiveButtonText="@android:string/ok"
+            android:negativeButtonText="@android:string/cancel"-->
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_activity_navigation_title"
         android:key="pref_key_navigation">
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:key="pref_key_navigation_api"
             android:title="@string/preferences_activity_navigation_api_title"
             android:summary="@string/preferences_activity_navigation_api_summary"
@@ -60,7 +63,7 @@
         android:title="@string/preferences_activity_internal_navigation_title"
         android:key="pref_key_internal_navigation">
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:key="pref_key_internal_navigation_coexistence"
             android:title="@string/preferences_activity_internal_navigation_coexistence_title"
             android:summary="@string/preferences_activity_internal_navigation_coexistence_summary"
@@ -68,7 +71,7 @@
             android:entries="@array/preferences_activity_internal_navigation_coexistence_entries"
             android:entryValues="@array/preferences_activity_internal_navigation_coexistence_values"
             android:defaultValue="@string/preferences_activity_internal_navigation_coexistence_default" />
-        <CheckBoxPreference
+        <android.support.v7.preference.CheckBoxPreference
             android:key="pref_key_internal_navigation_rotate"
             android:title="@string/preferences_activity_internal_navigation_rotate_title"
             android:summaryOff="@string/preferences_activity_internal_navigation_rotate_summary_unckecked"
@@ -79,7 +82,7 @@
         android:title="@string/main_activity_tab_hospitals_doctors"
         android:key="pref_key_hospitals_doctors">
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:key="pref_key_hospitals_doctors_view"
             android:title="@string/preferences_activity_hospitals_doctors_view_title"
             android:summary="@string/preferences_activity_hospitals_doctors_view_summary"
@@ -92,7 +95,7 @@
             android:title="@string/preferences_activity_hospitals_doctors_takeover_title"
             android:summary="@string/preferences_activity_hospitals_doctors_takeover_summary"
             android:defaultValue="420" /> <!-- 07:00h -->
-        <Preference
+        <android.support.v7.preference.Preference
             android:key="pref_key_hospitals_doctors_permanent_admittances"
             android:title="@string/preferences_activity_hospitals_doctors_permanent_admittances_title"
             android:summary="@string/preferences_activity_hospitals_doctors_permanent_admittances_summary">
@@ -100,8 +103,8 @@
             <intent android:action="tk.crazysoft.ego.preferences.PERMANENT_ADMITTANCES"
                 android:targetPackage="tk.crazysoft.ego"
                 android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
-        </Preference>
-        <Preference
+        </android.support.v7.preference.Preference>
+        <android.support.v7.preference.Preference
             android:key="pref_key_hospitals_doctors_replacement"
             android:title="@string/preferences_activity_hospitals_doctors_replacement_title"
             android:summary="@string/preferences_activity_hospitals_doctors_replacement_summary">
@@ -109,13 +112,13 @@
             <intent android:action="tk.crazysoft.ego.preferences.REPLACEMENT"
                 android:targetPackage="tk.crazysoft.ego"
                 android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
-        </Preference>
+        </android.support.v7.preference.Preference>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_activity_app_options_title"
         android:key="pref_key_bug_fixing">
 
-        <CheckBoxPreference android:key="acra.alwaysaccept"
+        <android.support.v7.preference.CheckBoxPreference android:key="acra.alwaysaccept"
             android:title="@string/preferences_activity_app_options_silent_mode_title"
             android:summaryOff="@string/preferences_activity_app_options_silent_mode_summary_unchecked"
             android:summaryOn="@string/preferences_activity_app_options_silent_mode_summary_checked"

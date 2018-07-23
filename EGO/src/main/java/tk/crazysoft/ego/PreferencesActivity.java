@@ -5,22 +5,18 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.preference.PreferenceFragmentCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.widget.BaseAdapter;
-
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.*;
 import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.io.ExternalStorage;
-import tk.crazysoft.ego.preferences.DataImportPreference;
-import tk.crazysoft.ego.preferences.Preferences;
+import tk.crazysoft.ego.preferences.*;
 import tk.crazysoft.ego.services.DataImportReceiver;
 import tk.crazysoft.ego.services.DataImportService;
 
-public class PreferencesActivity extends ActionBarActivity {
+public class PreferencesActivity extends AppCompatActivity {
     private AppThemeWatcher themeWatcher;
 
     @Override
@@ -75,15 +71,14 @@ public class PreferencesActivity extends ActionBarActivity {
         super.startActivity(intent);
     }
 
-    public static class PreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener
+    public static class PreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
     {
         private DataImportReceiver importReceiver;
 
         @Override
-        public void onCreate(final Bundle savedInstanceState)
+        public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey)
         {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
+            setPreferencesFromResource(R.xml.preferences, rootKey);
 
             IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
             importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
@@ -132,6 +127,11 @@ public class PreferencesActivity extends ActionBarActivity {
         }
 
         @Override
+        public Fragment getCallbackFragment() {
+            return this;
+        }
+
+        @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Preference pref = findPreference(key);
             if (key.equals(Preferences.PREFERENCE_IMPORT_USE_SD)) {
@@ -143,6 +143,23 @@ public class PreferencesActivity extends ActionBarActivity {
             } else if (key.equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER)) {
                 refreshHospitalsDoctorsTakeover();
             }
+        }
+
+        @Override
+        public boolean onPreferenceDisplayDialog(@NonNull PreferenceFragmentCompat caller, Preference pref) {
+            PreferenceDialogFragmentCompat fragment = null;
+            if (pref.getKey().equals(Preferences.PREFERENCE_MAP_ADDRESS)) {
+                fragment = AddressPreferenceDialogFragment.newInstance((AddressPreference) pref);
+            } else if (pref.getKey().equals(Preferences.PREFERENCE_HOSPITALS_DOCTORS_TAKEOVER)) {
+                fragment = TimePickerPreferenceDialogFragment.newInstance((TimePickerPreference) pref);
+            }
+
+            if (fragment != null) {
+                fragment.setTargetFragment(this, 0);
+                fragment.show(getFragmentManager(), "settingsDialog");
+                return true;
+            }
+            return false;
         }
 
         private void refreshImportFiles() {
@@ -171,7 +188,8 @@ public class PreferencesActivity extends ActionBarActivity {
         }
 
         private void refreshHospitalsDoctorsTakeover() {
-            ((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
+            // FIXME: getRootAdapter() not available in PreferenceScreen of support-v7
+            //((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
         }
     }
 }

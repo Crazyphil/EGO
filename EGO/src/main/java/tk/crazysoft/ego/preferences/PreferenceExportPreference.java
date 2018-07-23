@@ -8,21 +8,20 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import tk.crazysoft.ego.R;
+import tk.crazysoft.ego.io.ExternalStorage;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-
-import tk.crazysoft.ego.R;
-import tk.crazysoft.ego.io.ExternalStorage;
 
 public class PreferenceExportPreference extends Preference implements Preference.OnPreferenceClickListener {
     private static final String TAG = PreferenceExportPreference.class.getName();
@@ -40,11 +39,12 @@ public class PreferenceExportPreference extends Preference implements Preference
     }
 
     @Override
-    protected View onCreateView(ViewGroup parent) {
-        View view = super.onCreateView(parent);
-        progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+
+        View view = holder.itemView;
+        progressBar = view.findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
-        return view;
     }
 
     @Override

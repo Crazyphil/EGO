@@ -29,15 +29,9 @@ public class Preferences {
     public static final int HOSPITALS_DOCTORS_VIEW_HOSPITALS = 1;
     public static final int HOSPITALS_DOCTORS_VIEW_DOCTORS = 2;
 
-    // Map latitude/longitude were replaced by address preference
-    public static final String PREFERENCE_LEGACY_MAP_LATITUDE = "pref_key_map_latitude";
-    public static final String PREFERENCE_LEGACY_MAP_LONGITUDE = "pref_key_map_longitude";
-
-    private final Context context;
     private final SharedPreferences preferences;
 
     public Preferences(Context context) {
-        this.context = context;
         preferences = getPreferences(context);
     }
 
@@ -54,7 +48,7 @@ public class Preferences {
         if (coords != null) {
             return Double.parseDouble(coords.split(",")[0]);
         }
-        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_LEGACY_MAP_LATITUDE, 0));
+        return 0;
     }
 
     public double getMapLongitude() {
@@ -62,7 +56,7 @@ public class Preferences {
         if (coords != null) {
             return Double.parseDouble(coords.split(",")[1]);
         }
-        return Double.longBitsToDouble(preferences.getLong(PREFERENCE_LEGACY_MAP_LONGITUDE, 0));
+        return 0;
     }
 
     public String getNavigationApi() {
