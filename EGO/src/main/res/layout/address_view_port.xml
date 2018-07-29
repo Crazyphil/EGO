@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearCity"
                 android:layout_column="5"
-                android:src="?attr/clearIconInverse"
+                android:src="@drawable/clear"
                 android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearZip"
                 android:layout_column="5"
-                android:src="?attr/clearIconInverse"
+                android:src="@drawable/clear"
                 android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearStreet"
                 android:layout_column="5"
-                android:src="?attr/clearIconInverse"
+                android:src="@drawable/clear"
                 android:contentDescription="@string/address_view_remove" />
         </TableRow>
 
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address_imageButtonClearStreetNo"
                 android:layout_column="5"
-                android:src="?attr/clearIconInverse"
+                android:src="@drawable/clear"
                 android:contentDescription="@string/address_view_remove" />
         </TableRow>
 

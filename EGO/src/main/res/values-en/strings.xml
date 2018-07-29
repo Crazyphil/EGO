@@ -16,8 +16,7 @@
     <string name="crash_dialog_ok_toast">Thank you!</string>
 
     <!-- Main Activity -->
-    <string name="main_activity_action_light_off">Lights off</string>
-    <string name="main_activity_action_light_on">Lights on</string>
+    <string name="main_activity_action_light">Lights off</string>
     <string name="main_activity_action_navigation">Navigation</string>
     <string name="main_activity_action_contacts">Contacts</string>
     <string name="main_activity_action_data_management">Settings</string>

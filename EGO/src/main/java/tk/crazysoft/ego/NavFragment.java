@@ -252,7 +252,7 @@ public class NavFragment extends MapFragment {
                     items.add(item);
                 }
 
-                if (MainActivity.hasDarkTheme(getActivity())) {
+                if (getResources().getBoolean(R.bool.nightMode)) {
                     float[] blueToYellow = {
                             0.5f, 0, 0.5f, 0, 0, //red
                             0, 0.5f, 0.5f, 0, 0, //green

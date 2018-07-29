@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
-import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.databinding.NavActivityBinding;
 import tk.crazysoft.ego.services.LocalGraphHopperRoadManager;
 import tk.crazysoft.ego.viewmodels.NavActivityViewModel;
@@ -38,17 +36,9 @@ public class NavActivity extends AppCompatActivity implements NavFragment.OnNavE
     private int currentRoadNode;
     private double distanceLeft, durationLeft;
 
-    private AppThemeWatcher themeWatcher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
-            setTheme(getIntent().getIntExtra("theme", themeWatcher.getCurrentAppTheme()));
-            themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
-        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.nav_activity);
         viewModel = new NavActivityViewModel();
@@ -99,15 +89,6 @@ public class NavActivity extends AppCompatActivity implements NavFragment.OnNavE
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onResume();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
@@ -119,21 +100,9 @@ public class NavActivity extends AppCompatActivity implements NavFragment.OnNavE
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onPause();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onSaveInstanceState(outState);
-        }
         outState.putParcelable("destination", destination);
     }
 

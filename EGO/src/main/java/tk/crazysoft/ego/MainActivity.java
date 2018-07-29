@@ -11,12 +11,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -24,7 +25,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import org.acra.ACRA;
 import org.osmdroid.util.GeoPoint;
-import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.components.TabListener;
 import tk.crazysoft.ego.io.Environment4;
 import tk.crazysoft.ego.preferences.Preferences;
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
     private static final String NAVIGON_PUBLIC_INTENT_EXTRA_FREE_TEXT_ADDRESS = "free_text_address";
 
     private Stack<Long> displayedHouses;
-    private AppThemeWatcher themeWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +57,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
 
         // Set media rescan filter for getting current list of devices
         Environment4.setUseReceiver(getApplicationContext(), true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
-            setTheme(themeWatcher.getCurrentAppTheme());
-            themeWatcher.setOnAppThemeChangedListener(new OnAppThemeChangedListener(this));
-        }
 
         // Initialize default preferences if the app is started for the first time
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -132,23 +125,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
         return null;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onPause();
-        }
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -161,9 +137,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
             outState.putLongArray("displayedHouses", toLongArray(savedHouses));
         } else {
             outState.putLongArray("displayedHouses", null);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onSaveInstanceState(outState);
         }
     }
 
@@ -204,9 +177,13 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
                 displayedHouses = null;
                 break;
             case R.id.action_light:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    themeWatcher.toggleAppTheme();
+                int nightMode = AppCompatDelegate.getDefaultNightMode();
+                if (nightMode != AppCompatDelegate.MODE_NIGHT_AUTO && nightMode != AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(getResources().getBoolean(R.bool.nightMode) ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
                 }
+                getDelegate().applyDayNight();
                 break;
             case R.id.action_navigation:
                 sendNavigationIntent(this, (String)null, false);
@@ -217,9 +194,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
                 break;
             case R.id.action_data_management:
                 Intent dataManagementIntent = new Intent(this, PreferencesActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    dataManagementIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
-                }
                 startActivity(dataManagementIntent);
                 break;
             case R.id.action_launcher:
@@ -230,9 +204,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
                 break;
             case R.id.action_about:
                 Intent aboutIntent = new Intent(this, AboutActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    aboutIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
-                }
                 startActivity(aboutIntent);
                 break;
         }
@@ -298,9 +269,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
         } else {
             Intent houseIntent = new Intent(this, HouseActivity.class);
             houseIntent.putExtra("id", id);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                houseIntent.putExtra("theme", themeWatcher.getCurrentAppTheme());
-            }
             startActivityForResult(houseIntent, 0);
         }
 
@@ -310,11 +278,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
             }
             displayedHouses.push(id);
         }
-    }
-
-    public static boolean hasDarkTheme(ContextThemeWrapper context) {
-        // FIXME: implement AppCompat DayNight theme (https://android-developers.googleblog.com/2016/02/android-support-library-232.html)
-        return false;
     }
 
     private static int getThemeId(ContextThemeWrapper context) {
@@ -454,22 +417,6 @@ public class MainActivity extends AppCompatActivity implements AddressFragment.O
             activity.startActivity(navIntent);
         } else {
             Toast.makeText(activity, R.string.error_no_navigation_app, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public static class OnAppThemeChangedListener implements AppThemeWatcher.OnAppThemeChangedListener {
-        private Activity activity;
-
-        public OnAppThemeChangedListener(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void onAppThemeChanged(int newTheme) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                activity.getIntent().putExtra("theme", newTheme);
-                activity.recreate();
-            }
         }
     }
 }

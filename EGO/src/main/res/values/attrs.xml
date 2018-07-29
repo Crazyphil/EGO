@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomAttrs">
-        <!-- For ActionBar icons -->
-        <attr name="contactsMenuIcon" format="reference" />
-        <attr name="navigationMenuIcon" format="reference" />
-        <attr name="lightMenuIcon" format="reference" />
-        <attr name="lightMenuText" format="reference|string" />
-        <!-- For address view button -->
-        <attr name="clearIcon" format="reference" />
-        <attr name="clearIconInverse" format="reference" />
         <!-- For map view -->
         <attr name="tilesLoadingBackgroundColor" format="color" />
         <attr name="tilesLoadingLineColor" format="color" />

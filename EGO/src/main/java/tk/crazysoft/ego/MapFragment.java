@@ -1,11 +1,10 @@
 package tk.crazysoft.ego;
 
 import android.app.AlertDialog;
-import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
-
-import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.MapTileProviderArray;
 import org.osmdroid.tileprovider.modules.IArchiveFile;
 import org.osmdroid.tileprovider.modules.MapTileFileArchiveProvider;
@@ -28,14 +25,13 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
-import java.io.File;
-import java.util.ArrayList;
-
 import tk.crazysoft.ego.components.MultiPartFilenameFilter;
 import tk.crazysoft.ego.data.DatabaseFileArchive;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.Preferences;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
@@ -114,13 +110,15 @@ public class MapFragment extends Fragment {
         mapView = new MapView(view.getContext(), basemapProviderArray);
 
         // Set background for loading/missing tiles depending on day/night mode and optionally enable night mode (invert colors)
-        TypedArray a = getActivity().getTheme().obtainStyledAttributes(R.styleable.CustomAttrs);
-        mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(a.getColor(R.styleable.CustomAttrs_tilesLoadingBackgroundColor, Color.BLACK));
-        mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(a.getColor(R.styleable.CustomAttrs_tilesLoadingLineColor, Color.WHITE));
-        if (MainActivity.hasDarkTheme(getActivity())) {
+        mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(ContextCompat.getColor(getContext(), R.color.primaryLightColor));
+        mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(ContextCompat.getColor(getContext(), R.color.primaryDarkColor));
+        if (getResources().getBoolean(R.bool.nightMode)) {
             mapView.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
+
+            // Invert loading colors to get the correct values, because they are inverted by osmdroid as well (see line above)
+            mapView.getOverlayManager().getTilesOverlay().setLoadingBackgroundColor(~mapView.getOverlayManager().getTilesOverlay().getLoadingBackgroundColor() & 0xFFFFFF | 0xFF000000);
+            mapView.getOverlayManager().getTilesOverlay().setLoadingLineColor(~mapView.getOverlayManager().getTilesOverlay().getLoadingLineColor() & 0xFFFFFF | 0xFF000000);
         }
-        a.recycle();
 
         if (orthophotoArchives.length > 0) {
             ITileSource orthophotoSource = new XYTileSource("geoimage.at", getMinZoomLevel(orthophotoArchives), getMaxZoomLevel(orthophotoArchives), ORTHOPHOTO_TILE_SIZE,

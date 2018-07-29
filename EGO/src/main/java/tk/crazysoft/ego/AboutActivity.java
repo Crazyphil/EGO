@@ -12,22 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import tk.crazysoft.ego.components.AppThemeWatcher;
 
 import java.lang.ref.WeakReference;
 
 public class AboutActivity extends AppCompatActivity {
-    private AppThemeWatcher themeWatcher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
-            setTheme(getIntent().getIntExtra("theme", R.style.AppTheme));
-            themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
-        }
 
         setContentView(R.layout.about_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,33 +36,6 @@ public class AboutActivity extends AppCompatActivity {
 
         loadBitmap((ImageView)findViewById(R.id.about_imageViewRK), R.drawable.logo_rk);
         loadBitmap((ImageView)findViewById(R.id.about_imageViewJKUTNF), R.drawable.logo_jku_tnf);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onPause();
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onSaveInstanceState(outState);
-        }
     }
 
     private void loadBitmap(ImageView imageView, int id) {

@@ -3,31 +3,22 @@ package tk.crazysoft.ego;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.*;
-import tk.crazysoft.ego.components.AppThemeWatcher;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.*;
 import tk.crazysoft.ego.services.DataImportReceiver;
 import tk.crazysoft.ego.services.DataImportService;
 
 public class PreferencesActivity extends AppCompatActivity {
-    private AppThemeWatcher themeWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher = new AppThemeWatcher(this, savedInstanceState);
-            setTheme(getIntent().getIntExtra("theme", R.style.AppTheme));
-            themeWatcher.setOnAppThemeChangedListener(new MainActivity.OnAppThemeChangedListener(this));
-        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -37,37 +28,7 @@ public class PreferencesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onPause();
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            themeWatcher.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
     public void startActivity(Intent intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            intent.putExtra("theme", themeWatcher.getCurrentAppTheme());
-        }
         super.startActivity(intent);
     }
 

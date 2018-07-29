@@ -222,9 +222,9 @@ public class Environment4 {
         try {
             // Aufruf der versteckten Methode getVolumeList
             //noinspection NullArgumentToVariableArgMethod
-            Method m = c.getMethod("getVolumeList", null);
+            Method m = c.getMethod("getVolumeList", (Class<?>[])null);
             //noinspection NullArgumentToVariableArgMethod
-            vols = (Object[]) m.invoke(sm, null); // android.os.Storage.StorageVolume
+            vols = (Object[]) m.invoke(sm, (Object[])null); // android.os.Storage.StorageVolume
             Device[] temp = new Device[vols.length];
             for (int i = 0; i < vols.length; i++) temp[i] = new Device(vols[i]);
 

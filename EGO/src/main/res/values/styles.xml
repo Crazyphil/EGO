@@ -2,15 +2,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Needed for the support-preferences library -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="android:colorForeground">@color/primaryTextColor</item>
-        <item name="clearIcon">@drawable/clear_dark</item>
-        <item name="clearIconInverse">@drawable/clear_light</item>
     </style>
 
 </resources>
