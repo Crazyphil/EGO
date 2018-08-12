@@ -67,8 +67,8 @@
 
     <!-- Nav Activity -->
     <string name="nav_activity_title">Navigation</string>
-    <string name="nav_activity_loading_startup">Starting route planner...</string>
-    <string name="nav_activity_loading_routing">Planning route...</string>
+    <string name="nav_activity_loading_startup">Starting route planner…</string>
+    <string name="nav_activity_loading_routing">Planning route…</string>
     <string name="nav_activity_next_direction">Then %s</string>
     <string name="nav_activity_time">In %s</string>
     <string name="nav_activity_time_minutes">%s Minutes</string>
@@ -87,7 +87,16 @@
 
     <!-- Preferences Activity -->
     <string name="preferences_activity_title">Settings</string>
-    <string name="preferences_activity_import_title">Import Data</string>
+    <string name="preferences_activity_data_management_title">Data Management</string>
+    <string name="preferences_activity_import_title">Import data…</string>
+    <string name="preferences_activity_app_options_export_title">Export app settings</string>
+    <string name="preferences_activity_app_options_export_summary">Exports all data to the SD card</string>
+    <string name="preferences_activity_app_options_export_success">All data was exported to %s successfully.</string>
+    <string name="preferences_activity_app_options_export_failed">Exporting all data to %s failed.</string>
+    <string name="preferences_activity_app_options_import_title">Import app settings</string>
+    <string name="preferences_activity_app_options_import_summary">Import all data from the SD card</string>
+    <string name="preferences_activity_app_options_import_success">All data was imported from %s successfully.</string>
+    <string name="preferences_activity_app_options_import_failed">Importing all data from %s failed.</string>
     <string name="preferences_activity_import_addresses_title">Addresses</string>
     <string name="preferences_activity_import_addresses_summary">from %sego/import/adressen.csv</string>
     <string name="preferences_activity_import_hospitals_title">Hospital admittances</string>
@@ -101,7 +110,7 @@
     <string name="preferences_activity_map_address_title">Default Position</string>
     <string name="preferences_activity_map_address_summary">Address of the place centered on the map by default</string>
     <string name="preferences_activity_map_address_text">Enter an address or coordinates with format “North,East”.</string>
-    <string name="preferences_activity_navigation_title">Navigation</string>
+    <string name="preferences_activity_navigation_title">Navigation…</string>
     <string name="preferences_activity_navigation_api_title">Interface</string>
     <string name="preferences_activity_navigation_api_summary">Coordinates are transmitted by %s</string>
     <string name="preferences_activity_internal_navigation_title">Internal Navigation</string>
@@ -118,18 +127,10 @@
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Manage the hospitals that admit patients at all times</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Contact search replacements</string>
     <string name="preferences_activity_hospitals_doctors_replacement_summary">Manage the names by which hospitals and doctors are searched in your contacts</string>
-    <string name="preferences_activity_app_options_title">App options</string>
+    <string name="preferences_activity_app_options_title">Extended Options</string>
     <string name="preferences_activity_app_options_silent_mode_title">Send error reports automatically</string>
     <string name="preferences_activity_app_options_silent_mode_summary_unchecked">Error reports are sent after confirmation</string>
     <string name="preferences_activity_app_options_silent_mode_summary_checked">Error reports are sent automatically</string>
-    <string name="preferences_activity_app_options_export_title">Export data</string>
-    <string name="preferences_activity_app_options_export_summary">Exports all data to the SD card</string>
-    <string name="preferences_activity_app_options_export_success">All data was exported to %s successfully.</string>
-    <string name="preferences_activity_app_options_export_failed">Exporting all data to %s failed.</string>
-    <string name="preferences_activity_app_options_import_title">Import Data</string>
-    <string name="preferences_activity_app_options_import_summary">Import all data from the SD card</string>
-    <string name="preferences_activity_app_options_import_success">All data was imported from %s successfully.</string>
-    <string name="preferences_activity_app_options_import_failed">Importing all data from %s failed.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geographical Point</item>

@@ -87,7 +87,16 @@
 
     <!-- Preferences Activity -->
     <string name="preferences_activity_title">Einstellungen</string>
-    <string name="preferences_activity_import_title">Daten importieren</string>
+    <string name="preferences_activity_data_management_title">Datenverwaltung</string>
+    <string name="preferences_activity_import_title">Daten importieren…</string>
+    <string name="preferences_activity_app_options_export_title">App-Einstellungen sichern</string>
+    <string name="preferences_activity_app_options_export_summary">Exportiert alle Daten auf die SD-Karte</string>
+    <string name="preferences_activity_app_options_export_success">Alle Daten wurden erfolgreich nach %s exportiert.</string>
+    <string name="preferences_activity_app_options_export_failed">Exportieren aller Daten nach %s fehlgeschlagen.</string>
+    <string name="preferences_activity_app_options_import_title">App-Einstellungen wiederherstellen</string>
+    <string name="preferences_activity_app_options_import_summary">Importiert alle Daten von der SD-Karte</string>
+    <string name="preferences_activity_app_options_import_success">Alle Daten wurden erfolgreich von %s importiert.</string>
+    <string name="preferences_activity_app_options_import_failed">Importieren aller Daten von %s fehlgeschlagen.</string>
     <string name="preferences_activity_import_addresses_title">Adressen</string>
     <string name="preferences_activity_import_addresses_summary">aus %sego/import/adressen.csv</string>
     <string name="preferences_activity_import_hospitals_title">Krankenhausaufnahmen</string>
@@ -101,7 +110,8 @@
     <string name="preferences_activity_map_address_title">Standardposition</string>
     <string name="preferences_activity_map_address_summary">Adresse des standardmäßig auf der Karte zentrierten Ortes</string>
     <string name="preferences_activity_map_address_text">Geben Sie eine Adresse oder Koordinaten im Format „Nord,Ost“ ein.</string>
-    <string name="preferences_activity_navigation_title">Navigation</string>
+    <string name="preferences_activity_navigation_title">Navigation…</string>
+    <string name="preferences_activity_external_navigation_title">Externe Navigation</string>
     <string name="preferences_activity_navigation_api_title">Schnittstelle</string>
     <string name="preferences_activity_navigation_api_summary">Koordinaten werden per %s weitergegeben</string>
     <string name="preferences_activity_navigation_api_default" translatable="false">geo</string>
@@ -121,18 +131,10 @@
     <string name="preferences_activity_hospitals_doctors_permanent_admittances_summary">Verwalten der Krankenhäuser, die zu jeder Zeit Patienten aufnehmen</string>
     <string name="preferences_activity_hospitals_doctors_replacement_title">Ersetzungen zur Kontaktsuche</string>
     <string name="preferences_activity_hospitals_doctors_replacement_summary">Verwalten der Namen, unter denen Krankenhäuser und Ärzte in den Kontakten gesucht werden</string>
-    <string name="preferences_activity_app_options_title">App-Optionen</string>
+    <string name="preferences_activity_app_options_title">Erweiterte Einstellungen</string>
     <string name="preferences_activity_app_options_silent_mode_title">Fehlerberichte automatisch senden</string>
     <string name="preferences_activity_app_options_silent_mode_summary_unchecked">Fehlerberichte werden nach Bestätigung gesendet</string>
     <string name="preferences_activity_app_options_silent_mode_summary_checked">Fehlerberichte werden automatisch gesendet</string>
-    <string name="preferences_activity_app_options_export_title">Daten exportieren</string>
-    <string name="preferences_activity_app_options_export_summary">Exportiert alle Daten auf die SD-Karte</string>
-    <string name="preferences_activity_app_options_export_success">Alle Daten wurden erfolgreich nach %s exportiert.</string>
-    <string name="preferences_activity_app_options_export_failed">Exportieren aller Daten nach %s fehlgeschlagen.</string>
-    <string name="preferences_activity_app_options_import_title">Daten importieren</string>
-    <string name="preferences_activity_app_options_import_summary">Importiert alle Daten von der SD-Karte</string>
-    <string name="preferences_activity_app_options_import_success">Alle Daten wurden erfolgreich von %s importiert.</string>
-    <string name="preferences_activity_app_options_import_failed">Importieren aller Daten von %s fehlgeschlagen.</string>
 
     <string-array name="preferences_activity_navigation_api_entries">
         <item>Geografischer Punkt</item>

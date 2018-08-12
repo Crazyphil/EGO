@@ -7,14 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.*;
+import android.view.MenuItem;
 import tk.crazysoft.ego.io.ExternalStorage;
 import tk.crazysoft.ego.preferences.*;
 import tk.crazysoft.ego.services.DataImportReceiver;
 import tk.crazysoft.ego.services.DataImportService;
 
-public class PreferencesActivity extends AppCompatActivity {
+public class PreferencesActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +34,36 @@ public class PreferencesActivity extends AppCompatActivity {
         super.startActivity(intent);
     }
 
+    @Override
+    public boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen pref) {
+        Bundle args = new Bundle(1);
+        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.getKey());
+        PreferencesFragment fragment = new PreferencesFragment();
+        fragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragment).addToBackStack(pref.getKey()).commit();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public static class PreferencesFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
     {
         private DataImportReceiver importReceiver;
+        private String preferenceKey;
 
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey)
         {
             setPreferencesFromResource(R.xml.preferences, rootKey);
+            this.preferenceKey = rootKey;
 
             IntentFilter importFilter = new IntentFilter(DataImportService.BROADCAST_ERROR);
             importFilter.addAction(DataImportService.BROADCAST_PROGRESS);
@@ -48,6 +72,16 @@ public class PreferencesActivity extends AppCompatActivity {
             importFilter.addAction(DataImportService.BROADCAST_COMPLETED);
             importReceiver = new DataImportReceiver(savedInstanceState);
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(importReceiver, importFilter);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(preferenceKey != null ? findPreference(preferenceKey).getTitle() : getString(R.string.main_activity_action_data_management));
+            }
         }
 
         @Override
@@ -130,22 +164,32 @@ public class PreferencesActivity extends AppCompatActivity {
             DataImportPreference hospitalsPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_HOSPITALS);
             DataImportPreference doctorsPreference = (DataImportPreference)findPreference(Preferences.PREFERENCE_IMPORT_DOCTORS);
 
-            addressPreference.setSummary(String.format(getString(R.string.preferences_activity_import_addresses_summary), sdPath));
-            addressPreference.setBroadcastReceiver(importReceiver);
-            hospitalsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_hospitals_summary), sdPath));
-            hospitalsPreference.setBroadcastReceiver(importReceiver);
-            doctorsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_doctors_summary), sdPath));
-            doctorsPreference.setBroadcastReceiver(importReceiver);
+            if (addressPreference != null) {
+                addressPreference.setSummary(String.format(getString(R.string.preferences_activity_import_addresses_summary), sdPath));
+                addressPreference.setBroadcastReceiver(importReceiver);
+            }
+            if (hospitalsPreference != null) {
+                hospitalsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_hospitals_summary), sdPath));
+                hospitalsPreference.setBroadcastReceiver(importReceiver);
+            }
+            if (doctorsPreference != null) {
+                doctorsPreference.setSummary(String.format(getString(R.string.preferences_activity_import_doctors_summary), sdPath));
+                doctorsPreference.setBroadcastReceiver(importReceiver);
+            }
         }
 
         private void refreshNavigationApi(Preference pref) {
-            ListPreference apiPreference = (ListPreference)getPreferenceScreen().findPreference(Preferences.PREFERENCE_NAVIGATION_API);
-            pref.setSummary(getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+            ListPreference apiPreference = (ListPreference)findPreference(Preferences.PREFERENCE_NAVIGATION_API);
+            if (apiPreference != null) {
+                pref.setSummary(getString(R.string.preferences_activity_navigation_api_summary, apiPreference.getEntry()));
+            }
         }
 
         private void refreshHospitalsDoctorsView(Preference pref) {
-            ListPreference viewPreference = (ListPreference)getPreferenceScreen().findPreference(Preferences.PREFERENCE_HOSPITALS_DOCTORS_VIEW);
-            pref.setSummary(getString(R.string.preferences_activity_hospitals_doctors_view_summary, viewPreference.getEntry()));
+            ListPreference viewPreference = (ListPreference)findPreference(Preferences.PREFERENCE_HOSPITALS_DOCTORS_VIEW);
+            if (viewPreference != null) {
+                pref.setSummary(getString(R.string.preferences_activity_hospitals_doctors_view_summary, viewPreference.getEntry()));
+            }
         }
 
         private void refreshHospitalsDoctorsTakeover() {

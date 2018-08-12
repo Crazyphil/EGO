@@ -1,39 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/preferences_activity_import_title"
-        android:key="pref_key_import">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/preferences_activity_data_management_title"
+        android:key="pref_key_data_management">
 
-        <tk.crazysoft.ego.preferences.DataImportPreference
-            android:key="pref_key_import_addresses"
-            android:title="@string/preferences_activity_import_addresses_title"
-            android:summary="@string/preferences_activity_import_addresses_summary">
+        <android.support.v7.preference.PreferenceScreen
+            android:title="@string/preferences_activity_import_title"
+            android:key="pref_key_import"
+            android:persistent="false">
 
-            <intent android:action="tk.crazysoft.ego.services.IMPORT_ADDRESSES" />
-        </tk.crazysoft.ego.preferences.DataImportPreference>
-        <tk.crazysoft.ego.preferences.DataImportPreference
-            android:key="pref_key_import_hospitals"
-            android:title="@string/preferences_activity_import_hospitals_title"
-            android:summary="@string/preferences_activity_import_hospitals_summary">
+            <tk.crazysoft.ego.preferences.DataImportPreference
+                android:key="pref_key_import_addresses"
+                android:title="@string/preferences_activity_import_addresses_title"
+                android:summary="@string/preferences_activity_import_addresses_summary">
 
-            <intent android:action="tk.crazysoft.ego.services.IMPORT_ADMITTANCES" />
-        </tk.crazysoft.ego.preferences.DataImportPreference>
-        <tk.crazysoft.ego.preferences.DataImportPreference
-            android:key="pref_key_import_doctors"
-            android:title="@string/preferences_activity_import_doctors_title"
-            android:summary="@string/preferences_activity_import_doctors_summary">
+                <intent android:action="tk.crazysoft.ego.services.IMPORT_ADDRESSES" />
+            </tk.crazysoft.ego.preferences.DataImportPreference>
+            <tk.crazysoft.ego.preferences.DataImportPreference
+                android:key="pref_key_import_hospitals"
+                android:title="@string/preferences_activity_import_hospitals_title"
+                android:summary="@string/preferences_activity_import_hospitals_summary">
 
-            <intent android:action="tk.crazysoft.ego.services.IMPORT_STANDBY" />
-        </tk.crazysoft.ego.preferences.DataImportPreference>
-        <android.support.v7.preference.CheckBoxPreference
-            android:key="pref_key_import_use_sd"
-            android:title="@string/preferences_activity_import_use_sd_title"
-            android:summaryOff="@string/preferences_activity_import_use_sd_summary_unchecked"
-            android:summaryOn="@string/preferences_activity_import_use_sd_summary_checked"
-            android:defaultValue="true" />
-    </PreferenceCategory>
-    <PreferenceCategory
+                <intent android:action="tk.crazysoft.ego.services.IMPORT_ADMITTANCES" />
+            </tk.crazysoft.ego.preferences.DataImportPreference>
+            <tk.crazysoft.ego.preferences.DataImportPreference
+                android:key="pref_key_import_doctors"
+                android:title="@string/preferences_activity_import_doctors_title"
+                android:summary="@string/preferences_activity_import_doctors_summary">
+
+                <intent android:action="tk.crazysoft.ego.services.IMPORT_STANDBY" />
+            </tk.crazysoft.ego.preferences.DataImportPreference>
+            <android.support.v7.preference.CheckBoxPreference
+                android:key="pref_key_import_use_sd"
+                android:title="@string/preferences_activity_import_use_sd_title"
+                android:summaryOff="@string/preferences_activity_import_use_sd_summary_unchecked"
+                android:summaryOn="@string/preferences_activity_import_use_sd_summary_checked"
+                android:defaultValue="true" />
+        </android.support.v7.preference.PreferenceScreen>
+        <tk.crazysoft.ego.preferences.PreferenceExportPreference
+            android:key="pref_key_export_data"
+            android:title="@string/preferences_activity_app_options_export_title"
+            android:summary="@string/preferences_activity_app_options_export_summary"
+            android:defaultValue="true" /> <!-- true = export -->
+        <tk.crazysoft.ego.preferences.PreferenceExportPreference
+            android:key="pref_key_export_data"
+            android:title="@string/preferences_activity_app_options_import_title"
+            android:summary="@string/preferences_activity_app_options_import_summary"
+            android:defaultValue="false" /> <!-- false = import -->
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/preferences_activity_map_title"
         android:key="pref_key_map">
 
@@ -43,25 +59,11 @@
             android:summary="@string/preferences_activity_map_address_summary"
             android:dialogMessage="@string/preferences_activity_map_address_text"
             android:defaultValue="48.46594215,14.16284773" />
-        <!--android:positiveButtonText="@android:string/ok"
-            android:negativeButtonText="@android:string/cancel"-->
-    </PreferenceCategory>
-    <PreferenceCategory
+    </android.support.v7.preference.PreferenceCategory>
+    <PreferenceScreen
         android:title="@string/preferences_activity_navigation_title"
-        android:key="pref_key_navigation">
-
-        <android.support.v7.preference.ListPreference
-            android:key="pref_key_navigation_api"
-            android:title="@string/preferences_activity_navigation_api_title"
-            android:summary="@string/preferences_activity_navigation_api_summary"
-            android:dialogTitle="@string/preferences_activity_navigation_api_title"
-            android:entries="@array/preferences_activity_navigation_api_entries"
-            android:entryValues="@array/preferences_activity_navigation_api_values"
-            android:defaultValue="@string/preferences_activity_navigation_api_default" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/preferences_activity_internal_navigation_title"
-        android:key="pref_key_internal_navigation">
+        android:key="pref_key_navigation"
+        android:persistent="false">
 
         <android.support.v7.preference.ListPreference
             android:key="pref_key_internal_navigation_coexistence"
@@ -71,14 +73,32 @@
             android:entries="@array/preferences_activity_internal_navigation_coexistence_entries"
             android:entryValues="@array/preferences_activity_internal_navigation_coexistence_values"
             android:defaultValue="@string/preferences_activity_internal_navigation_coexistence_default" />
-        <android.support.v7.preference.CheckBoxPreference
-            android:key="pref_key_internal_navigation_rotate"
-            android:title="@string/preferences_activity_internal_navigation_rotate_title"
-            android:summaryOff="@string/preferences_activity_internal_navigation_rotate_summary_unckecked"
-            android:summaryOn="@string/preferences_activity_internal_navigation_rotate_summary_ckecked"
-            android:defaultValue="true" />
-    </PreferenceCategory>
-    <PreferenceCategory
+        <android.support.v7.preference.PreferenceCategory
+            android:title="@string/preferences_activity_internal_navigation_title"
+            android:key="pref_key_internal_navigation">
+
+            <android.support.v7.preference.CheckBoxPreference
+                android:key="pref_key_internal_navigation_rotate"
+                android:title="@string/preferences_activity_internal_navigation_rotate_title"
+                android:summaryOff="@string/preferences_activity_internal_navigation_rotate_summary_unckecked"
+                android:summaryOn="@string/preferences_activity_internal_navigation_rotate_summary_ckecked"
+                android:defaultValue="true" />
+        </android.support.v7.preference.PreferenceCategory>
+        <android.support.v7.preference.PreferenceCategory
+            android:title="@string/preferences_activity_external_navigation_title"
+            android:key="pref_key_external_navigation">
+
+            <android.support.v7.preference.ListPreference
+                android:key="pref_key_navigation_api"
+                android:title="@string/preferences_activity_navigation_api_title"
+                android:summary="@string/preferences_activity_navigation_api_summary"
+                android:dialogTitle="@string/preferences_activity_navigation_api_title"
+                android:entries="@array/preferences_activity_navigation_api_entries"
+                android:entryValues="@array/preferences_activity_navigation_api_values"
+                android:defaultValue="@string/preferences_activity_navigation_api_default" />
+        </android.support.v7.preference.PreferenceCategory>
+    </PreferenceScreen>
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/main_activity_tab_hospitals_doctors"
         android:key="pref_key_hospitals_doctors">
 
@@ -113,8 +133,8 @@
                 android:targetPackage="tk.crazysoft.ego"
                 android:targetClass="tk.crazysoft.ego.HospitalManagementActivity" />
         </android.support.v7.preference.Preference>
-    </PreferenceCategory>
-    <PreferenceCategory
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/preferences_activity_app_options_title"
         android:key="pref_key_bug_fixing">
 
@@ -123,15 +143,5 @@
             android:summaryOff="@string/preferences_activity_app_options_silent_mode_summary_unchecked"
             android:summaryOn="@string/preferences_activity_app_options_silent_mode_summary_checked"
             android:defaultValue="true"/>
-        <tk.crazysoft.ego.preferences.PreferenceExportPreference
-            android:key="pref_key_export_data"
-            android:title="@string/preferences_activity_app_options_export_title"
-            android:summary="@string/preferences_activity_app_options_export_summary"
-            android:defaultValue="true" /> <!-- true = export -->
-        <tk.crazysoft.ego.preferences.PreferenceExportPreference
-            android:key="pref_key_export_data"
-            android:title="@string/preferences_activity_app_options_import_title"
-            android:summary="@string/preferences_activity_app_options_import_summary"
-            android:defaultValue="false" /> <!-- false = import -->
-    </PreferenceCategory>
-</PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>
