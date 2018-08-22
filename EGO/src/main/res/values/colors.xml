@@ -12,4 +12,6 @@
     <color name="secondaryDarkColor">#7f0000</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="routeColor">#800000ff</color>
 </resources>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.TypedArray;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.DashPathEffect;
@@ -13,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -227,10 +227,7 @@ public class NavFragment extends MapFragment {
         @Override
         protected void onPostExecute(Road road) {
             if (road.mStatus == Road.STATUS_OK) {
-                TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { R.attr.routeColor });
-                int routeColor = a.getColor(0, 0);
-                a.recycle();
-
+                int routeColor = ContextCompat.getColor(getContext(), R.color.routeColor);
                 routeOverlay = new FolderOverlay(mapView.getContext());
                 routeOverlay.add(buildRoadOverlay(road, routeColor, ROUTE_LINE_WIDTH, mapView.getContext()));
 

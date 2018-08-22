@@ -9,4 +9,6 @@
     <color name="primaryDarkColor">#000000</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
+
+    <color name="routeColor">#80ffff00</color>
 </resources>
