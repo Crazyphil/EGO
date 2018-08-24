@@ -5,21 +5,37 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Needed for the support-preferences library -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="android:colorForeground">@color/primaryTextColor</item>
+
+        <item name="actionBarTheme">@style/AppTheme.ActionBar</item>
+        <item name="actionBarPopupTheme">@style/AppTheme.ActionBar.Menu</item>
     </style>
 
     <style name="AppTheme.Header">
         <item name="android:textAppearance">@style/AppTheme.Header.TextAppearance</item>
     </style>
 
+    <!-- Fallback for Material header texts copied from support-preference -->
     <style name="AppTheme.Header.TextAppearance">
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
         <item name="android:textColor">?android:attr/colorAccent</item>
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="AppTheme.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="fontFamily">@font/dunant</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.Menu" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="AppTheme.Dunant" parent="AppTheme">
+        <item name="fontFamily">@font/dunant</item>
+    </style>
 </resources>
