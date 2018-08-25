@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
+<resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Needed for the support-preferences library -->
@@ -38,4 +37,7 @@
     <style name="AppTheme.Dunant" parent="AppTheme">
         <item name="fontFamily">@font/dunant</item>
     </style>
+
+    <!-- This is just here to be overriden in values-v21 -->
+    <style name="AppTheme.SpinnerButton" parent="Widget.AppCompat.Spinner" />
 </resources>

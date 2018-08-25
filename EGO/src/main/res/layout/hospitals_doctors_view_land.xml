@@ -14,10 +14,10 @@
         android:layout_height="wrap_content">
 
         <Button
+            style="@style/AppTheme.SpinnerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/hospitals_doctors_buttonDate"
-            style="?android:attr/spinnerStyle"
             android:layout_weight="1"
             android:gravity="center" />
 
@@ -29,7 +29,7 @@
             android:id="@+id/hospitals_doctors_buttonToday" />
 
         <Button
-            style="?android:attr/spinnerStyle"
+            style="@style/AppTheme.SpinnerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/hospitals_doctors_buttonTime"

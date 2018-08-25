@@ -4,4 +4,9 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Material.Body2</item>
         <item name="android:textColor">?android:attr/colorAccent</item>
     </style>
+
+    <!-- Starting with Android 5.0, buttons have a shadow animation that is not overriden by the spinner style and looks weird -->
+    <style name="AppTheme.SpinnerButton" parent="Widget.AppCompat.Spinner">
+        <item name="android:stateListAnimator">@null</item>
+    </style>
 </resources>
