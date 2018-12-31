@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customMapSource>
+	<name>basemap.at</name>
+	<minZoom>0</minZoom>
+	<maxZoom>19</maxZoom>
+	<tileType>png</tileType>
+	<tileUpdate>None</tileUpdate>
+	<url>http://maps{$serverpart}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{$z}/{$y}/{$x}.png</url>
+	<serverParts>1 2 3 4</serverParts>
+	<backgroundColor>#000000</backgroundColor>
+</customMapSource>

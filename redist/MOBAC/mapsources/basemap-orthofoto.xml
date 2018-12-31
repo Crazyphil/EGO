@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customMapSource>
+	<name>basemap.at Orthofoto</name>
+	<minZoom>0</minZoom>
+	<maxZoom>19</maxZoom>
+	<tileType>jpg</tileType>
+	<tileUpdate>None</tileUpdate>
+	<url>http://maps{$serverpart}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{$z}/{$y}/{$x}.jpeg</url>
+	<serverParts>1 2 3 4</serverParts>
+	<backgroundColor>#000000</backgroundColor>
+</customMapSource>
