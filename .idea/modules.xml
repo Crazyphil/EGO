@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EGO.iml" filepath="$PROJECT_DIR$/EGO.iml" />
       <module fileurl="file://$PROJECT_DIR$/EGO/EGO-EGO.iml" filepath="$PROJECT_DIR$/EGO/EGO-EGO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Programmierung-EGO.iml" filepath="$PROJECT_DIR$/Programmierung-EGO.iml" />
     </modules>
   </component>
 </project>
